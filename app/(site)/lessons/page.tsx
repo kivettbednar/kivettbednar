@@ -7,16 +7,28 @@ import {SplitScreenImage} from '@/components/ui/SplitScreenImage'
 import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
 import {Guitar, Music, Mic2, BookOpen, Users, Award, Sparkles, ChevronRight} from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Lessons | Kivett Bednar',
-  description: 'Guitar and blues music lessons',
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  try {
+    const {data: lessonsPage} = await sanityFetch({query: lessonsPageQuery})
+    return {
+      title: lessonsPage?.seoTitle || 'Lessons | Kivett Bednar',
+      description: lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome',
+      alternates: { canonical: `${baseUrl}/lessons` },
+    }
+  } catch {
+    return {
+      title: 'Lessons | Kivett Bednar',
+      description: 'Guitar and blues music lessons',
+    }
+  }
 }
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
 
 // Icon mapping for learning items
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, React.ComponentType<{className?: string}>> = {
   guitar: Guitar,
   music: Music,
   mic: Mic2,
@@ -72,28 +84,34 @@ export default async function LessonsPage() {
         </div>
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-center">
-            <AnimatedSection animation="fadeIn" delay={0.1}>
-              <div className="flex flex-col items-center group cursor-default">
-                <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
-                  <AnimatedCounter value={20} suffix="+" />
-                </span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Years Experience</span>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection animation="fadeIn" delay={0.2}>
-              <div className="flex flex-col items-center group cursor-default">
-                <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
-                  <AnimatedCounter value={500} suffix="+" />
-                </span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Students Taught</span>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection animation="fadeIn" delay={0.3}>
-              <div className="flex flex-col items-center group cursor-default">
-                <span className="text-4xl md:text-5xl font-bebas text-accent-primary animate-count">All</span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Skill Levels</span>
-              </div>
-            </AnimatedSection>
+            {(lessonsPage.stats && lessonsPage.stats.length > 0
+              ? lessonsPage.stats
+              : [
+                  {_key: 'default-1', label: 'Years Experience', value: '20', suffix: '+'},
+                  {_key: 'default-2', label: 'Students Taught', value: '500', suffix: '+'},
+                  {_key: 'default-3', label: 'Skill Levels', value: 'All', suffix: ''},
+                ]
+            ).map((stat: {_key?: string; label: string; value: string; suffix?: string}, index: number) => {
+              const numericValue = parseInt(stat.value, 10)
+              const isNumeric = !isNaN(numericValue)
+
+              return (
+                <AnimatedSection key={stat._key || index} animation="fadeIn" delay={0.1 * (index + 1)}>
+                  <div className="flex flex-col items-center group cursor-default">
+                    <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
+                      {isNumeric ? (
+                        <AnimatedCounter value={numericValue} suffix={stat.suffix || ''} />
+                      ) : (
+                        <span className="animate-count">{stat.value}{stat.suffix || ''}</span>
+                      )}
+                    </span>
+                    <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">
+                      {stat.label}
+                    </span>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -144,7 +162,7 @@ export default async function LessonsPage() {
               </AnimatedSection>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {lessonsPage.learningItems.map((item: any, index: number) => {
+                {lessonsPage.learningItems.map((item: {_key?: string; title: string; description: string; icon?: string}, index: number) => {
                   const iconKey = item.icon || defaultIcons[index % defaultIcons.length]
                   const IconComponent = iconMap[iconKey] || Guitar
 
@@ -253,13 +271,13 @@ export default async function LessonsPage() {
                 {/* Large quote marks */}
                 <span className="absolute -top-8 left-0 text-8xl font-serif text-accent-primary/20 leading-none">&ldquo;</span>
                 <blockquote className="relative z-10 font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary px-8 md:px-16">
-                  Music isn&apos;t just about the notes you play — it&apos;s about the story you tell and the feeling you share.
+                  {lessonsPage.testimonialQuote || "Music isn\u2019t just about the notes you play \u2014 it\u2019s about the story you tell and the feeling you share."}
                 </blockquote>
                 <span className="absolute -bottom-16 right-0 text-8xl font-serif text-accent-primary/20 leading-none">&rdquo;</span>
               </div>
               <div className="mt-8 flex items-center justify-center gap-3">
                 <div className="h-px bg-accent-primary/50 w-8" />
-                <span className="text-accent-primary uppercase tracking-widest text-sm font-bold">Kivett Bednar</span>
+                <span className="text-accent-primary uppercase tracking-widest text-sm font-bold">{lessonsPage.testimonialAttribution || 'Kivett Bednar'}</span>
                 <div className="h-px bg-accent-primary/50 w-8" />
               </div>
             </AnimatedSection>

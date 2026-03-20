@@ -9,9 +9,21 @@ import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
 import {Calendar, MapPin, Music} from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Shows | Kivett Bednar',
-  description: 'Upcoming concerts and performances',
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  try {
+    const {data: showsPage} = await sanityFetch({query: showsPageQuery})
+    return {
+      title: showsPage?.seoTitle || 'Shows | Kivett Bednar',
+      description: showsPage?.seoDescription || 'Upcoming concerts and performances by Kivett Bednar - authentic blues in the Pacific Northwest',
+      alternates: { canonical: `${baseUrl}/shows` },
+    }
+  } catch {
+    return {
+      title: 'Shows | Kivett Bednar',
+      description: 'Upcoming concerts and performances',
+    }
+  }
 }
 
 // Revalidate every 60 seconds (ISR)
@@ -34,7 +46,7 @@ export default async function ShowsPage() {
   }
 
   // Generate JSON-LD structured data for events
-  const eventsJsonLd = events?.map((event: any) => ({
+  const eventsJsonLd = events?.map((event: {title: string | null; startDateTime: string | null; venue: string | null; city: string | null; ticketUrl?: string | null; isSoldOut?: boolean | null; isCanceled?: boolean | null}) => ({
     '@context': 'https://schema.org',
     '@type': 'MusicEvent',
     name: event.title,
@@ -92,19 +104,19 @@ export default async function ShowsPage() {
                 <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
                   <AnimatedCounter value={events?.length || 0} />
                 </span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Upcoming Shows</span>
+                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel1 || 'Upcoming Shows'}</span>
               </div>
             </AnimatedSection>
             <AnimatedSection animation="fadeIn" delay={0.2}>
               <div className="flex items-center gap-3 group cursor-default">
                 <Music className="w-6 h-6 text-accent-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">Live Blues</span>
+                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel2 || 'Live Blues'}</span>
               </div>
             </AnimatedSection>
             <AnimatedSection animation="fadeIn" delay={0.3}>
               <div className="flex items-center gap-3 group cursor-default">
                 <MapPin className="w-6 h-6 text-accent-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">Pacific Northwest</span>
+                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel3 || 'Pacific Northwest'}</span>
               </div>
             </AnimatedSection>
           </div>
@@ -126,9 +138,9 @@ export default async function ShowsPage() {
             {showsPage?.performanceImages && showsPage.performanceImages.length > 0 && (
               <StaggeredImageGrid
                 images={showsPage.performanceImages
-                  .filter((img: any) => img.image?.asset?.url)
-                  .map((img: any) => ({
-                    src: img.image.asset.url,
+                  .filter((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => img.image?.asset?.url)
+                  .map((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => ({
+                    src: img.image!.asset!.url!,
                     alt: img.alt || img.image?.alt || 'Performance photo',
                     caption: img.caption || '',
                   }))
@@ -162,9 +174,9 @@ export default async function ShowsPage() {
                   </div>
                 </AnimatedSection>
                 <div className="grid gap-8">
-                  {events.map((event: any, index: number) => (
+                  {events.map((event, index: number) => (
                     <AnimatedSection key={event._id} animation="fadeUp" delay={0.1 * index}>
-                      <EventCard event={event} />
+                      <EventCard event={event as unknown as import('@/types/event').Event} />
                     </AnimatedSection>
                   ))}
                 </div>
@@ -175,7 +187,7 @@ export default async function ShowsPage() {
                   {showsPage?.upcomingShowsHeading || 'Upcoming Shows'}
                 </h2>
                 <div className="text-center py-16 border-2 border-dashed border-border rounded-lg bg-surface">
-                  <div className="text-6xl mb-4">🎸</div>
+                  <div className="text-4xl md:text-6xl mb-4">🎸</div>
                   <p className="text-text-primary text-2xl font-semibold mb-2">
                     {showsPage?.emptyStateHeading || 'No upcoming shows scheduled'}
                   </p>

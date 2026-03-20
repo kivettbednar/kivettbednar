@@ -1,39 +1,140 @@
 "use client"
 
-import {useEffect, useState} from 'react'
+import {Suspense, useEffect, useState} from 'react'
+import {useSearchParams} from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useCart} from '@/components/ui/CartContext'
 import {motion} from 'framer-motion'
 import {CheckCircle, Package, Truck, ChevronRight} from 'lucide-react'
+import {clientBrowser} from '@/sanity/lib/client-browser'
+import {orderConfirmationPageQuery} from '@/sanity/lib/queries'
 
 type OrderData = {
   orderId: string
-  items: any[]
+  email?: string | null
+  name?: string | null
+  items: Array<{
+    productTitle: string
+    quantity: number
+    priceCents: number
+    imageUrl?: string
+  }>
   totalCents: number
-  shippingInfo: any
+  shippingInfo?: {email?: string; firstName?: string; lastName?: string; carrier?: string; trackingNumber?: string; estimatedDelivery?: string; address?: string; city?: string; state?: string; zipCode?: string; country?: string} | null
+  address?: {line1?: string | null; line2?: string | null; city?: string | null; state?: string | null; postalCode?: string | null; country?: string | null} | null
   orderDate: string
 }
 
 export default function OrderConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-accent-primary/30 border-t-accent-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-muted">Loading your order...</p>
+        </div>
+      </div>
+    }>
+      <OrderConfirmationContent />
+    </Suspense>
+  )
+}
+
+function OrderConfirmationContent() {
   const {clear} = useCart()
+  const searchParams = useSearchParams()
   const [orderData, setOrderData] = useState<OrderData | null>(null)
   const [showContent, setShowContent] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [pageContent, setPageContent] = useState<Record<string, string> | null>(null)
 
   useEffect(() => {
-    // Load order from sessionStorage
-    const storedOrder = sessionStorage.getItem('lastOrder')
-    if (storedOrder) {
-      const data = JSON.parse(storedOrder)
-      setOrderData(data)
-      // Clear cart after successful order
-      clear()
-      // Clear session storage
-      sessionStorage.removeItem('lastOrder')
-      // Trigger content animation after a brief delay
-      setTimeout(() => setShowContent(true), 300)
+    const sessionId = searchParams.get('session_id')
+
+    async function loadOrder() {
+      // Fetch CMS content for labels
+      clientBrowser.fetch(orderConfirmationPageQuery).then(setPageContent).catch(() => {})
+
+      // Try Stripe session lookup first with retry logic for webhook race condition
+      // Webhooks can take 2-15s; use exponential backoff: 1s, 2s, 3s, 4s, 5s, 5s = 20s total
+      if (sessionId) {
+        const retryDelays = [1000, 2000, 3000, 4000, 5000, 5000]
+        for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
+          try {
+            const res = await fetch(`/api/orders/${sessionId}`)
+            if (res.ok) {
+              const order = await res.json()
+              setOrderData({
+                orderId: order.stripeSessionId || order._id,
+                email: order.email,
+                name: order.name,
+                items: (order.items || []).map((it: {productId?: string; productTitle?: string; productSlug?: string; imageUrl?: string; priceCents?: number; quantity?: number; options?: string | Record<string, string>}) => {
+                  let options = it.options
+                  if (typeof options === 'string') {
+                    try { options = JSON.parse(options) } catch { options = {} }
+                  }
+                  return {
+                    productId: it.productId,
+                    title: it.productTitle,
+                    slug: it.productSlug,
+                    imageUrl: it.imageUrl,
+                    priceCents: it.priceCents,
+                    quantity: it.quantity,
+                    options,
+                  }
+                }),
+                totalCents: order.totalCents,
+                address: order.address,
+                orderDate: order.createdAt,
+              })
+              clear()
+              setLoading(false)
+              setTimeout(() => setShowContent(true), 300)
+              return
+            }
+            // If not found and we have retries left, wait and try again
+            if (attempt < retryDelays.length) {
+              await new Promise(resolve => setTimeout(resolve, retryDelays[attempt]))
+            }
+          } catch (e) {
+            console.error('Failed to fetch order by session ID:', e)
+            if (attempt < retryDelays.length) {
+              await new Promise(resolve => setTimeout(resolve, retryDelays[attempt]))
+            }
+          }
+        }
+      }
+
+      // Fallback: demo mode sessionStorage
+      const storedOrder = sessionStorage.getItem('lastOrder')
+      if (storedOrder) {
+        const data = JSON.parse(storedOrder)
+        setOrderData(data)
+        clear()
+        sessionStorage.removeItem('lastOrder')
+        setLoading(false)
+        setTimeout(() => setShowContent(true), 300)
+        return
+      }
+
+      setLoading(false)
     }
-  }, [clear])
+
+    loadOrder()
+  }, [clear, searchParams])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-accent-primary/30 border-t-accent-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-primary font-semibold text-lg mb-2">Processing your order...</p>
+          <p className="text-text-muted text-sm">This may take a few moments. Please don&apos;t close this page.</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!orderData) {
     return (
@@ -44,10 +145,10 @@ export default function OrderConfirmationPage() {
           className="bg-surface-elevated border border-border p-16 max-w-2xl mx-auto text-center"
         >
           <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">
-            No Order Found
+            {pageContent?.noOrderHeading || 'No Order Found'}
           </h1>
           <p className="text-text-secondary mb-8">
-            We couldn&apos;t find your order information.
+            {pageContent?.noOrderText || "We couldn't find your order information."}
           </p>
           <Link href="/merch" className="btn-primary inline-flex">
             Browse Merch
@@ -57,6 +158,8 @@ export default function OrderConfirmationPage() {
     )
   }
 
+  const email = orderData.email || orderData.shippingInfo?.email || ''
+  const displayName = orderData.name || (orderData.shippingInfo ? `${orderData.shippingInfo.firstName} ${orderData.shippingInfo.lastName}` : '')
   const orderDate = new Date(orderData.orderDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -112,7 +215,7 @@ export default function OrderConfirmationPage() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="h-px bg-accent-primary w-12" />
                 <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">
-                  Order Confirmed
+                  {pageContent?.orderConfirmedLabel || 'Order Confirmed'}
                 </span>
                 <div className="h-px bg-accent-primary w-12" />
               </div>
@@ -124,7 +227,7 @@ export default function OrderConfirmationPage() {
               transition={{delay: 0.5}}
               className="font-bebas text-6xl md:text-7xl uppercase tracking-wide text-text-primary mb-4"
             >
-              Thank You!
+              {pageContent?.thankYouHeading || 'Thank You!'}
             </motion.h1>
 
             <motion.p
@@ -133,12 +236,14 @@ export default function OrderConfirmationPage() {
               transition={{delay: 0.6}}
               className="text-xl text-text-secondary mb-8"
             >
-              Your order has been received and is being processed.
-              <br />
-              A confirmation email has been sent to{' '}
-              <span className="text-accent-primary font-bold">
-                {orderData.shippingInfo.email}
-              </span>
+              {pageContent?.orderReceivedText || 'Your order has been received and is being processed.'}
+              {email && (
+                <>
+                  <br />
+                  A confirmation email has been sent to{' '}
+                  <span className="text-accent-primary font-bold">{email}</span>
+                </>
+              )}
             </motion.p>
 
             <motion.div
@@ -151,7 +256,7 @@ export default function OrderConfirmationPage() {
                 Order Number
               </div>
               <div className="font-bebas text-3xl text-accent-primary tracking-wider">
-                {orderData.orderId}
+                {orderData.orderId.length > 20 ? orderData.orderId.slice(-12).toUpperCase() : orderData.orderId}
               </div>
             </motion.div>
           </div>
@@ -213,15 +318,32 @@ export default function OrderConfirmationPage() {
                   Shipping Address
                 </h2>
                 <div className="text-text-secondary">
-                  <div className="font-bold text-text-primary mb-2">
-                    {orderData.shippingInfo.firstName} {orderData.shippingInfo.lastName}
-                  </div>
-                  <div>{orderData.shippingInfo.address}</div>
-                  <div>
-                    {orderData.shippingInfo.city}, {orderData.shippingInfo.state}{' '}
-                    {orderData.shippingInfo.zipCode}
-                  </div>
-                  <div className="mt-2">{orderData.shippingInfo.country}</div>
+                  {displayName && (
+                    <div className="font-bold text-text-primary mb-2">{displayName}</div>
+                  )}
+                  {orderData.address ? (
+                    <>
+                      {orderData.address.line1 && <div>{orderData.address.line1}</div>}
+                      {orderData.address.line2 && <div>{orderData.address.line2}</div>}
+                      <div>
+                        {[orderData.address.city, orderData.address.state, orderData.address.postalCode]
+                          .filter(Boolean)
+                          .join(', ')}
+                      </div>
+                      {orderData.address.country && <div className="mt-2">{orderData.address.country}</div>}
+                    </>
+                  ) : orderData.shippingInfo ? (
+                    <>
+                      <div>{orderData.shippingInfo.address}</div>
+                      <div>
+                        {orderData.shippingInfo.city}, {orderData.shippingInfo.state}{' '}
+                        {orderData.shippingInfo.zipCode}
+                      </div>
+                      <div className="mt-2">{orderData.shippingInfo.country}</div>
+                    </>
+                  ) : (
+                    <div className="text-text-muted">Shipping details will be sent via email</div>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -237,7 +359,7 @@ export default function OrderConfirmationPage() {
                 Order Items
               </h2>
               <div className="space-y-4">
-                {orderData.items.map((it, index) => {
+                {orderData.items.map((it: {productTitle: string; quantity: number; priceCents: number; imageUrl?: string; productId?: string; slug?: string; title?: string; options?: Record<string, string>}, index: number) => {
                   const optKey = it.options
                     ? Object.entries(it.options)
                         .map(([k, v]) => `${k}: ${v}`)
@@ -245,7 +367,7 @@ export default function OrderConfirmationPage() {
                     : ''
                   return (
                     <motion.div
-                      key={it.productId + optKey}
+                      key={(it.productId || it.slug || index) + optKey}
                       initial={{opacity: 0, x: -20}}
                       animate={showContent ? {opacity: 1, x: 0} : {}}
                       transition={{delay: 0.4 + index * 0.1}}
@@ -255,7 +377,7 @@ export default function OrderConfirmationPage() {
                         <div className="relative w-24 h-24 bg-background border border-border flex-shrink-0 overflow-hidden">
                           <Image
                             src={it.imageUrl}
-                            alt={it.title}
+                            alt={it.title || it.productTitle}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
@@ -307,13 +429,15 @@ export default function OrderConfirmationPage() {
               className="bg-background/50 border border-border p-8 mb-8"
             >
               <h2 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-4">
-                What&apos;s Next?
+                {pageContent?.whatsNextHeading || "What's Next?"}
               </h2>
               <ul className="space-y-3 text-text-secondary">
                 {[
-                  `You'll receive an order confirmation email at ${orderData.shippingInfo.email}`,
-                  'Your order will be processed and shipped within 3-5 business days',
-                  "You'll receive tracking information once your order ships"
+                  email
+                    ? (pageContent?.nextStepEmail || "You'll receive an order confirmation email at {email}").replace('{email}', email)
+                    : (pageContent?.nextStepEmail || "You'll receive an order confirmation email shortly").replace(' at {email}', ' shortly'),
+                  pageContent?.nextStepShipping || 'Your order will be processed and shipped within 3-5 business days',
+                  pageContent?.nextStepTracking || "You'll receive tracking information once your order ships"
                 ].map((text, i) => (
                   <motion.li
                     key={i}
@@ -340,11 +464,11 @@ export default function OrderConfirmationPage() {
                 href="/merch"
                 className="group inline-flex items-center justify-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-lg uppercase tracking-wider px-8 py-4 transition-all duration-300 active:scale-95"
               >
-                Continue Shopping
+                {pageContent?.continueShoppingText || 'Continue Shopping'}
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link href="/shows" className="btn-secondary inline-flex justify-center">
-                View Upcoming Shows
+                {pageContent?.viewShowsText || 'View Upcoming Shows'}
               </Link>
             </motion.div>
           </div>

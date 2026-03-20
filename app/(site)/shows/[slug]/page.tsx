@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {eventBySlugQuery, eventsSlugs} from '@/sanity/lib/queries'
+import {eventBySlugQuery, eventsSlugs, showsPageQuery} from '@/sanity/lib/queries'
 import {urlFor} from '@/sanity/lib/image'
 import {PortableText} from '@portabletext/react'
 import {formatInTimeZone} from 'date-fns-tz'
@@ -12,6 +12,16 @@ import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {getObjectPosition} from '@/lib/image-positioning'
 import {MapPin, Calendar, Clock, ExternalLink, Ticket} from 'lucide-react'
 import {EventActions} from './EventActions'
+import type {SanityImageWithPositioning} from '@/lib/image-positioning'
+
+type Performer = {name: string; role?: string; bio?: string}
+
+type EventDetailFields = {
+  heroImage?: SanityImageWithPositioning
+  heroImageMobile?: SanityImageWithPositioning
+  coverImage?: SanityImageWithPositioning
+  lineup?: Performer[]
+}
 
 type Props = {
   params: Promise<{slug: string}>
@@ -40,15 +50,42 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     {next: {revalidate: 60}}
   )
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  const canonicalUrl = `${baseUrl}/shows/${slug}`
+  const ogImageUrl = event?.coverImage?.asset?.url
+    ? urlFor(event.coverImage.asset).width(1200).height(630).url()
+    : event?.heroImage?.asset?.url
+    ? urlFor(event.heroImage.asset).width(1200).height(630).url()
+    : undefined
+
   return {
     title: event?.title ? `${event.title} | Kivett Bednar` : 'Event | Kivett Bednar',
     description: event?.excerpt || 'Event details',
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: event?.title || 'Event | Kivett Bednar',
+      description: event?.excerpt || 'Event details',
+      url: canonicalUrl,
+      type: 'website',
+      ...(ogImageUrl && {
+        images: [{url: ogImageUrl, width: 1200, height: 630, alt: event?.title || 'Event'}],
+      }),
+    },
+    twitter: {
+      card: ogImageUrl ? 'summary_large_image' : 'summary',
+      title: event?.title || 'Event | Kivett Bednar',
+      description: event?.excerpt || 'Event details',
+      ...(ogImageUrl && {images: [ogImageUrl]}),
+    },
   }
 }
 
 export default async function EventPage({params}: Props) {
   const {slug} = await params
   const event = await sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data)
+  const showsPage = await sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null)
 
   if (!event) {
     notFound()
@@ -101,25 +138,34 @@ export default async function EventPage({params}: Props) {
     eventStatus: event.isCanceled
       ? 'https://schema.org/EventCancelled'
       : 'https://schema.org/EventScheduled',
+    image: event.coverImage?.asset?.url
+      ? urlFor(event.coverImage.asset).width(1200).height(630).url()
+      : event.heroImage?.asset?.url
+      ? urlFor(event.heroImage.asset).width(1200).height(630).url()
+      : undefined,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'}/shows/${slug}`,
   }
 
+  // Cast once to access fields not in the inferred type
+  const ev = event as typeof event & EventDetailFields
+
   // Determine hero image with fallback to default
-  const heroImageDesktop = (event as any).heroImage?.asset?.url
-    ? (event as any).heroImage
-    : (event as any).coverImage?.asset?.url
-    ? (event as any).coverImage
+  const heroImageDesktop = ev.heroImage?.asset?.url
+    ? ev.heroImage
+    : ev.coverImage?.asset?.url
+    ? ev.coverImage
     : null
 
-  const heroImageMobile = (event as any).heroImageMobile?.asset?.url
-    ? (event as any).heroImageMobile
+  const heroImageMobile = ev.heroImageMobile?.asset?.url
+    ? ev.heroImageMobile
     : heroImageDesktop
 
-  // Default hero image if none provided
-  const defaultHeroImage = '/images/performance/stage-main.jpg'
+  // Default hero image: prefer CMS setting, fallback to static path
+  const defaultHeroImage = showsPage?.defaultEventImage?.asset?.url || '/images/performance/stage-main.jpg'
   const hasHeroImage = heroImageDesktop?.asset?.url
 
   // Generate Google Maps link
-  const venueAddress = `${event.venue}, ${event.address || ''}, ${event.city}, ${event.state || ''} ${event.country || ''}`
+  const venueAddress = [event.venue, event.address, event.city, event.state, event.country].filter(Boolean).join(', ')
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueAddress)}`
 
   return (
@@ -139,7 +185,7 @@ export default async function EventPage({params}: Props) {
           <div className="hidden md:block absolute inset-0">
             <Image
               src={hasHeroImage ? urlFor(heroImageDesktop.asset).width(1920).height(1080).url() : defaultHeroImage}
-              alt={hasHeroImage ? (heroImageDesktop.alt || event.title) : `${event.title} at ${event.venue}`}
+              alt={hasHeroImage ? (heroImageDesktop.alt || event.title || '') : `${event.title} at ${event.venue}`}
               fill
               className="object-cover"
               sizes="100vw"
@@ -160,7 +206,7 @@ export default async function EventPage({params}: Props) {
               }
               alt={
                 heroImageMobile?.asset?.url
-                  ? (heroImageMobile.alt || event.title)
+                  ? (heroImageMobile.alt || event.title || '')
                   : `${event.title} at ${event.venue}`
               }
               fill
@@ -182,12 +228,12 @@ export default async function EventPage({params}: Props) {
           {/* Event Status Badges */}
           {event.isCanceled && (
             <div className="absolute top-8 right-8 z-20 bg-red-600 text-white px-6 py-3 rounded-lg text-xl font-bold tracking-wide shadow-2xl">
-              CANCELED
+              {showsPage?.canceledBadgeText || 'CANCELED'}
             </div>
           )}
           {event.isSoldOut && !event.isCanceled && (
             <div className="absolute top-8 right-8 z-20 bg-accent-primary text-black px-6 py-3 rounded-lg text-xl font-bold tracking-wide shadow-2xl">
-              SOLD OUT
+              {showsPage?.soldOutBadgeText || 'SOLD OUT'}
             </div>
           )}
 
@@ -243,17 +289,17 @@ export default async function EventPage({params}: Props) {
                   )}
 
                   {/* Event Image - Show coverImage if different from hero, or as placeholder */}
-                  {(event as any).coverImage?.asset?.url && (event as any).coverImage.asset.url !== heroImageDesktop?.asset?.url && (
+                  {ev.coverImage?.asset?.url && ev.coverImage.asset.url !== heroImageDesktop?.asset?.url && (
                     <AnimatedSection animation="fadeUp" delay={0.15}>
                       <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl">
                         <Image
-                          src={urlFor((event as any).coverImage.asset).width(1200).height(675).url()}
-                          alt={(event as any).coverImage.alt || `${event.title} performance`}
+                          src={urlFor(ev.coverImage.asset).width(1200).height(675).url()}
+                          alt={ev.coverImage.alt || `${event.title} performance`}
                           fill
                           className="object-cover"
                           sizes="(min-width: 1024px) 66vw, 100vw"
                           style={{
-                            objectPosition: getObjectPosition((event as any).coverImage, false)
+                            objectPosition: getObjectPosition(ev.coverImage, false)
                           }}
                         />
                       </div>
@@ -261,12 +307,12 @@ export default async function EventPage({params}: Props) {
                   )}
 
                   {/* Lineup */}
-                  {(event as any).lineup && (event as any).lineup.length > 0 && (
+                  {ev.lineup && ev.lineup.length > 0 && (
                     <AnimatedSection animation="fadeUp" delay={0.2}>
                       <div className="bg-surface-elevated rounded-2xl p-8 border-2 border-accent-primary/20 shadow-lg">
                         <h2 className="text-3xl font-bold text-text-primary mb-6">Lineup</h2>
                         <div className="space-y-6">
-                          {(event as any).lineup.map((performer: any, index: number) => (
+                          {ev.lineup.map((performer: Performer, index: number) => (
                             <div key={index} className="border-b border-border last:border-0 pb-4 last:pb-0">
                               <div className="flex items-baseline gap-3 mb-2">
                                 <h3 className="text-xl font-bold text-text-primary">{performer.name}</h3>
@@ -290,7 +336,7 @@ export default async function EventPage({params}: Props) {
                   {event.specialNotes && (
                     <AnimatedSection animation="fadeUp" delay={0.3}>
                       <div className="bg-surface-elevated border-l-4 border-accent-primary p-6 rounded-r-lg">
-                        <h3 className="text-lg font-bold text-text-primary mb-2">Important Information</h3>
+                        <h3 className="text-lg font-bold text-text-primary mb-2">{showsPage?.importantInfoText || 'Important Information'}</h3>
                         <p className="text-text-secondary whitespace-pre-wrap">{event.specialNotes}</p>
                       </div>
                     </AnimatedSection>
@@ -309,7 +355,7 @@ export default async function EventPage({params}: Props) {
                       <div className="relative z-10">
                         <h2 className="text-2xl font-bold text-accent-primary mb-6 flex items-center gap-2">
                           <Calendar className="h-6 w-6" />
-                          Event Details
+                          {showsPage?.eventDetailsLabel || 'Event Details'}
                         </h2>
 
                         <div className="space-y-6 mb-8">
@@ -319,7 +365,7 @@ export default async function EventPage({params}: Props) {
                               <Clock className="h-5 w-5 text-accent-primary" />
                             </div>
                             <div className="flex-1">
-                              <div className="text-sm text-text-muted uppercase tracking-wide mb-1">Date & Time</div>
+                              <div className="text-sm text-text-muted uppercase tracking-wide mb-1">{showsPage?.dateTimeLabel || 'Date & Time'}</div>
                               <div className="text-lg font-semibold">{eventDate}</div>
                               <div className="text-text-secondary">{eventTime}</div>
                             </div>
@@ -331,7 +377,7 @@ export default async function EventPage({params}: Props) {
                               <MapPin className="h-5 w-5 text-accent-primary" />
                             </div>
                             <div className="flex-1">
-                              <div className="text-sm text-text-muted uppercase tracking-wide mb-1">Venue</div>
+                              <div className="text-sm text-text-muted uppercase tracking-wide mb-1">{showsPage?.venueLabel || 'Venue'}</div>
                               <div className="text-lg font-semibold">{event.venue}</div>
                               {event.address && <div className="text-text-secondary text-sm">{event.address}</div>}
                               <div className="text-text-secondary text-sm">
@@ -344,7 +390,7 @@ export default async function EventPage({params}: Props) {
                                 className="inline-flex items-center gap-1 mt-2 text-accent-primary hover:text-accent-primary/80 text-sm font-medium transition-colors"
                               >
                                 <MapPin className="h-4 w-4" />
-                                View on Map
+                                {showsPage?.viewOnMapText || 'View on Map'}
                                 <ExternalLink className="h-3 w-3" />
                               </a>
                             </div>
@@ -360,7 +406,7 @@ export default async function EventPage({params}: Props) {
                                 className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold uppercase tracking-wider transition-all mb-4 bg-surface-elevated border-2 border-accent-primary/30 text-text-muted cursor-not-allowed"
                               >
                                 <Ticket className="h-5 w-5" />
-                                Sold Out
+                                {showsPage?.soldOutText || 'Sold Out'}
                               </button>
                             ) : (
                               <a
@@ -370,7 +416,7 @@ export default async function EventPage({params}: Props) {
                                 className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold uppercase tracking-wider transition-all mb-4 bg-accent-primary text-black hover:bg-accent-primary/90 hover:shadow-lg hover:shadow-accent-primary/20"
                               >
                                 <Ticket className="h-5 w-5" />
-                                Get Tickets
+                                {showsPage?.getTicketsText || 'Get Tickets'}
                                 <ExternalLink className="h-4 w-4" />
                               </a>
                             )}
@@ -380,7 +426,7 @@ export default async function EventPage({params}: Props) {
                         {/* Event Status Messages */}
                         {event.isCanceled && (
                           <div className="bg-red-600/20 border border-red-600/30 rounded-lg p-4 text-center">
-                            <p className="font-semibold">This event has been canceled</p>
+                            <p className="font-semibold">{showsPage?.canceledMessageText || 'This event has been canceled'}</p>
                           </div>
                         )}
                       </div>
@@ -396,22 +442,23 @@ export default async function EventPage({params}: Props) {
                       <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                       </svg>
-                      <span className="font-bold uppercase tracking-wider text-sm">Back to All Shows</span>
+                      <span className="font-bold uppercase tracking-wider text-sm">{showsPage?.backToShowsText || 'Back to All Shows'}</span>
                     </Link>
                   </AnimatedSection>
 
                   {/* Share Event */}
                   <AnimatedSection animation="fadeUp" delay={0.4}>
                     <div className="bg-surface-elevated border border-border rounded-lg p-6">
-                      <h3 className="text-sm uppercase tracking-wider font-bold text-text-primary mb-3">Share Event</h3>
+                      <h3 className="text-sm uppercase tracking-wider font-bold text-text-primary mb-3">{showsPage?.shareEventText || 'Share Event'}</h3>
                       <EventActions
                         title={event.title || ''}
-                        eventUrl={typeof window !== 'undefined' ? window.location.href : ''}
+                        eventUrl={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'}/shows/${event.slug || slug}`}
                         venue={event.venue || ''}
                         startDate={startDateTime}
                         endDate={event.endDateTime || startDateTime}
                         description={event.excerpt || ''}
                         location={`${event.venue || ''}, ${event.city || ''}`}
+                        timezone={timezone}
                       />
                     </div>
                   </AnimatedSection>

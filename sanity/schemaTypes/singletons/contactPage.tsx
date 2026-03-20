@@ -1,5 +1,7 @@
 import {EnvelopeIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
+import {seoFields} from '@/sanity/lib/schema-fields'
 
 /**
  * Contact Page singleton schema
@@ -35,7 +37,9 @@ export const contactPage = defineType({
           name: 'alt',
           title: 'Alt Text',
           type: 'string',
-              initialValue: 'Kivett Bednar',        }),
+          initialValue: 'Kivett Bednar',
+        }),
+        ...imagePositionFields,
       ],
     }),
 
@@ -54,6 +58,7 @@ export const contactPage = defineType({
           title: 'Alt Text',
           type: 'string',
               initialValue: 'Kivett Bednar',        }),
+        ...imagePositionFields,
       ],
     }),
     defineField({
@@ -72,21 +77,123 @@ export const contactPage = defineType({
               type: 'image',
               options: {
                 hotspot: true,
-              },            }),
-            defineField({
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              initialValue: 'Kivett Bednar',            }),
+              },
+              fields: [
+                defineField({
+                  name: 'alt',
+                  title: 'Alt Text',
+                  type: 'string',
+                  initialValue: 'Kivett Bednar',
+                }),
+                ...imagePositionFields,
+              ],
+            }),
           ],
           preview: {
             select: {
-              title: 'alt',
+              title: 'image.alt',
               media: 'image',
             },
           },
         }),
       ],
+    }),
+
+    // Connect Section
+    defineField({
+      name: 'connectHeading',
+      title: 'Connect Section Heading',
+      type: 'string',
+      description: 'Heading for the contact cards section (e.g., "Let\'s Connect")',
+      initialValue: "Let's Connect",
+    }),
+
+    // Booking Card
+    defineField({
+      name: 'bookingCardTitle',
+      title: 'Booking Card Title',
+      type: 'string',
+      description: 'Title for the booking card',
+      initialValue: 'Book a Show',
+    }),
+    defineField({
+      name: 'bookingCardDescription',
+      title: 'Booking Card Description',
+      type: 'text',
+      rows: 2,
+      description: 'Description text for booking card',
+      initialValue: 'Looking for live blues at your venue or private event? Check out upcoming shows or reach out to discuss booking.',
+    }),
+    defineField({
+      name: 'bookingCardLinkText',
+      title: 'Booking Card Link Text',
+      type: 'string',
+      description: 'Link text for booking card',
+      initialValue: 'View Shows →',
+    }),
+
+    // Lessons Card
+    defineField({
+      name: 'lessonsCardTitle',
+      title: 'Lessons Card Title',
+      type: 'string',
+      description: 'Title for the lessons card',
+      initialValue: 'Guitar Lessons',
+    }),
+    defineField({
+      name: 'lessonsCardDescription',
+      title: 'Lessons Card Description',
+      type: 'text',
+      rows: 2,
+      description: 'Description text for lessons card',
+      initialValue: 'Learn blues guitar from decades of experience. All skill levels welcome — from beginners to advanced players.',
+    }),
+    defineField({
+      name: 'lessonsCardLinkText',
+      title: 'Lessons Card Link Text',
+      type: 'string',
+      description: 'Link text for lessons card',
+      initialValue: 'Learn More →',
+    }),
+
+    // Location Card
+    defineField({
+      name: 'locationCardTitle',
+      title: 'Location Card Title',
+      type: 'string',
+      description: 'Title for the location card',
+      initialValue: 'Based In',
+    }),
+    defineField({
+      name: 'locationCardRegion',
+      title: 'Location Card Region',
+      type: 'string',
+      description: 'Region name displayed prominently',
+      initialValue: 'Pacific Northwest',
+    }),
+    defineField({
+      name: 'locationCardDescription',
+      title: 'Location Card Description',
+      type: 'text',
+      rows: 2,
+      description: 'Description text for location card',
+      initialValue: 'Gritty Texas Blues meets the heart of the Pacific Northwest. Available for shows and events throughout the region.',
+    }),
+    defineField({
+      name: 'locationCardLinkText',
+      title: 'Location Card Link Text',
+      type: 'string',
+      description: 'Link text for location card',
+      initialValue: 'View on Map →',
+    }),
+
+    // Social Section
+    defineField({
+      name: 'socialSubheading',
+      title: 'Social Section Subheading',
+      type: 'string',
+      description: 'Subtitle under social section heading',
+      initialValue: 'Stay connected for show updates, behind-the-scenes content, and more',
     }),
 
     // Section Headings
@@ -175,6 +282,14 @@ export const contactPage = defineType({
       description: 'Button text for shows CTA',
       initialValue: 'See Upcoming Shows',
     }),
+    defineField({
+      name: 'locationMapQuery',
+      title: 'Location Map Query',
+      type: 'string',
+      description: 'Google Maps search query for "Based In" card (e.g., "Portland Oregon")',
+      initialValue: 'Portland Oregon',
+    }),
+    ...seoFields,
   ],
   preview: {
     prepare() {

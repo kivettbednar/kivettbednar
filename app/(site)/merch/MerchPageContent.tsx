@@ -7,6 +7,7 @@ import {ProductCard} from '@/components/ui/ProductCard'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {motion} from 'framer-motion'
 import {Search, Filter, Star, Sparkles} from 'lucide-react'
+import type {ProductListItem} from '@/types/product'
 
 type MerchPageData = {
   heroHeading?: string | null
@@ -25,7 +26,7 @@ type MerchPageData = {
 
 type Props = {
   merchPage: MerchPageData | null
-  products: any[]
+  products: ProductListItem[]
 }
 
 export function MerchPageContent({merchPage, products}: Props) {
@@ -40,7 +41,7 @@ export function MerchPageContent({merchPage, products}: Props) {
     // Filter by search query
     if (searchQuery.trim().length >= 2) {
       const query = searchQuery.toLowerCase()
-      filtered = filtered.filter((p: any) =>
+      filtered = filtered.filter((p) =>
         p.title?.toLowerCase().includes(query) ||
         p.category?.toLowerCase().includes(query) ||
         p.tags?.some((tag: string) => tag.toLowerCase().includes(query))
@@ -49,7 +50,7 @@ export function MerchPageContent({merchPage, products}: Props) {
 
     // Filter by category
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter((p: any) => p.category === selectedCategory)
+      filtered = filtered.filter((p) => p.category === selectedCategory)
     }
 
     // Sort products
@@ -146,7 +147,7 @@ export function MerchPageContent({merchPage, products}: Props) {
 
             {/* Main Heading - From Sanity */}
             <AnimatedSection animation="fadeUp" delay={0.2}>
-              <h1 className="font-bebas text-7xl md:text-8xl lg:text-9xl uppercase tracking-wider text-white mb-6 leading-none drop-shadow-2xl">
+              <h1 className="font-bebas text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl uppercase tracking-wider text-white mb-6 leading-none drop-shadow-2xl">
                 {heroHeading}
               </h1>
             </AnimatedSection>
@@ -176,12 +177,13 @@ export function MerchPageContent({merchPage, products}: Props) {
                     <div className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 shadow-2xl">
                     {/* Search Bar */}
                     <div className="mb-8 pb-8 border-b border-border/50">
-                      <label className="block text-xs uppercase tracking-[0.2em] font-bold text-accent-primary mb-4 flex items-center gap-2">
+                      <label htmlFor="merch-search" className="block text-xs uppercase tracking-[0.2em] font-bold text-accent-primary mb-4 flex items-center gap-2">
                         <Search className="w-4 h-4" />
                         Search Products
                       </label>
                       <div className="relative">
                         <input
+                          id="merch-search"
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
@@ -286,7 +288,7 @@ export function MerchPageContent({merchPage, products}: Props) {
                 {/* Products Grid - Enhanced Layout */}
                 {filteredAndSortedProducts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {filteredAndSortedProducts.map((product: any) => (
+                    {filteredAndSortedProducts.map((product) => (
                       <div key={product._id} className="h-full">
                         <ProductCard product={product} />
                       </div>

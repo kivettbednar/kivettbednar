@@ -8,13 +8,27 @@ import {ImageRevealScroll} from '@/components/ui/ImageRevealScroll'
 import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
 import {Music, Disc3, Guitar, ChevronRight} from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Blues Set List | Kivett Bednar',
-  description: 'A collection of classic blues songs',
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  try {
+    const {data: setlistPage} = await sanityFetch({query: setlistPageQuery})
+    return {
+      title: setlistPage?.seoTitle || 'Blues Set List | Kivett Bednar',
+      description: setlistPage?.seoDescription || 'A collection of classic blues songs performed by Kivett Bednar',
+      alternates: { canonical: `${baseUrl}/setlist` },
+    }
+  } catch {
+    return {
+      title: 'Blues Set List | Kivett Bednar',
+      description: 'A collection of classic blues songs',
+    }
+  }
 }
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
+
+type Song = {_id: string; title: string | null; key: string | null; artist?: string | null; notes?: string | null; order?: number | null}
 
 export default async function SetlistPage() {
   let setlistPage = null
@@ -30,8 +44,8 @@ export default async function SetlistPage() {
   }
 
   // Group songs by first letter for a more organized display
-  const songsByLetter = songs?.reduce((acc: Record<string, any[]>, song: any) => {
-    const letter = song.title.charAt(0).toUpperCase()
+  const songsByLetter = songs?.reduce((acc: Record<string, Song[]>, song: Song) => {
+    const letter = (song.title || '').charAt(0).toUpperCase() || '#'
     if (!acc[letter]) acc[letter] = []
     acc[letter].push(song)
     return acc
@@ -57,19 +71,19 @@ export default async function SetlistPage() {
                 <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
                   <AnimatedCounter value={songs?.length || 0} />
                 </span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Songs</span>
+                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">{setlistPage?.statsLabel1 || 'Songs'}</span>
               </div>
             </AnimatedSection>
             <AnimatedSection animation="fadeIn" delay={0.2}>
               <div className="flex items-center gap-3 group cursor-default">
                 <Disc3 className="w-6 h-6 text-accent-primary animate-spin-slow group-hover:text-white transition-colors" />
-                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">Classic Blues</span>
+                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">{setlistPage?.statsLabel2 || 'Classic Blues'}</span>
               </div>
             </AnimatedSection>
             <AnimatedSection animation="fadeIn" delay={0.3}>
               <div className="flex flex-col items-center group cursor-default">
-                <span className="text-4xl md:text-5xl font-bebas text-accent-primary animate-count">Live</span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">Performance Ready</span>
+                <span className="text-4xl md:text-5xl font-bebas text-accent-primary animate-count">{setlistPage?.statsValue3 || 'Live'}</span>
+                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">{setlistPage?.statsLabel3 || 'Performance Ready'}</span>
               </div>
             </AnimatedSection>
           </div>
@@ -114,12 +128,12 @@ export default async function SetlistPage() {
               <div className="space-y-12">
                 <AnimatedSection animation="fadeIn">
                   <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-center text-text-primary mb-12">
-                    The Repertoire
+                    {setlistPage?.repertoireHeading || 'The Repertoire'}
                   </h2>
                 </AnimatedSection>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {songs.map((song: any, index: number) => (
+                  {songs.map((song: Song, index: number) => (
                     <AnimatedSection
                       key={song._id}
                       animation="fadeUp"
@@ -178,7 +192,7 @@ export default async function SetlistPage() {
                 <AnimatedSection animation="fadeIn" delay={0.5}>
                   <div className="text-center mt-12 pt-12 border-t border-border">
                     <p className="text-text-muted">
-                      <span className="text-accent-primary font-bold">{songs.length}</span> songs ready for your event
+                      <span className="text-accent-primary font-bold">{songs.length}</span>{setlistPage?.songCountSummaryText || ' songs ready for your event'}
                     </p>
                   </div>
                 </AnimatedSection>
@@ -209,16 +223,16 @@ export default async function SetlistPage() {
               <div className="bg-surface-elevated border border-border p-8 md:p-12 text-center">
                 <Guitar className="w-12 h-12 text-accent-primary mx-auto mb-6" />
                 <h3 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-4">
-                  Have a Special Request?
+                  {setlistPage?.requestHeading || 'Have a Special Request?'}
                 </h3>
                 <p className="text-text-secondary mb-6 max-w-xl mx-auto">
-                  Looking for a specific blues classic not on the list? Get in touch and let&apos;s talk about adding it to the setlist for your event.
+                  {setlistPage?.requestText || 'Looking for a specific blues classic not on the list? Get in touch and let\'s talk about adding it to the setlist for your event.'}
                 </p>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-primary/80 font-bold uppercase tracking-wider transition-colors"
                 >
-                  Make a Request
+                  {setlistPage?.requestButtonText || 'Make a Request'}
                   <ChevronRight className="w-5 h-5" />
                 </Link>
               </div>

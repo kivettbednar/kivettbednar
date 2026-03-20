@@ -7,16 +7,28 @@ import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {Mail, Calendar, Music, Instagram, Facebook, Youtube, MapPin, ChevronRight, ExternalLink} from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Contact | Kivett Bednar',
-  description: 'Get in touch',
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  try {
+    const {data: contactPage} = await sanityFetch({query: contactPageQuery})
+    return {
+      title: contactPage?.seoTitle || 'Contact | Kivett Bednar',
+      description: contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries',
+      alternates: { canonical: `${baseUrl}/contact` },
+    }
+  } catch {
+    return {
+      title: 'Contact | Kivett Bednar',
+      description: 'Get in touch',
+    }
+  }
 }
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
 
 // Social platform icons mapping
-const socialIcons: Record<string, any> = {
+const socialIcons: Record<string, React.ComponentType<{className?: string}>> = {
   instagram: Instagram,
   facebook: Facebook,
   youtube: Youtube,
@@ -67,7 +79,7 @@ export default async function ContactPage() {
                   <div className="h-px bg-accent-primary w-12" />
                 </div>
                 <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary">
-                  Let&apos;s Connect
+                  {contactPage?.connectHeading || "Let's Connect"}
                 </h2>
               </div>
             </AnimatedSection>
@@ -138,13 +150,13 @@ export default async function ContactPage() {
 
                     {/* Content */}
                     <h3 className="font-bebas text-2xl uppercase tracking-wide mb-2 text-text-primary group-hover:text-accent-primary transition-colors">
-                      Book a Show
+                      {contactPage?.bookingCardTitle || 'Book a Show'}
                     </h3>
                     <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                      Looking for live blues at your venue or private event? Check out upcoming shows or reach out to discuss booking.
+                      {contactPage?.bookingCardDescription || 'Looking for live blues at your venue or private event? Check out upcoming shows or reach out to discuss booking.'}
                     </p>
                     <span className="text-accent-primary font-bold text-sm uppercase tracking-wider">
-                      View Shows →
+                      {contactPage?.bookingCardLinkText || 'View Shows →'}
                     </span>
 
                     {/* Arrow indicator */}
@@ -179,13 +191,13 @@ export default async function ContactPage() {
 
                     {/* Content */}
                     <h3 className="font-bebas text-2xl uppercase tracking-wide mb-2 text-text-primary group-hover:text-accent-primary transition-colors">
-                      Guitar Lessons
+                      {contactPage?.lessonsCardTitle || 'Guitar Lessons'}
                     </h3>
                     <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                      Learn blues guitar from decades of experience. All skill levels welcome — from beginners to advanced players.
+                      {contactPage?.lessonsCardDescription || 'Learn blues guitar from decades of experience. All skill levels welcome — from beginners to advanced players.'}
                     </p>
                     <span className="text-accent-primary font-bold text-sm uppercase tracking-wider">
-                      Learn More →
+                      {contactPage?.lessonsCardLinkText || 'Learn More →'}
                     </span>
 
                     {/* Arrow indicator */}
@@ -202,7 +214,7 @@ export default async function ContactPage() {
               {/* Location Card - Interactive */}
               <AnimatedSection animation="fadeUp" delay={0.4}>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Portland+Oregon"
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contactPage?.locationMapQuery || 'Portland Oregon')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group block h-full"
@@ -222,16 +234,16 @@ export default async function ContactPage() {
 
                     {/* Content */}
                     <h3 className="font-bebas text-2xl uppercase tracking-wide mb-2 text-text-primary group-hover:text-accent-primary transition-colors">
-                      Based In
+                      {contactPage?.locationCardTitle || 'Based In'}
                     </h3>
                     <p className="text-accent-primary font-bold text-lg mb-4">
-                      Pacific Northwest
+                      {contactPage?.locationCardRegion || 'Pacific Northwest'}
                     </p>
                     <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                      Gritty Texas Blues meets the heart of the Pacific Northwest. Available for shows and events throughout the region.
+                      {contactPage?.locationCardDescription || 'Gritty Texas Blues meets the heart of the Pacific Northwest. Available for shows and events throughout the region.'}
                     </p>
                     <span className="text-accent-primary font-bold text-sm uppercase tracking-wider">
-                      View on Map →
+                      {contactPage?.locationCardLinkText || 'View on Map →'}
                     </span>
 
                     {/* Arrow indicator */}
@@ -260,18 +272,18 @@ export default async function ContactPage() {
                     {contactPage?.socialHeading || 'Follow the Journey'}
                   </h2>
                   <p className="text-text-secondary">
-                    Stay connected for show updates, behind-the-scenes content, and more
+                    {contactPage?.socialSubheading || 'Stay connected for show updates, behind-the-scenes content, and more'}
                   </p>
                 </div>
               </AnimatedSection>
 
               <div className="flex flex-wrap justify-center gap-4">
-                {settings.socialLinks.map((link: any, index: number) => {
-                  const IconComponent = socialIcons[link.platform?.toLowerCase()] || ExternalLink
+                {settings.socialLinks.map((link: {platform: string | null; url: string | null}, index: number) => {
+                  const IconComponent = socialIcons[link.platform?.toLowerCase() ?? ''] || ExternalLink
                   return (
-                    <AnimatedSection key={link.url} animation="fadeUp" delay={0.1 * index}>
+                    <AnimatedSection key={link.url || index} animation="fadeUp" delay={0.1 * index}>
                       <a
-                        href={link.url}
+                        href={link.url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center gap-3 px-6 py-4 bg-surface-elevated border border-border hover:border-accent-primary/50 transition-all duration-300"
@@ -294,9 +306,9 @@ export default async function ContactPage() {
       {/* Portrait Gallery */}
       {(() => {
         const validImages = contactPage?.portraitGallery
-          ?.filter((img: any) => img.image?.asset?.url)
-          .map((img: any) => ({
-            src: img.image.asset.url,
+          ?.filter((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => img.image?.asset?.url)
+          .map((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => ({
+            src: img.image!.asset!.url!,
             alt: img.alt || img.image?.alt || 'Portrait photo',
             caption: img.caption || '',
           })) || []

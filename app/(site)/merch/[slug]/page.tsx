@@ -2,7 +2,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {productBySlugQuery, relatedProductsByCategoryQuery} from '@/sanity/lib/queries'
+import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery} from '@/sanity/lib/queries'
 import {ProductPageContent} from './ProductPageContent'
 import {urlFor} from '@/sanity/lib/image'
 
@@ -27,52 +27,56 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     console.warn(`Failed to fetch product metadata for slug: ${slug}`, error)
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
+  const canonicalUrl = `${baseUrl}/merch/${slug}`
+  const ogImageUrl = product?.seo?.ogImage?.asset?.url
+    || (product?.images?.[0]?.asset?.url ? urlFor(product.images[0].asset).width(1200).height(630).url() : undefined)
+
   return {
-    title: product?.title ? `${product.title} | Kivett Bednar` : 'Product | Kivett Bednar',
+    title: product?.seo?.title || (product?.title ? `${product.title} | Kivett Bednar` : 'Product | Kivett Bednar'),
     description: product?.seo?.description || 'Product details',
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: product?.seo?.title || product?.title || 'Product | Kivett Bednar',
+      description: product?.seo?.description || 'Product details',
+      url: canonicalUrl,
+      type: 'website',
+      ...(ogImageUrl && {
+        images: [{url: ogImageUrl, width: 1200, height: 630, alt: product?.title || 'Product'}],
+      }),
+    },
+    twitter: {
+      card: ogImageUrl ? 'summary_large_image' : 'summary',
+      title: product?.seo?.title || product?.title || 'Product | Kivett Bednar',
+      description: product?.seo?.description || 'Product details',
+      ...(ogImageUrl && {images: [ogImageUrl]}),
+    },
   }
 }
 
 export default async function ProductPage({params}: Props) {
   const {slug} = await params
 
-  // Fetch product and related products in parallel
-  const [productResult, relatedProductsResult] = await Promise.allSettled([
-    sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data),
-    // Pre-fetch related products query (will be resolved after we have product data)
-    sanityFetch({query: productBySlugQuery, params: {slug}})
-      .then(async (r) => {
-        const prod = r.data
-        if (!prod) return []
-
-        // If product has explicit related products, use those
-        if (prod.relatedProducts && prod.relatedProducts.length > 0) {
-          return prod.relatedProducts
-        }
-
-        // Otherwise fetch by category
-        if (prod.category) {
-          return sanityFetch({
-            query: relatedProductsByCategoryQuery,
-            params: {
-              category: prod.category,
-              excludeId: prod._id,
-              limit: 4,
-            },
-          }).then((r) => r.data || [])
-        }
-
-        return []
-      })
-      .catch(() => [])
-  ])
-
-  const product = productResult.status === 'fulfilled' ? productResult.value : null
-  const relatedProducts = relatedProductsResult.status === 'fulfilled' ? relatedProductsResult.value : []
+  // Fetch product once, then resolve related products
+  const product = await sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data)
 
   if (!product) {
     notFound()
   }
+
+  let relatedProducts: unknown[] = []
+  try {
+    if (product.relatedProducts?.length > 0) {
+      relatedProducts = product.relatedProducts
+    } else if (product.category) {
+      relatedProducts = await sanityFetch({
+        query: relatedProductsByCategoryQuery,
+        params: {category: product.category, excludeId: product._id, limit: 4},
+      }).then((r) => r.data || [])
+    }
+  } catch { /* related products are non-critical */ }
 
   const price = product.priceCents ? (product.priceCents / 100).toFixed(2) : '0.00'
 
@@ -84,7 +88,7 @@ export default async function ProductPage({params}: Props) {
     : undefined
 
   const thumbnailImages = product.images && product.images.length > 1
-    ? product.images.slice(1, 5).map((img: any) => ({
+    ? product.images.slice(1, 5).map((img: {asset: {url?: string}; alt?: string}) => ({
         url: urlFor(img.asset).width(200).height(200).url(),
         alt: img.alt || ''
       }))
@@ -92,7 +96,7 @@ export default async function ProductPage({params}: Props) {
 
   // Build all images for lightbox (larger resolution)
   const allImages = product.images
-    ? product.images.map((img: any) => ({
+    ? product.images.map((img: {asset: {url?: string}; alt?: string}) => ({
         url: urlFor(img.asset).width(1600).height(1600).url(),
         alt: img.alt || product.title || 'Product image'
       }))
@@ -117,6 +121,14 @@ export default async function ProductPage({params}: Props) {
     },
   }
 
+  // Fetch merch page settings for trust badges
+  let merchPage = null
+  try {
+    merchPage = await sanityFetch({query: merchPageQuery}).then((r) => r.data)
+  } catch (e) {
+    // Trust badges are non-critical, fallback to defaults
+  }
+
   return (
     <>
       <script
@@ -130,7 +142,8 @@ export default async function ProductPage({params}: Props) {
         mainImageUrl={mainImageUrl}
         thumbnailImages={thumbnailImages}
         allImages={allImages}
-        relatedProducts={relatedProducts}
+        relatedProducts={relatedProducts as import('@/types/product').ProductListItem[]}
+        trustBadges={merchPage?.trustBadges}
       />
     </>
   )

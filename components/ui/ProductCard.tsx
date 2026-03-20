@@ -15,7 +15,7 @@ type Product = {
   title: string
   slug: string
   images: Array<SanityImageWithPositioning & {
-    alt: string
+    alt?: string
   }>
   priceCents: number
   compareAtPriceCents?: number

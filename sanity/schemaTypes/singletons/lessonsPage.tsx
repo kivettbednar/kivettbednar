@@ -1,5 +1,7 @@
 import {BookIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
+import {seoFields} from '@/sanity/lib/schema-fields'
 
 /**
  * Lessons Page singleton schema
@@ -36,44 +38,52 @@ export const lessonsPage = defineType({
           title: 'Alt Text',
           type: 'string',
               initialValue: 'Kivett Bednar teaching guitar',        }),
-        defineField({
-          name: 'desktopPosition',
-          title: 'Desktop Position (Optional)',
-          type: 'string',
-          description: 'Override image position on desktop screens',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top-left'},
-              {title: 'Top Center', value: 'top-center'},
-              {title: 'Top Right', value: 'top-right'},
-              {title: 'Center Left', value: 'center-left'},
-              {title: 'Center', value: 'center'},
-              {title: 'Center Right', value: 'center-right'},
-              {title: 'Bottom Left', value: 'bottom-left'},
-              {title: 'Bottom Center', value: 'bottom-center'},
-              {title: 'Bottom Right', value: 'bottom-right'},
-            ],
-            layout: 'dropdown',
-          },
-        }),
-        defineField({
-          name: 'mobilePosition',
-          title: 'Mobile Position (Optional)',
-          type: 'string',
-          description: 'Override image position on mobile screens',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top-left'},
-              {title: 'Top Center', value: 'top-center'},
-              {title: 'Top Right', value: 'top-right'},
-              {title: 'Center Left', value: 'center-left'},
-              {title: 'Center', value: 'center'},
-              {title: 'Center Right', value: 'center-right'},
-              {title: 'Bottom Left', value: 'bottom-left'},
-              {title: 'Bottom Center', value: 'bottom-center'},
-              {title: 'Bottom Right', value: 'bottom-right'},
-            ],
-            layout: 'dropdown',
+        ...imagePositionFields,
+      ],
+    }),
+
+    // Stats Banner (editable counters)
+    defineField({
+      name: 'stats',
+      title: 'Stats Banner',
+      type: 'array',
+      description: 'Editable stats shown in the credentials banner (e.g., "20+ Years Experience")',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'stat',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'e.g., "Years Experience", "Students Taught"',
+            }),
+            defineField({
+              name: 'value',
+              title: 'Value',
+              type: 'string',
+              description: 'e.g., "20", "500", "All"',
+            }),
+            defineField({
+              name: 'suffix',
+              title: 'Suffix',
+              type: 'string',
+              description: 'e.g., "+" (appears after the number)',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'label',
+              value: 'value',
+              suffix: 'suffix',
+            },
+            prepare({title, value, suffix}) {
+              return {
+                title: title || 'Stat',
+                subtitle: `${value || ''}${suffix || ''}`,
+              }
+            },
           },
         }),
       ],
@@ -105,6 +115,7 @@ export const lessonsPage = defineType({
           title: 'Alt Text',
           type: 'string',
               initialValue: 'Kivett Bednar teaching guitar',        }),
+        ...imagePositionFields,
       ],
     }),
 
@@ -177,6 +188,7 @@ export const lessonsPage = defineType({
           title: 'Alt Text',
           type: 'string',
               initialValue: 'Kivett Bednar teaching guitar',        }),
+        ...imagePositionFields,
       ],
     }),
     defineField({
@@ -193,6 +205,7 @@ export const lessonsPage = defineType({
           title: 'Alt Text',
           type: 'string',
               initialValue: 'Kivett Bednar teaching guitar',        }),
+        ...imagePositionFields,
       ],
     }),
 
@@ -211,6 +224,24 @@ export const lessonsPage = defineType({
       description: 'Text for schedule button in CTA box',
       initialValue: 'Schedule a Lesson',
     }),
+
+    // Testimonial Quote Section
+    defineField({
+      name: 'testimonialQuote',
+      title: 'Testimonial Quote',
+      type: 'text',
+      rows: 3,
+      description: 'Quote displayed at the bottom of the lessons page',
+      initialValue: "Music isn't just about the notes you play — it's about the story you tell and the feeling you share.",
+    }),
+    defineField({
+      name: 'testimonialAttribution',
+      title: 'Quote Attribution',
+      type: 'string',
+      description: 'Who the quote is attributed to',
+      initialValue: 'Kivett Bednar',
+    }),
+    ...seoFields,
   ],
   preview: {
     prepare() {

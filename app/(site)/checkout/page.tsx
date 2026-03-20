@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {useCart} from '@/components/ui/CartContext'
 import {useFormValidation} from '@/hooks/useFormValidation'
@@ -9,6 +9,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {motion} from 'framer-motion'
 import {ShieldCheck, Lock, Truck, CreditCard, CheckCircle, ChevronRight} from 'lucide-react'
+import {clientBrowser} from '@/sanity/lib/client-browser'
+import {checkoutSettingsQuery} from '@/sanity/lib/queries'
 
 export default function CheckoutPage() {
   const {items, totalCents} = useCart()
@@ -24,6 +26,15 @@ export default function CheckoutPage() {
     country: 'US',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [checkoutSettings, setCheckoutSettings] = useState<{
+    trustBadges?: Array<{_key?: string; title: string; description: string; icon: string}>
+    deliveryEstimateText?: string
+    [key: string]: unknown
+  } | null>(null)
+
+  useEffect(() => {
+    clientBrowser.fetch(checkoutSettingsQuery).then(setCheckoutSettings).catch(() => {})
+  }, [])
 
   // Form validation
   const {errors, touched, validateAll, handleBlur, handleChange: validateChange} = useFormValidation({
@@ -186,6 +197,15 @@ export default function CheckoutPage() {
               <h1 className="font-bebas text-5xl md:text-6xl uppercase tracking-wide text-text-primary text-center">
                 Complete Your Order
               </h1>
+              {/* Demo Mode Banner */}
+              <div className="mt-6 bg-amber-500/10 border border-amber-500/30 px-6 py-4 text-center">
+                <p className="text-amber-400 font-bold text-sm uppercase tracking-wide">
+                  Demo Mode
+                </p>
+                <p className="text-text-muted text-sm mt-1">
+                  This is a preview checkout. Payment processing will be enabled soon.
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -328,9 +348,13 @@ export default function CheckoutPage() {
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
                             <option value="GB">United Kingdom</option>
-                            <option value="AU">Australia</option>
+                            <option value="IE">Ireland</option>
                             <option value="DE">Germany</option>
                             <option value="FR">France</option>
+                            <option value="ES">Spain</option>
+                            <option value="IT">Italy</option>
+                            <option value="AU">Australia</option>
+                            <option value="NZ">New Zealand</option>
                           </select>
                         </div>
                       </div>
@@ -344,38 +368,28 @@ export default function CheckoutPage() {
                     transition={{delay: 0.4}}
                     className="grid grid-cols-1 sm:grid-cols-3 gap-4"
                   >
-                    {/* Secure Payment */}
-                    <div className="bg-surface-elevated border border-border p-4 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
-                        <Lock className="w-5 h-5 text-accent-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-wide text-text-primary">Secure</p>
-                        <p className="text-xs text-text-muted">256-bit SSL</p>
-                      </div>
-                    </div>
-
-                    {/* Free Shipping */}
-                    <div className="bg-surface-elevated border border-border p-4 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
-                        <Truck className="w-5 h-5 text-accent-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-wide text-text-primary">Free Shipping</p>
-                        <p className="text-xs text-text-muted">On all orders</p>
-                      </div>
-                    </div>
-
-                    {/* Money Back */}
-                    <div className="bg-surface-elevated border border-border p-4 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
-                        <ShieldCheck className="w-5 h-5 text-accent-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-wide text-text-primary">Guarantee</p>
-                        <p className="text-xs text-text-muted">30-day returns</p>
-                      </div>
-                    </div>
+                    {(checkoutSettings?.trustBadges && checkoutSettings.trustBadges.length > 0
+                      ? checkoutSettings.trustBadges
+                      : [
+                          {_key: 'secure', title: 'Secure', description: '256-bit SSL', icon: 'lock'},
+                          {_key: 'shipping', title: 'Free Shipping', description: 'On all orders', icon: 'truck'},
+                          {_key: 'guarantee', title: 'Guarantee', description: '30-day returns', icon: 'shield'},
+                        ]
+                    ).map((badge: {_key?: string; title: string; description: string; icon: string}) => {
+                      const iconMap: Record<string, React.ComponentType<{className?: string}>> = { lock: Lock, truck: Truck, shield: ShieldCheck }
+                      const IconComponent = iconMap[badge.icon] || ShieldCheck
+                      return (
+                        <div key={badge._key || badge.title} className="bg-surface-elevated border border-border p-4 flex items-center gap-3">
+                          <div className="w-10 h-10 bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
+                            <IconComponent className="w-5 h-5 text-accent-primary" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold uppercase tracking-wide text-text-primary">{badge.title}</p>
+                            <p className="text-xs text-text-muted">{badge.description}</p>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </motion.div>
 
                   {/* Delivery Estimate */}
@@ -392,8 +406,7 @@ export default function CheckoutPage() {
                           Estimated Delivery
                         </h4>
                         <p className="text-text-secondary text-sm">
-                          Your order will arrive in <span className="text-accent-primary font-bold">3-5 business days</span> after processing.
-                          You&apos;ll receive tracking information via email.
+                          {checkoutSettings?.deliveryEstimateText || 'Your order will arrive in 3-5 business days after processing. You\'ll receive tracking information via email.'}
                         </p>
                       </div>
                     </div>
@@ -471,7 +484,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-text-secondary">Tax</span>
-                        <span className="text-text-muted">$0.00</span>
+                        <span className="text-text-muted text-xs">Calculated at checkout</span>
                       </div>
                     </div>
 
@@ -497,7 +510,7 @@ export default function CheckoutPage() {
                       ) : (
                         <>
                           <Lock className="w-5 h-5" />
-                          Place Order
+                          Submit Demo Order
                           <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </>
                       )}

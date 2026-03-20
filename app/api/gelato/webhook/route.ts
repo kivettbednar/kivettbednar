@@ -1,4 +1,5 @@
 import {NextRequest, NextResponse} from 'next/server'
+import crypto from 'crypto'
 
 export const runtime = 'nodejs'
 
@@ -8,17 +9,22 @@ export const runtime = 'nodejs'
  * Updates Sanity orders with latest status, tracking info, etc.
  */
 export async function POST(req: NextRequest) {
-  // Verify webhook signature if secret is configured
+  // Verify webhook signature
   const secret = process.env.GELATO_WEBHOOK_SECRET
-  if (secret && secret !== 'placeholder') {
-    const sig = req.headers.get('x-gelato-signature') || req.headers.get('x-signature')
-    if (sig !== secret) {
-      console.warn('Gelato webhook: Invalid signature')
-      return new NextResponse('Invalid signature', {status: 401})
-    }
+  if (!secret) {
+    console.warn('Gelato webhook: GELATO_WEBHOOK_SECRET not configured')
+    return new NextResponse('Webhook secret not configured', {status: 501})
+  }
+  const sig = req.headers.get('x-gelato-signature') || req.headers.get('x-signature')
+  const sigBuf = Buffer.from(sig || '')
+  const secretBuf = Buffer.from(secret)
+  if (sigBuf.length !== secretBuf.length || !crypto.timingSafeEqual(sigBuf, secretBuf)) {
+    console.warn('Gelato webhook: Invalid signature')
+    return new NextResponse('Invalid signature', {status: 401})
   }
 
-  let data: any
+  // Webhook payload is untyped external data
+  let data: Record<string, any> | null
   try {
     data = await req.json()
   } catch (error) {
@@ -43,17 +49,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ok: true, message: 'No order ID found'})
     }
 
-    console.log(`Gelato webhook: Received event for order ${gelatoOrderId}`, {
-      status,
-      trackingNumber,
-      carrier,
-    })
-
     // Update order in Sanity
-    const {createClient} = await import('next-sanity')
-    const {projectId, dataset, apiVersion} = await import('@/sanity/lib/api')
-    const {token} = await import('@/sanity/lib/token')
-    const writeClient = createClient({projectId, dataset, apiVersion, token, useCdn: false})
+    const {writeClient} = await import('@/sanity/lib/write-client')
 
     // Find the order
     const existingOrder = await writeClient
@@ -66,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Build update payload
-    const updateData: any = {
+    const updateData: Record<string, string> = {
       updatedAt: new Date().toISOString(),
     }
 
@@ -89,7 +86,22 @@ export async function POST(req: NextRequest) {
       .set(updateData)
       .commit()
 
-    console.log(`Gelato webhook: Updated order ${existingOrder._id}`, updateData)
+    // Send shipping update email if tracking info received
+    if (trackingNumber && existingOrder.email) {
+      try {
+        const {sendShippingUpdate} = await import('@/lib/email')
+        await sendShippingUpdate({
+          orderId: existingOrder._id,
+          email: existingOrder.email,
+          name: existingOrder.name || undefined,
+          trackingNumber,
+          trackingUrl,
+          carrier,
+        })
+      } catch (e) {
+        console.error('Failed to send shipping update email:', e)
+      }
+    }
 
     return NextResponse.json({
       ok: true,
@@ -97,13 +109,12 @@ export async function POST(req: NextRequest) {
       gelatoOrderId,
       updated: Object.keys(updateData),
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Gelato webhook: Processing error', error)
     return NextResponse.json(
       {
         ok: false,
         error: 'Internal server error',
-        message: error.message,
       },
       {status: 500}
     )

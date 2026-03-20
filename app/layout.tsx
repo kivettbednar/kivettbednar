@@ -1,5 +1,6 @@
 import './globals.css'
 
+import {Inter, Playfair_Display, Anton} from 'next/font/google'
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
 import {draftMode} from 'next/headers'
@@ -15,12 +16,34 @@ import {settingsQuery} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage} from '@/sanity/lib/utils'
 import {handleError} from './client-utils'
 
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  display: 'swap',
+  variable: '--font-inter-nf',
+})
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-playfair-nf',
+})
+
+const anton = Anton({
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
+  variable: '--font-anton-nf',
+})
+
 /**
  * Generate metadata for the page.
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
  */
 export async function generateMetadata(): Promise<Metadata> {
-  let settings: any
+  let settings: import('@/sanity.types').SettingsQueryResult | null
   try {
     settings = await client.fetch(
       settingsQuery,
@@ -63,7 +86,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <html lang="en" className="bg-white text-black">
+    <html lang="en" className={`bg-white text-black ${inter.variable} ${playfairDisplay.variable} ${anton.variable}`}>
       <body className="overflow-x-hidden">
         <GrainOverlay />
         <section className="min-h-screen">

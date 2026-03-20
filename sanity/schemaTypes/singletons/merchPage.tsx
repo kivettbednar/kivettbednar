@@ -1,5 +1,7 @@
 import {BasketIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
+import {seoFields} from '@/sanity/lib/schema-fields'
 
 /**
  * Merch Page singleton schema - content for the merchandise page
@@ -40,46 +42,7 @@ export const merchPage = defineType({
           type: 'string',
               initialValue: 'Kivett Bednar merchandise',
         }),
-        defineField({
-          name: 'desktopPosition',
-          title: 'Desktop Position (Optional)',
-          type: 'string',
-          description: 'Override image position on desktop screens',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top-left'},
-              {title: 'Top Center', value: 'top-center'},
-              {title: 'Top Right', value: 'top-right'},
-              {title: 'Center Left', value: 'center-left'},
-              {title: 'Center', value: 'center'},
-              {title: 'Center Right', value: 'center-right'},
-              {title: 'Bottom Left', value: 'bottom-left'},
-              {title: 'Bottom Center', value: 'bottom-center'},
-              {title: 'Bottom Right', value: 'bottom-right'},
-            ],
-            layout: 'dropdown',
-          },
-        }),
-        defineField({
-          name: 'mobilePosition',
-          title: 'Mobile Position (Optional)',
-          type: 'string',
-          description: 'Override image position on mobile screens',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top-left'},
-              {title: 'Top Center', value: 'top-center'},
-              {title: 'Top Right', value: 'top-right'},
-              {title: 'Center Left', value: 'center-left'},
-              {title: 'Center', value: 'center'},
-              {title: 'Center Right', value: 'center-right'},
-              {title: 'Bottom Left', value: 'bottom-left'},
-              {title: 'Bottom Center', value: 'bottom-center'},
-              {title: 'Bottom Right', value: 'bottom-right'},
-            ],
-            layout: 'dropdown',
-          },
-        }),
+        ...imagePositionFields,
       ],
     }),
 
@@ -143,6 +106,42 @@ export const merchPage = defineType({
       description: 'Subtitle for products section',
       initialValue: 'Support the music and show your blues pride',
     }),
+    defineField({
+      name: 'trustBadges',
+      title: 'Product Trust Badges',
+      type: 'array',
+      description: 'Trust badges shown on product detail pages (e.g., "Authentic", "Free Shipping")',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'trustBadge',
+          fields: [
+            defineField({name: 'title', title: 'Title', type: 'string'}),
+            defineField({name: 'description', title: 'Description', type: 'string'}),
+            defineField({
+              name: 'icon',
+              title: 'Icon',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Shield', value: 'shield'},
+                  {title: 'Star', value: 'star'},
+                  {title: 'Truck', value: 'truck'},
+                  {title: 'Guitar', value: 'guitar'},
+                  {title: 'Package', value: 'package'},
+                  {title: 'Sparkles', value: 'sparkles'},
+                ],
+                layout: 'dropdown',
+              },
+            }),
+          ],
+          preview: {
+            select: {title: 'title', subtitle: 'description'},
+          },
+        }),
+      ],
+    }),
+    ...seoFields,
   ],
   preview: {
     prepare() {
