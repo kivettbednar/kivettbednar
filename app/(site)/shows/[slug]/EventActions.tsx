@@ -1,6 +1,7 @@
 'use client'
 
-import {Calendar, Share2} from 'lucide-react'
+import {Calendar, Share2, Check} from 'lucide-react'
+import {useState} from 'react'
 
 interface EventActionsProps {
   title: string
@@ -10,6 +11,40 @@ interface EventActionsProps {
   endDate: string
   description: string
   location: string
+  timezone?: string
+}
+
+/** Escape special characters for ICS text fields (commas, semicolons, backslashes, newlines) */
+function escapeIcsText(text: string): string {
+  return text
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n')
+}
+
+/** Format a date string as ICS local time for a given IANA timezone: YYYYMMDDTHHmmss */
+function formatIcsDateTime(dateStr: string, tz: string): string {
+  try {
+    const date = new Date(dateStr)
+    // Use Intl to get the local date/time parts in the target timezone
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).formatToParts(date)
+
+    const get = (type: string) => parts.find((p) => p.type === type)?.value || '00'
+    return `${get('year')}${get('month')}${get('day')}T${get('hour')}${get('minute')}${get('second')}`
+  } catch {
+    // Fallback: UTC format
+    return new Date(dateStr).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+  }
 }
 
 export function EventActions({
@@ -20,7 +55,10 @@ export function EventActions({
   endDate,
   description,
   location,
+  timezone = 'America/Los_Angeles',
 }: EventActionsProps) {
+  const [copied, setCopied] = useState(false)
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -35,30 +73,34 @@ export function EventActions({
     } else {
       // Fallback to clipboard
       navigator.clipboard.writeText(eventUrl)
-      alert('Link copied to clipboard!')
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     }
   }
 
   const handleAddToCalendar = () => {
-    const eventData = {
-      title: title || 'Event',
-      location: location || venue || 'TBD',
-      startDate,
-      endDate,
-      description: description || title || 'Event',
-    }
+    const eventTitle = escapeIcsText(title || 'Event')
+    const eventLocation = escapeIcsText(location || venue || 'TBD')
+    const eventDescription = escapeIcsText(description || title || 'Event')
+
+    const dtStart = formatIcsDateTime(startDate, timezone)
+    const dtEnd = formatIcsDateTime(endDate, timezone)
+    const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Kivett Bednar//Events//EN
+BEGIN:VTIMEZONE
+TZID:${timezone}
+END:VTIMEZONE
 BEGIN:VEVENT
-UID:${eventData.title.replace(/\s+/g, '-')}-${Date.now()}@kivettbednar.com
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-SUMMARY:${eventData.title}
-LOCATION:${eventData.location}
-DESCRIPTION:${eventData.description}
-DTSTART:${new Date(eventData.startDate).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${new Date(eventData.endDate).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+UID:${(title || 'event').replace(/\s+/g, '-')}-${Date.now()}@kivettbednar.com
+DTSTAMP:${dtstamp}
+SUMMARY:${eventTitle}
+LOCATION:${eventLocation}
+DESCRIPTION:${eventDescription}
+DTSTART;TZID=${timezone}:${dtStart}
+DTEND;TZID=${timezone}:${dtEnd}
 END:VEVENT
 END:VCALENDAR`
     const blob = new Blob([icsContent], {type: 'text/calendar'})
@@ -77,8 +119,17 @@ END:VCALENDAR`
         className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-background hover:bg-accent-primary/10 border border-border hover:border-accent-primary text-text-secondary hover:text-accent-primary rounded transition-all"
         aria-label="Share event"
       >
-        <Share2 className="w-4 h-4" />
-        <span className="text-xs font-medium uppercase tracking-wide hidden sm:inline">Share</span>
+        {copied ? (
+          <>
+            <Check className="w-4 h-4 text-green-500" />
+            <span className="text-xs font-medium uppercase tracking-wide hidden sm:inline text-green-500">Copied!</span>
+          </>
+        ) : (
+          <>
+            <Share2 className="w-4 h-4" />
+            <span className="text-xs font-medium uppercase tracking-wide hidden sm:inline">Share</span>
+          </>
+        )}
       </button>
       <button
         onClick={handleAddToCalendar}

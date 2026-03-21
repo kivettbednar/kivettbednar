@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import {urlFor} from '@/lib/image-positioning'
-import {useState, useEffect} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
 
 type FeatureGridProps = {
@@ -34,14 +34,7 @@ function sectionClasses(variant?: string, pad?: string) {
 }
 
 export function FeatureGrid({items, backgroundVariant, sectionPadding}: FeatureGridProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   if (!items || items.length === 0) return null
 

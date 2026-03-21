@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import {useCart} from './CartContext'
+import {useCart, optionsKey} from './CartContext'
 import {useEffect, useState} from 'react'
 import {motion, AnimatePresence} from 'framer-motion'
 import {X, Minus, Plus, ShoppingBag, Tag, Trash2} from 'lucide-react'
@@ -148,7 +148,8 @@ export function CartDrawer({open, onClose}: {open: boolean; onClose: () => void}
                 </div>
               ) : (
                 items.map((it, index) => {
-                  const optKey = it.options ? Object.entries(it.options).map(([k, v]) => `${k}: ${v}`).join(', ') : ''
+                  const optKey = optionsKey(it.options)
+                  const optDisplay = it.options ? Object.entries(it.options).map(([k, v]) => `${k}: ${v}`).join(', ') : ''
                   return (
                     <motion.div
                       key={it.productId + optKey}
@@ -175,8 +176,8 @@ export function CartDrawer({open, onClose}: {open: boolean; onClose: () => void}
                         >
                           {it.title}
                         </Link>
-                        {optKey && (
-                          <div className="text-xs text-text-muted mt-0.5">{optKey}</div>
+                        {optDisplay && (
+                          <div className="text-xs text-text-muted mt-0.5">{optDisplay}</div>
                         )}
                         <div className="flex items-center justify-between mt-3">
                           {/* Quantity controls */}

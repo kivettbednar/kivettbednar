@@ -25,7 +25,7 @@ type CartState = {
 
 const Ctx = createContext<CartState | null>(null)
 
-function optionsKey(options?: Record<string, string>) {
+export function optionsKey(options?: Record<string, string>) {
   if (!options) return ''
   return Object.entries(options)
     .sort(([a], [b]) => a.localeCompare(b))
@@ -39,9 +39,9 @@ export function CartProvider({children}: {children: React.ReactNode}) {
 
   useEffect(() => {
     setItems(loadCart())
-    // Load promo code from sessionStorage
+    // Load promo code from localStorage
     try {
-      const savedPromo = sessionStorage.getItem('cart-promo-code')
+      const savedPromo = localStorage.getItem('cart-promo-code')
       if (savedPromo) {
         setPromoCode(JSON.parse(savedPromo))
       }
@@ -54,13 +54,13 @@ export function CartProvider({children}: {children: React.ReactNode}) {
     saveCart(items)
   }, [items])
 
-  // Save promo code to sessionStorage when it changes
+  // Save promo code to localStorage when it changes
   useEffect(() => {
     try {
       if (promoCode) {
-        sessionStorage.setItem('cart-promo-code', JSON.stringify(promoCode))
+        localStorage.setItem('cart-promo-code', JSON.stringify(promoCode))
       } else {
-        sessionStorage.removeItem('cart-promo-code')
+        localStorage.removeItem('cart-promo-code')
       }
     } catch (e) {
       // Ignore errors
@@ -99,8 +99,9 @@ export function CartProvider({children}: {children: React.ReactNode}) {
         setItems((prev) => prev.filter((i) => !(i.productId === productId && optionsKey(i.options) === optKey)))
       },
       updateQty: (productId, qty, optKey = '') => {
+        const safeQty = Math.max(1, Math.min(99, qty))
         setItems((prev) =>
-          prev.map((i) => (i.productId === productId && optionsKey(i.options) === optKey ? {...i, quantity: qty} : i)),
+          prev.map((i) => (i.productId === productId && optionsKey(i.options) === optKey ? {...i, quantity: safeQty} : i)),
         )
       },
       clear: () => {

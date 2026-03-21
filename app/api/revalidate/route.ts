@@ -9,8 +9,11 @@ export async function POST(req: NextRequest) {
       slug?: {current: string}
     }>(req, process.env.SANITY_REVALIDATE_SECRET)
 
-    // Validate signature if secret is configured (recommended for production)
-    if (process.env.SANITY_REVALIDATE_SECRET && !isValidSignature) {
+    // Require secret in production — reject all requests if not configured
+    if (!process.env.SANITY_REVALIDATE_SECRET) {
+      return new Response('Revalidation secret not configured', {status: 501})
+    }
+    if (!isValidSignature) {
       return new Response('Invalid signature', {status: 401})
     }
 
@@ -59,6 +62,15 @@ export async function POST(req: NextRequest) {
       case 'merchPage':
         revalidatePath('/merch')
         break
+      case 'product':
+        revalidatePath('/merch')
+        if (body.slug?.current) {
+          revalidatePath(`/merch/${body.slug.current}`)
+        }
+        break
+      case 'song':
+        revalidatePath('/setlist')
+        break
       default:
         // For any other content type, revalidate all pages
         revalidatePath('/', 'layout')
@@ -69,8 +81,8 @@ export async function POST(req: NextRequest) {
       now: Date.now(),
       body,
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err)
-    return new Response(err.message, {status: 500})
+    return new Response('Internal server error', {status: 500})
   }
 }

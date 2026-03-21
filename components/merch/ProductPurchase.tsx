@@ -4,7 +4,10 @@ import {useState} from 'react'
 import {useCart} from '@/components/ui/CartContext'
 import {useToast} from '@/components/ui/Toast'
 
+import {variantOptionValuesToRecord} from '@/types/product'
+
 type ProductOption = {name: string; values: string[]}
+type ProductVariant = {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number; sku?: string}
 
 export function PurchaseSection({
   product,
@@ -16,6 +19,7 @@ export function PurchaseSection({
     priceCents: number
     currency: string
     options: ProductOption[]
+    variants?: ProductVariant[]
     imageUrl?: string
   }
 }) {
@@ -23,8 +27,22 @@ export function PurchaseSection({
   const [quantity, setQuantity] = useState(1)
   const {addItem} = useCart()
   const {showToast} = useToast()
-  const unitPrice = product.priceCents ? (product.priceCents / 100).toFixed(2) : '0.00'
-  const totalPrice = product.priceCents ? ((product.priceCents * quantity) / 100).toFixed(2) : '0.00'
+
+  // Check for variant-specific pricing
+  const effectivePriceCents = (() => {
+    if (!product.variants || !Object.keys(selected).length) return product.priceCents
+    const matchingVariant = product.variants.find((v) => {
+      if (!v.optionValues) return false
+      const ov = variantOptionValuesToRecord(v.optionValues)
+      return Object.entries(selected).every(
+        ([key, val]) => ov[key] === val || ov[key.toLowerCase()] === val
+      )
+    })
+    return matchingVariant?.priceCents || product.priceCents
+  })()
+
+  const unitPrice = effectivePriceCents ? (effectivePriceCents / 100).toFixed(2) : '0.00'
+  const totalPrice = effectivePriceCents ? ((effectivePriceCents * quantity) / 100).toFixed(2) : '0.00'
 
   const handleAddToCart = () => {
     addItem({
@@ -32,7 +50,7 @@ export function PurchaseSection({
       title: product.title,
       slug: product.slug,
       imageUrl: product.imageUrl,
-      priceCents: product.priceCents,
+      priceCents: effectivePriceCents,
       currency: product.currency || 'USD',
       quantity,
       options: Object.keys(selected).length ? selected : undefined,

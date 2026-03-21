@@ -6,7 +6,7 @@ import Image from 'next/image'
 import {ProductCard} from '@/components/ui/ProductCard'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {motion} from 'framer-motion'
-import {Search, Filter, Star, Sparkles} from 'lucide-react'
+import {Search, Filter} from 'lucide-react'
 import type {ProductListItem} from '@/types/product'
 
 type MerchPageData = {

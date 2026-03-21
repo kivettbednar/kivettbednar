@@ -3,6 +3,7 @@
 import {motion} from 'framer-motion'
 import {staggerContainer} from '@/lib/animations'
 import {EventCard} from './EventCard'
+import type {SanityImageWithPositioning} from '@/lib/image-positioning'
 
 type Event = {
   _id: string
@@ -13,10 +14,7 @@ type Event = {
   city: string
   state?: string
   ticketUrl?: string
-  coverImage?: {
-    asset: any
-    alt?: string
-  }
+  coverImage?: SanityImageWithPositioning & {alt?: string}
   isCanceled?: boolean
   isSoldOut?: boolean
 }
@@ -29,7 +27,7 @@ export function ShowsList({events}: {events: Event[]}) {
       animate="visible"
       className="grid gap-8"
     >
-      {events.map((event: any) => (
+      {events.map((event) => (
         <EventCard key={event._id} event={event} />
       ))}
     </motion.div>

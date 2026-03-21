@@ -14,8 +14,9 @@ export const page = defineType({
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Page Name',
       type: 'string',
+      description: 'Internal name used in navigation and the browser tab (e.g., "About")',
       validation: (Rule) => Rule.required().min(2),
     }),
 
@@ -29,8 +30,10 @@ export const page = defineType({
     }),
     defineField({
       name: 'heading',
-      title: 'Heading',
-      type: 'string',    }),
+      title: 'Page Heading',
+      type: 'string',
+      description: 'The large heading displayed on the page itself (can differ from the page name)',
+    }),
     defineField({
       name: 'subheading',
       title: 'Subheading',

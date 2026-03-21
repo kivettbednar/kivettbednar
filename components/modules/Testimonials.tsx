@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
-import {useEffect, useState} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 
 type TestimonialItem = {
   _key: string
@@ -54,13 +54,7 @@ const leadingMap: Record<string, string> = {
 }
 
 export function Testimonials({heading, headingTracking = 'tracking-tight', headingLineHeight = 'leading-tight', backgroundVariant, sectionPadding, items = []}: TestimonialsProps) {
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   if (!items || items.length === 0) return null
 

@@ -1,11 +1,12 @@
 'use client'
 
 import {useState, useEffect, useRef} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {motion, useScroll, useTransform} from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import {cn} from '@/lib/utils'
-import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
+import {getObjectPosition, type SanityImageWithPositioning, type PositionValue} from '@/lib/image-positioning'
 
 // Text size mapping for Tailwind JIT compiler
 const textSizeMap: Record<string, string> = {
@@ -66,7 +67,7 @@ export function HeroSlider({
 }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
   const sectionRef = useRef<HTMLElement>(null)
 
   // Parallax effect: background moves at 50% speed
@@ -75,39 +76,6 @@ export function HeroSlider({
     offset: ['start start', 'end start'],
   })
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, 400])
-
-  // Detect mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) // Tailwind md breakpoint
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  // Debug: Log positioning data
-  useEffect(() => {
-    if (slides.length > 0 && slides[0]) {
-      const slide = slides[0]
-      const activeImage = isMobile && slide.mobileImage?.asset?.url ? slide.mobileImage : slide.image
-      const imageWithPosition = {
-        ...activeImage,
-        desktopPosition: slide.desktopPosition as any,
-        mobilePosition: slide.mobilePosition as any
-      }
-      console.log('Hero Slider Debug:', {
-        isMobile,
-        slide: {
-          desktopPosition: slide.desktopPosition,
-          mobilePosition: slide.mobilePosition,
-          hotspot: activeImage?.hotspot,
-          calculatedPosition: getObjectPosition(imageWithPosition, isMobile)
-        }
-      })
-    }
-  }, [slides, isMobile])
 
   useEffect(() => {
     setIsLoaded(true)
@@ -170,8 +138,8 @@ export function HeroSlider({
                 // Combine image data with slide-level position settings
                 const imageWithPosition = {
                   ...activeImage,
-                  desktopPosition: slide.desktopPosition as any,
-                  mobilePosition: slide.mobilePosition as any
+                  desktopPosition: slide.desktopPosition as PositionValue | undefined,
+                  mobilePosition: slide.mobilePosition as PositionValue | undefined
                 }
 
                 return imageUrl ? (

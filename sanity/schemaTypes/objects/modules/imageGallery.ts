@@ -1,5 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ImagesIcon} from '@sanity/icons'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 export const imageGallery = defineType({
   name: 'imageGallery',
@@ -56,6 +57,7 @@ export const imageGallery = defineType({
               title: 'Caption',
               type: 'string',
             }),
+            ...imagePositionFields,
           ],
         }),
       ],    }),

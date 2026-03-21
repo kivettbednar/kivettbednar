@@ -3,7 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {urlFor} from '@/lib/image-positioning'
-import {useState, useEffect, useCallback} from 'react'
+import {useState, useCallback} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
 import {motion} from 'framer-motion'
 import {ShoppingCart} from 'lucide-react'
@@ -30,7 +31,7 @@ type Product = {
 }
 
 export function ProductCard({product}: {product: Product}) {
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [imageError, setImageError] = useState(false)
   const {addItem} = useCart()
@@ -38,13 +39,6 @@ export function ProductCard({product}: {product: Product}) {
 
   // Check if product has options that require selection
   const hasOptions = product.options && product.options.length > 0
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   // Quick add to cart for products without options
   const handleQuickAdd = useCallback((e: React.MouseEvent) => {

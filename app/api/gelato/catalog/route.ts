@@ -30,12 +30,11 @@ export async function GET(req: Request) {
       count: products.length,
       message: products.length === 0 ? 'Gelato API not configured or no products available' : undefined,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Gelato catalog API error:', error)
     return NextResponse.json(
       {
         error: 'Failed to fetch Gelato catalog',
-        message: error.message,
         configured: false,
       },
       {status: 500}

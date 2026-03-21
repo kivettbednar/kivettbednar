@@ -1,17 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
-import {createClient} from 'next-sanity'
-import {apiVersion, dataset, projectId} from '@/sanity/lib/api'
-import {token} from '@/sanity/lib/token'
+import {writeClient} from '@/sanity/lib/write-client'
 import {z} from 'zod'
-
-// Write client for API routes - no CDN, with token
-const writeClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token,
-})
 
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),

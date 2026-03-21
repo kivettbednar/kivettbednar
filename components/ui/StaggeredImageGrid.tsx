@@ -2,7 +2,8 @@
 
 import {motion} from 'framer-motion'
 import Image from 'next/image'
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
 
 interface StaggeredImageGridProps {
@@ -18,14 +19,7 @@ interface StaggeredImageGridProps {
 
 export function StaggeredImageGrid({images, columns = 3}: StaggeredImageGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <div

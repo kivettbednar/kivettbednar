@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const products = await client.fetch(allProductsQuery)
     return NextResponse.json(products || [])
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching products from Sanity:', error)
     return NextResponse.json([], {status: 500})
   }

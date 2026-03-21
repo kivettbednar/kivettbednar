@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {formatInTimeZone} from 'date-fns-tz'
 import {urlFor} from '@/lib/image-positioning'
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {motion} from 'framer-motion'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
 import {MapPin, Calendar, Clock} from 'lucide-react'
@@ -27,15 +28,8 @@ type Event = {
 }
 
 export function EventCard({event, index = 0}: {event: Event; index?: number}) {
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
   const [imageError, setImageError] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   const eventDate = formatInTimeZone(
     new Date(event.startDateTime),

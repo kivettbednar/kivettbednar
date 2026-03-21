@@ -110,8 +110,11 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   heroSubheading,
   heroTagline,
   heroButtonText,
+  marqueeTopItems[]{text, style},
+  marqueeBottomItems[]{text, style},
   aboutHeading,
   aboutText,
+  aboutVerticalLabel,
   aboutImage{
     asset->{_id, url},
     hotspot,
@@ -124,7 +127,7 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   albumYear,
   albumFormat,
   albumDescription,
-  albumCoverImage{
+  albumImage{
     asset->{_id, url},
     hotspot,
     crop,
@@ -183,6 +186,7 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   featuredVideoHeading,
   featuredVideoSubheading,
   featuredVideoUrl,
+  featuredVideoTitle,
   bookingSectionHeading,
   bookingSectionIntro,
   bookingInquiriesHeading,
@@ -197,9 +201,10 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   studioSectionSubheading,
   studioVideo1Url,
   studioVideo2Url,
+  studioVideo1Title,
+  studioVideo2Title,
   newsletterHeading,
   newsletterText,
-  heroButtonText,
   showAboutSection,
   showAlbumSection,
   showUpcomingShows,
@@ -207,7 +212,9 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   showBookingSection,
   showGallerySection,
   showStudioVideos,
-  showNewsletterSection
+  showNewsletterSection,
+  seoTitle,
+  seoDescription
 }`)
 
 // Lessons Page
@@ -216,6 +223,12 @@ export const lessonsPageQuery = defineQuery(`*[_type == "lessonsPage"][0]{
   heroHeading,
   heroSubheading,
   heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
+  stats[]{
+    _key,
+    label,
+    value,
+    suffix
+  },
   philosophyHeading,
   philosophyText,
   philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
@@ -231,7 +244,11 @@ export const lessonsPageQuery = defineQuery(`*[_type == "lessonsPage"][0]{
   teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
   performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
   emailButtonText,
-  scheduleButtonText
+  scheduleButtonText,
+  testimonialQuote,
+  testimonialAttribution,
+  seoTitle,
+  seoDescription
 }`)
 
 // Contact Page
@@ -243,8 +260,7 @@ export const contactPageQuery = defineQuery(`*[_type == "contactPage"][0]{
   portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
   portraitGallery[]{
     _key,
-    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
-    alt
+    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}
   },
   formHeading,
   directContactHeading,
@@ -257,7 +273,22 @@ export const contactPageQuery = defineQuery(`*[_type == "contactPage"][0]{
   quickLinkSetlistText,
   ctaSectionHeading,
   ctaSectionText,
-  ctaSectionButtonText
+  ctaSectionButtonText,
+  locationMapQuery,
+  connectHeading,
+  bookingCardTitle,
+  bookingCardDescription,
+  bookingCardLinkText,
+  lessonsCardTitle,
+  lessonsCardDescription,
+  lessonsCardLinkText,
+  locationCardTitle,
+  locationCardRegion,
+  locationCardDescription,
+  locationCardLinkText,
+  socialSubheading,
+  seoTitle,
+  seoDescription
 }`)
 
 // Setlist Page
@@ -272,7 +303,18 @@ export const setlistPageQuery = defineQuery(`*[_type == "setlistPage"][0]{
   ctaText,
   ctaBookLessonButtonText,
   ctaContactButtonText,
-  subtitleSuffix
+  subtitleSuffix,
+  repertoireHeading,
+  songCountSummaryText,
+  requestHeading,
+  requestText,
+  requestButtonText,
+  statsLabel1,
+  statsLabel2,
+  statsLabel3,
+  statsValue3,
+  seoTitle,
+  seoDescription
 }`)
 
 // Shows Page
@@ -281,6 +323,7 @@ export const showsPageQuery = defineQuery(`*[_type == "showsPage"][0]{
   heroHeading,
   heroSubheading,
   heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
+  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},
   performanceGalleryHeading,
   performanceGallerySubheading,
   performanceImages[]{
@@ -294,7 +337,25 @@ export const showsPageQuery = defineQuery(`*[_type == "showsPage"][0]{
   emptyStateText,
   showCountPrefix,
   showSingular,
-  showPlural
+  showPlural,
+  statsLabel1,
+  statsLabel2,
+  statsLabel3,
+  eventDetailsLabel,
+  dateTimeLabel,
+  venueLabel,
+  viewOnMapText,
+  getTicketsText,
+  soldOutText,
+  backToShowsText,
+  shareEventText,
+  importantInfoText,
+  canceledBadgeText,
+  soldOutBadgeText,
+  canceledMessageText,
+  seoTitle,
+  seoDescription,
+  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}
 }`)
 
 // Merch Page
@@ -310,7 +371,48 @@ export const merchPageQuery = defineQuery(`*[_type == "merchPage"][0]{
   emptyStateButton2Text,
   emptyStateButton2Link,
   contentHeading,
-  contentSubheading
+  contentSubheading,
+  trustBadges[]{
+    _key,
+    title,
+    description,
+    icon
+  },
+  seoTitle,
+  seoDescription
+}`)
+
+// Checkout Settings
+export const checkoutSettingsQuery = defineQuery(`*[_type == "checkoutSettings"][0]{
+  _id,
+  trustBadges[]{
+    _key,
+    title,
+    description,
+    icon
+  },
+  deliveryEstimateText,
+  secureCheckoutText,
+  cartHeading,
+  cartEmptyHeading,
+  cartEmptyText,
+  cartEmptyButtonText
+}`)
+
+// Order Confirmation Page
+export const orderConfirmationPageQuery = defineQuery(`*[_type == "orderConfirmationPage"][0]{
+  _id,
+  thankYouHeading,
+  orderConfirmedLabel,
+  orderReceivedText,
+  whatsNextHeading,
+  nextStepEmail,
+  nextStepShipping,
+  nextStepTracking,
+  continueShoppingText,
+  viewShowsText,
+  noOrderHeading,
+  noOrderText
 }`)
 
 // Songs
@@ -681,8 +783,12 @@ export const morePostsQuery = defineQuery(`*[_type == "post" && _id != $skip] | 
 }`)
 
 // Sitemap
-export const sitemapQuery = defineQuery(`*[_type in ["page", "product", "post"] && defined(slug.current)] | order(_type asc){
+export const sitemapQuery = defineQuery(`*[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){
   "slug": slug.current,
   _type,
-  _updatedAt
+  _updatedAt,
+  _type == "event" => {
+    startDateTime,
+    isCanceled
+  }
 }`)

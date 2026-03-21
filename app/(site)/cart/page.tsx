@@ -2,15 +2,18 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import {useCart} from '@/components/ui/CartContext'
+import {useCart, optionsKey} from '@/components/ui/CartContext'
 import {useRouter} from 'next/navigation'
 import {PromoCodeInput} from '@/components/ui/PromoCodeInput'
 import {motion} from 'framer-motion'
 import {ShoppingCart, Trash2, ChevronRight, Package, ShieldCheck} from 'lucide-react'
+import {useState, useEffect} from 'react'
 
 export default function CartPage() {
   const {items, totalCents, updateQty, removeItem, clear, promoCode, applyPromoCode, removePromoCode, finalTotalCents} = useCart()
   const router = useRouter()
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   const handleApplyPromo = (discountCents: number, code: string, description?: string) => {
     applyPromoCode(code, discountCents, description)
@@ -20,8 +23,46 @@ export default function CartPage() {
     removePromoCode()
   }
 
-  const proceedToCheckout = () => {
-    router.push('/checkout')
+  const proceedToCheckout = async () => {
+    setCheckoutLoading(true)
+    setCheckoutError(null)
+    try {
+      // Check if Stripe is enabled
+      const statusRes = await fetch('/api/checkout/status')
+      const stripeEnabled = statusRes.ok ? (await statusRes.json()).stripeEnabled : false
+
+      if (stripeEnabled) {
+        // Stripe flow: call checkout API and redirect to Stripe hosted checkout
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            items: items.map(it => ({
+              slug: it.slug,
+              quantity: it.quantity,
+              options: it.options,
+            })),
+            promoCode: promoCode?.code || undefined,
+          }),
+        })
+        const data = await res.json()
+        if (data.url) {
+          window.location.href = data.url
+          return
+        }
+        if (data.error) {
+          setCheckoutError(data.error)
+          setCheckoutLoading(false)
+          return
+        }
+      }
+      // Fallback: demo checkout
+      router.push('/checkout')
+    } catch (err) {
+      console.error('Checkout error:', err)
+      setCheckoutError('Something went wrong. Please try again.')
+      setCheckoutLoading(false)
+    }
   }
 
   return (
@@ -107,7 +148,8 @@ export default function CartPage() {
                 {/* Cart Items */}
                 <div className="lg:col-span-2 space-y-4">
                   {items.map((it, index) => {
-                    const optKey = it.options
+                    const optKey = optionsKey(it.options)
+                    const optDisplay = it.options
                       ? Object.entries(it.options)
                           .map(([k, v]) => `${k}: ${v}`)
                           .join(', ')
@@ -143,9 +185,9 @@ export default function CartPage() {
                                 {it.title}
                               </h3>
                             </Link>
-                            {optKey && (
+                            {optDisplay && (
                               <div className="text-xs sm:text-sm text-text-muted uppercase tracking-wide mt-1">
-                                {optKey}
+                                {optDisplay}
                               </div>
                             )}
                             {/* Price - Mobile only */}
@@ -171,16 +213,16 @@ export default function CartPage() {
                                 onClick={() =>
                                   updateQty(it.productId, Math.max(1, it.quantity - 1), optKey)
                                 }
-                                className="w-8 h-8 sm:w-9 sm:h-9 border border-border hover:border-accent-primary hover:text-accent-primary transition-colors flex items-center justify-center text-lg"
+                                className="w-10 h-10 sm:w-9 sm:h-9 border border-border hover:border-accent-primary hover:text-accent-primary transition-colors flex items-center justify-center text-lg"
                               >
                                 −
                               </button>
-                              <div className="w-12 sm:w-14 h-8 sm:h-9 border border-border bg-background flex items-center justify-center text-text-primary font-bold">
+                              <div className="w-12 sm:w-14 h-10 sm:h-9 border border-border bg-background flex items-center justify-center text-text-primary font-bold">
                                 {it.quantity}
                               </div>
                               <button
                                 onClick={() => updateQty(it.productId, it.quantity + 1, optKey)}
-                                className="w-8 h-8 sm:w-9 sm:h-9 border border-border hover:border-accent-primary hover:text-accent-primary transition-colors flex items-center justify-center text-lg"
+                                className="w-10 h-10 sm:w-9 sm:h-9 border border-border hover:border-accent-primary hover:text-accent-primary transition-colors flex items-center justify-center text-lg"
                               >
                                 +
                               </button>
@@ -281,11 +323,27 @@ export default function CartPage() {
 
                     <button
                       onClick={proceedToCheckout}
-                      className="group w-full bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-lg uppercase tracking-wider py-4 transition-all duration-300 mb-3 flex items-center justify-center gap-2 btn-press"
+                      disabled={checkoutLoading}
+                      className="group w-full bg-accent-primary hover:bg-accent-primary/90 disabled:bg-accent-primary/50 text-black font-bold text-lg uppercase tracking-wider py-4 transition-all duration-300 mb-3 flex items-center justify-center gap-2 btn-press"
                     >
-                      Proceed to Checkout
-                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      {checkoutLoading ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Proceed to Checkout
+                          <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
                     </button>
+
+                    {checkoutError && (
+                      <div className="bg-red-500/10 border border-red-500/30 p-3 mb-3 text-center">
+                        <p className="text-red-400 text-sm font-medium">{checkoutError}</p>
+                      </div>
+                    )}
 
                     <button
                       onClick={clear}

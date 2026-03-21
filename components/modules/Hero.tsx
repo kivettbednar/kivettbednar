@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import {urlFor} from '@/lib/image-positioning'
 import {cn} from '@/lib/utils'
-import {useState, useEffect} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
 
 type HeroProps = {
@@ -85,14 +85,7 @@ export function Hero({
   backgroundVariant = 'default',
   sectionPadding = 'lg',
 }: HeroProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   const sectionPad = sectionPadding === 'none' ? 'py-0' : sectionPadding === 'sm' ? 'py-8' : sectionPadding === 'md' ? 'py-16' : sectionPadding === 'lg' ? 'py-24' : 'py-32'
   const sectionBg = backgroundVariant === 'surface' ? 'bg-surface' : backgroundVariant === 'surface-elevated' ? 'bg-surface-elevated' : backgroundVariant === 'dark-gradient' ? 'bg-gradient-to-b from-background via-surface to-surface-elevated' : ''

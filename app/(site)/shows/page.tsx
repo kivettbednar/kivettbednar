@@ -1,7 +1,6 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
 import {upcomingEventsQuery, showsPageQuery} from '@/sanity/lib/queries'
-import {urlFor} from '@/sanity/lib/image'
 import {EventCard} from '@/components/ui/EventCard'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'

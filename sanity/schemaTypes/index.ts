@@ -20,6 +20,8 @@ import {contactPage} from './singletons/contactPage'
 import {setlistPage} from './singletons/setlistPage'
 import {merchPage} from './singletons/merchPage'
 import {uiText} from './singletons/uiText'
+import {checkoutSettings} from './singletons/checkoutSettings'
+import {orderConfirmationPage} from './singletons/orderConfirmationPage'
 import {song} from './documents/song'
 import {link} from './objects/link'
 import {blockContent} from './objects/blockContent'
@@ -48,6 +50,8 @@ export const schemaTypes = [
   contactPage,
   setlistPage,
   merchPage,
+  checkoutSettings,
+  orderConfirmationPage,
   // Documents
   page,
   post,

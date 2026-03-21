@@ -1,7 +1,7 @@
 'use client'
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useState } from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 
 export function VideoBackground({
   videoSrc,
@@ -14,14 +14,7 @@ export function VideoBackground({
   overlayOpacity?: number
   videoAlt?: string
 }) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <div className="absolute inset-0 overflow-hidden">

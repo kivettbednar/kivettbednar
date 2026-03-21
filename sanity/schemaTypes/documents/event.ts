@@ -1,5 +1,6 @@
 import {CalendarIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 /**
  * Event schema for concerts and performances
@@ -34,7 +35,9 @@ export const event = defineType({
       name: 'title',
       title: 'Event Title',
       type: 'string',
-      group: 'details',    }),
+      group: 'details',
+      validation: (rule) => rule.required().error('Event title is required'),
+    }),
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -45,7 +48,9 @@ export const event = defineType({
         source: 'title',
         maxLength: 96,
         isUnique: (value, context) => context.defaultIsUnique(value, context),
-      },    }),
+      },
+      validation: (rule) => rule.required().error('Slug is required for event URLs'),
+    }),
     defineField({
       name: 'excerpt',
       title: 'Short Description',
@@ -58,7 +63,9 @@ export const event = defineType({
       name: 'startDateTime',
       title: 'Start Date & Time',
       type: 'datetime',
-      group: 'details',      options: {
+      group: 'details',
+      validation: (rule) => rule.required().error('Start date & time is required'),
+      options: {
         dateFormat: 'YYYY-MM-DD',
         timeFormat: 'HH:mm',
         timeStep: 15,
@@ -75,6 +82,14 @@ export const event = defineType({
         timeFormat: 'HH:mm',
         timeStep: 15,
       },
+      validation: (Rule) =>
+        Rule.custom((endDateTime, context) => {
+          const start = context.document?.startDateTime as string | undefined
+          if (!endDateTime || !start) return true
+          return new Date(endDateTime) > new Date(start)
+            ? true
+            : 'End date must be after start date'
+        }),
     }),
     defineField({
       name: 'timezone',
@@ -87,7 +102,9 @@ export const event = defineType({
       name: 'venue',
       title: 'Venue Name',
       type: 'string',
-      group: 'location',    }),
+      group: 'location',
+      validation: (rule) => rule.required().error('Venue name is required'),
+    }),
     defineField({
       name: 'address',
       title: 'Street Address',
@@ -98,7 +115,9 @@ export const event = defineType({
       name: 'city',
       title: 'City',
       type: 'string',
-      group: 'location',    }),
+      group: 'location',
+      validation: (rule) => rule.required().error('City is required'),
+    }),
     defineField({
       name: 'state',
       title: 'State/Province',
@@ -133,44 +152,7 @@ export const event = defineType({
           title: 'Alt Text',
           type: 'string',
         }),
-        defineField({
-          name: 'desktopPosition',
-          title: 'Desktop Image Position',
-          type: 'string',
-          description: 'Override hotspot positioning for desktop',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top left'},
-              {title: 'Top Center', value: 'top center'},
-              {title: 'Top Right', value: 'top right'},
-              {title: 'Center Left', value: 'center left'},
-              {title: 'Center Center', value: 'center center'},
-              {title: 'Center Right', value: 'center right'},
-              {title: 'Bottom Left', value: 'bottom left'},
-              {title: 'Bottom Center', value: 'bottom center'},
-              {title: 'Bottom Right', value: 'bottom right'},
-            ],
-          },
-        }),
-        defineField({
-          name: 'mobilePosition',
-          title: 'Mobile Image Position',
-          type: 'string',
-          description: 'Override hotspot positioning for mobile',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top left'},
-              {title: 'Top Center', value: 'top center'},
-              {title: 'Top Right', value: 'top right'},
-              {title: 'Center Left', value: 'center left'},
-              {title: 'Center Center', value: 'center center'},
-              {title: 'Center Right', value: 'center right'},
-              {title: 'Bottom Left', value: 'bottom left'},
-              {title: 'Bottom Center', value: 'bottom center'},
-              {title: 'Bottom Right', value: 'bottom right'},
-            ],
-          },
-        }),
+        ...imagePositionFields,
       ],
     }),
     defineField({
@@ -188,25 +170,7 @@ export const event = defineType({
           title: 'Alt Text',
           type: 'string',
         }),
-        defineField({
-          name: 'desktopPosition',
-          title: 'Desktop Image Position',
-          type: 'string',
-          description: 'Override hotspot positioning for desktop',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top left'},
-              {title: 'Top Center', value: 'top center'},
-              {title: 'Top Right', value: 'top right'},
-              {title: 'Center Left', value: 'center left'},
-              {title: 'Center Center', value: 'center center'},
-              {title: 'Center Right', value: 'center right'},
-              {title: 'Bottom Left', value: 'bottom left'},
-              {title: 'Bottom Center', value: 'bottom center'},
-              {title: 'Bottom Right', value: 'bottom right'},
-            ],
-          },
-        }),
+        ...imagePositionFields,
       ],
     }),
     defineField({
@@ -224,25 +188,7 @@ export const event = defineType({
           title: 'Alt Text',
           type: 'string',
         }),
-        defineField({
-          name: 'mobilePosition',
-          title: 'Mobile Image Position',
-          type: 'string',
-          description: 'Override hotspot positioning for mobile',
-          options: {
-            list: [
-              {title: 'Top Left', value: 'top left'},
-              {title: 'Top Center', value: 'top center'},
-              {title: 'Top Right', value: 'top right'},
-              {title: 'Center Left', value: 'center left'},
-              {title: 'Center Center', value: 'center center'},
-              {title: 'Center Right', value: 'center right'},
-              {title: 'Bottom Left', value: 'bottom left'},
-              {title: 'Bottom Center', value: 'bottom center'},
-              {title: 'Bottom Right', value: 'bottom right'},
-            ],
-          },
-        }),
+        ...imagePositionFields,
       ],
     }),
     defineField({

@@ -1,160 +1,282 @@
 import {NextRequest, NextResponse} from 'next/server'
 import Stripe from 'stripe'
+import {client} from '@/sanity/lib/client'
+import {productBySlugQuery} from '@/sanity/lib/queries'
+import {createGelatoOrder} from '@/lib/gelato'
+import {getStripe} from '@/lib/stripe'
+import {writeClient} from '@/sanity/lib/write-client'
 
 export const runtime = 'nodejs'
 
+type LineItemMeta = {
+  productId: string
+  slug: string
+  options: Record<string, string>
+}
+
+async function extractLineItemMeta(
+  stripe: Stripe,
+  lineItem: Stripe.LineItem
+): Promise<LineItemMeta | null> {
+  let meta: Record<string, any> | null = null
+
+  if (lineItem.price && typeof lineItem.price.product === 'string') {
+    const price = await stripe.prices.retrieve(lineItem.price.id, {expand: ['product']})
+    meta = (price.product as Stripe.Product).metadata || null
+  } else if (lineItem.price && (lineItem.price.product as any)?.metadata) {
+    meta = (lineItem.price.product as any).metadata || null
+  }
+
+  if (!meta?.productId) return null
+
+  return {
+    productId: meta.productId,
+    slug: meta.slug || '',
+    options: (() => { try { return JSON.parse(meta.options || '{}') } catch { return {} } })(),
+  }
+}
+
 export async function POST(req: NextRequest) {
+  if (process.env.STRIPE_ENABLED !== 'true') {
+    return NextResponse.json({error: 'Stripe webhooks are disabled'}, {status: 501})
+  }
+
+  const stripe = getStripe()
   const secret = process.env.STRIPE_WEBHOOK_SECRET
+  if (!secret) {
+    console.warn('Stripe webhook: STRIPE_WEBHOOK_SECRET not configured')
+    return new NextResponse('Webhook secret not configured', {status: 501})
+  }
+
   const body = await req.text()
   const sig = req.headers.get('stripe-signature') as string
 
   let event: Stripe.Event
-  if (process.env.STRIPE_ENABLED === 'true') {
-    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {apiVersion: '2025-02-24.acacia' as any})
-      event = stripe.webhooks.constructEvent(body, sig, secret || '')
-    } catch (err: any) {
-      return new NextResponse(`Webhook Error: ${err.message}`, {status: 400})
-    }
-  } else {
-    return NextResponse.json({error: 'Stripe webhooks are disabled'}, {status: 501})
+  try {
+    event = stripe.webhooks.constructEvent(body, sig, secret)
+  } catch (err: unknown) {
+    return new NextResponse('Webhook signature verification failed', {status: 400})
   }
 
   try {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session
-      if (process.env.STRIPE_ENABLED === 'true') {
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {apiVersion: '2025-02-24.acacia' as any})
-        // Retrieve line items
-        const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-        // Build Gelato items from metadata
-        const items: any[] = []
-        for (const li of lineItems.data) {
-          const prodId = (li.price?.product as any)?.id // may be undefined when using product_data
-          // when using product_data, metadata is on price?.product? not available; fetch the Price expanded? Simpler: parse from description if not available
-          // Safer: retrieve the Price with expand? Alternatively, we stored metadata on product_data, Stripe attaches it to the generated Product
-          let productMeta: Record<string, any> | null = null
-          if (li.price && typeof li.price.product === 'string') {
-            const price = await stripe.prices.retrieve(li.price.id, {expand: ['product']})
-            const prod = price.product as Stripe.Product
-            productMeta = (prod.metadata || null) as any
-          } else if (li.price && (li.price.product as any)?.metadata) {
-            productMeta = ((li.price.product as any).metadata || null) as any
-          }
-          if (!productMeta) continue
-          const productId = productMeta.productId
-          const slug = productMeta.slug
-          const options = JSON.parse(productMeta.options || '{}')
 
-          // Fetch full product from Sanity
-          const {client: sanityClient} = await import('@/sanity/lib/client')
-          const {productBySlugQuery} = await import('@/sanity/lib/queries')
-          // Note: import type system differs in route; using dynamic import above
-          const product = await sanityClient.fetch(productBySlugQuery, {slug})
-          if (!product || !product.gelatoProductUid) continue
-          const files = (product.printAreas || [])
-            .filter((pa: any) => pa?.artwork?.asset?.url)
-            .map((pa: any) => ({type: pa.areaName || 'front', url: pa.artwork.asset.url}))
-          items.push({
-            productUid: product.gelatoProductUid,
-            quantity: li.quantity || 1,
-            attributes: options,
-            files,
+      // Idempotency check: if order already exists and was fully processed, skip
+      const orderId = `order-${session.id}`
+      const existingOrder = await writeClient.fetch(
+        `*[_type == "order" && _id == $id][0]{ _id, postProcessed }`,
+        {id: orderId}
+      )
+      if (existingOrder?.postProcessed) {
+        return NextResponse.json({received: true})
+      }
+
+      const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
+
+      // Extract metadata for all line items in a single pass
+      const itemsWithMeta: Array<{
+        lineItem: Stripe.LineItem
+        meta: LineItemMeta
+        product: Record<string, any>
+      }> = []
+
+      for (const li of lineItems.data) {
+        const meta = await extractLineItemMeta(stripe, li)
+        if (!meta) continue
+
+        const product = await client.fetch(productBySlugQuery, {slug: meta.slug})
+        if (!product) continue
+
+        itemsWithMeta.push({lineItem: li, meta, product})
+      }
+
+      // Build Gelato order items
+      const gelatoItems = itemsWithMeta
+        .filter(({product}) => product.gelatoProductUid)
+        .map(({lineItem, meta, product}) => ({
+          productUid: product.gelatoProductUid,
+          quantity: lineItem.quantity || 1,
+          attributes: meta.options,
+          files: (product.printAreas || [])
+            .filter((pa: {areaName?: string; artwork?: {asset?: {url?: string}}}) => pa?.artwork?.asset?.url)
+            .map((pa: {areaName?: string; artwork: {asset: {url: string}}}) => ({type: pa.areaName || 'front', url: pa.artwork.asset.url})),
+        }))
+
+      // Build recipient from shipping_details
+      const sd = session.shipping_details
+      const recipient = {
+        addressLine1: sd?.address?.line1 || '',
+        addressLine2: sd?.address?.line2 || undefined,
+        city: sd?.address?.city || '',
+        country: sd?.address?.country || 'US',
+        postalCode: sd?.address?.postal_code || '',
+        state: sd?.address?.state || undefined,
+        name: sd?.name || undefined,
+        email: session.customer_details?.email || undefined,
+      }
+
+      // Create Gelato order
+      let gelatoOrderId: string | undefined
+      let gelatoError: string | undefined
+      if (gelatoItems.length > 0) {
+        try {
+          const gelato = await createGelatoOrder({
+            recipient,
+            items: gelatoItems,
+            marketplaceOrderId: session.id,
+            currency: session.currency?.toUpperCase() || 'USD',
+            itemPrices: gelatoItems.map((item, index) => {
+              const match = itemsWithMeta.find(({product}) => product.gelatoProductUid === item.productUid)
+              return {itemIndex: index, priceCents: match?.lineItem.price?.unit_amount || 0}
+            }),
           })
-        }
-
-        // Build recipient from shipping_details
-        const sd = session.shipping_details
-        const recipient = {
-          addressLine1: sd?.address?.line1 || '',
-          city: sd?.address?.city || '',
-          country: sd?.address?.country || 'US',
-          postalCode: sd?.address?.postal_code || '',
-          state: sd?.address?.state || undefined,
-          name: sd?.name || undefined,
-          email: session.customer_details?.email || undefined,
-        }
-
-        const {createGelatoOrder} = await import('@/lib/gelato')
-        let gelatoOrderId: string | undefined
-        try {
-          const gelato = await createGelatoOrder({recipient, items, marketplaceOrderId: session.id})
           gelatoOrderId = gelato?.orderId || gelato?.id
-        } catch (e) {
+        } catch (e: unknown) {
           console.error('Gelato order error', e)
+          gelatoError = e instanceof Error ? e.message : 'Unknown Gelato error'
         }
+      }
 
-        // Create order in Sanity with full item details
+      // Build order items for Sanity
+      const orderItems = itemsWithMeta.map(({lineItem, meta, product}) => ({
+        productId: meta.productId,
+        productTitle: lineItem.description || product.title || 'Unknown Product',
+        productSlug: meta.slug,
+        quantity: lineItem.quantity || 1,
+        priceCents: lineItem.price?.unit_amount || 0,
+        options: JSON.stringify(meta.options),
+        gelatoProductUid: product.gelatoProductUid || '',
+        imageUrl: product.images?.[0]?.asset?.url || '',
+      }))
+
+      const totalCents = itemsWithMeta.reduce(
+        (sum, {lineItem}) => sum + (lineItem.amount_total || 0),
+        0
+      )
+
+      // Create order in Sanity with deterministic ID for idempotency.
+      // postProcessed starts false; set to true after inventory/promo are done.
+      if (!existingOrder) {
         try {
-          const {createClient} = await import('next-sanity')
-          const {projectId, dataset, apiVersion} = await import('@/sanity/lib/api')
-          const {token} = await import('@/sanity/lib/token')
-          const writeClient = createClient({projectId, dataset, apiVersion, token, useCdn: false})
-
-          // Build order items from line items
-          const orderItems = []
-          let totalCents = 0
-
-          for (const li of lineItems.data) {
-            const productMeta = await (async () => {
-              if (li.price && typeof li.price.product === 'string') {
-                const price = await stripe.prices.retrieve(li.price.id, {expand: ['product']})
-                return (price.product as Stripe.Product).metadata || {}
-              } else if (li.price && (li.price.product as any)?.metadata) {
-                return (li.price.product as any).metadata || {}
-              }
-              return {}
-            })()
-
-            const itemTotalCents = (li.amount_total || 0)
-            totalCents += itemTotalCents
-
-            orderItems.push({
-              productId: productMeta.productId || '',
-              productTitle: li.description || 'Unknown Product',
-              productSlug: productMeta.slug || '',
-              quantity: li.quantity || 1,
-              priceCents: li.price?.unit_amount || 0,
-              options: productMeta.options || '{}',
-              gelatoProductUid: productMeta.gelatoProductUid || '',
-              imageUrl: productMeta.imageUrl || '',
-            })
-          }
-
           await writeClient.create({
+            _id: orderId,
             _type: 'order',
             stripeSessionId: session.id,
             email: session.customer_details?.email || null,
             name: session.customer_details?.name || null,
             phone: session.customer_details?.phone || null,
             address: {
-              line1: session.shipping_details?.address?.line1 || null,
-              line2: session.shipping_details?.address?.line2 || null,
-              city: session.shipping_details?.address?.city || null,
-              state: session.shipping_details?.address?.state || null,
-              postalCode: session.shipping_details?.address?.postal_code || null,
-              country: session.shipping_details?.address?.country || null,
+              line1: sd?.address?.line1 || null,
+              line2: sd?.address?.line2 || null,
+              city: sd?.address?.city || null,
+              state: sd?.address?.state || null,
+              postalCode: sd?.address?.postal_code || null,
+              country: sd?.address?.country || null,
             },
             items: orderItems,
             totalCents,
+            promoCode: session.metadata?.promoCode || null,
+            discountAmountCents: session.metadata?.discountAmountCents
+              ? (Number.isFinite(parseInt(session.metadata.discountAmountCents, 10))
+                  ? parseInt(session.metadata.discountAmountCents, 10)
+                  : null)
+              : null,
             currency: session.currency?.toUpperCase() || 'USD',
             gelatoOrderId: gelatoOrderId || null,
-            status: gelatoOrderId ? 'submitted' : 'pending',
+            status: gelatoOrderId ? 'submitted' : gelatoError ? 'gelato_failed' : 'pending',
+            gelatoError: gelatoError || null,
+            postProcessed: false,
             createdAt: new Date().toISOString(),
           })
-
-          console.log(`Created order in Sanity for session ${session.id}`, {
-            itemCount: orderItems.length,
-            totalCents,
-            gelatoOrderId,
-          })
-        } catch (e) {
-          console.error('Failed to create Sanity order', e)
+        } catch (e: unknown) {
+          // 409 = document already exists (race between idempotency check and create)
+          const err = e as {statusCode?: number; message?: string}
+          if (err?.statusCode === 409 || err?.message?.includes('already exists')) {
+            // Fall through — post-processing may still be needed
+          } else {
+            console.error('Failed to create Sanity order', e)
+            return NextResponse.json({error: 'Order creation failed'}, {status: 500})
+          }
         }
       }
+
+      // Increment promo code usage if applicable
+      const promoCodeStr = session.metadata?.promoCode
+      if (promoCodeStr) {
+        try {
+          const {fetchPromoCode} = await import('@/lib/promo-validation')
+          const promoDoc = await fetchPromoCode(promoCodeStr)
+          if (promoDoc?._id) {
+            await writeClient.patch(promoDoc._id).inc({currentUses: 1}).commit()
+          }
+        } catch (e) {
+          console.error('Failed to increment promo code usage:', e)
+        }
+      }
+
+      // Decrement inventory for tracked products (idempotent: check if already decremented via order existence)
+      // The order was just created above with a deterministic ID, so this block only runs on first successful creation.
+      // If we reach here, the order.create succeeded, meaning this is the first processing of this webhook.
+      for (const {meta, lineItem, product} of itemsWithMeta) {
+        if (!product.trackInventory || product.inventoryQuantity == null) continue
+        const qty = lineItem.quantity || 1
+
+        try {
+          await writeClient.patch(product._id).dec({inventoryQuantity: qty}).commit()
+          // Re-fetch to check stock status
+          const updated = await writeClient.fetch(
+            `*[_type == "product" && _id == $id][0]{inventoryQuantity, lowStockThreshold}`,
+            {id: product._id}
+          )
+          if (updated) {
+            const newQty = Math.max(0, updated.inventoryQuantity ?? 0)
+            const statusPatch: Record<string, string | number> = {}
+            if (newQty <= 0) {
+              statusPatch.stockStatus = 'out_of_stock'
+              statusPatch.inventoryQuantity = 0
+            } else if (updated.lowStockThreshold && newQty <= updated.lowStockThreshold) {
+              statusPatch.stockStatus = 'low_stock'
+            }
+            if (Object.keys(statusPatch).length > 0) {
+              await writeClient.patch(product._id).set(statusPatch).commit()
+            }
+          }
+        } catch (e) {
+          console.error(`Failed to update inventory for ${meta.slug}`, e)
+        }
+      }
+
+      // Mark post-processing as complete so retries skip these steps
+      try {
+        await writeClient.patch(orderId).set({postProcessed: true}).commit()
+      } catch (e) {
+        console.error('Failed to mark order as post-processed:', e)
+      }
+
+      // Send email notifications (gracefully degrades if no API key)
+      try {
+        const {sendOrderConfirmation, sendNewOrderNotification} = await import('@/lib/email')
+        const emailOrder = {
+          orderId: session.id,
+          email: session.customer_details?.email || '',
+          name: session.customer_details?.name || undefined,
+          items: orderItems.map(oi => ({
+            title: oi.productTitle,
+            quantity: oi.quantity,
+            priceCents: oi.priceCents,
+          })),
+          totalCents,
+        }
+        await sendOrderConfirmation(emailOrder)
+        await sendNewOrderNotification(emailOrder)
+      } catch (e) {
+        console.error('Email notification error:', e)
+      }
     }
+
     return NextResponse.json({received: true})
-  } catch (err: any) {
-    return new NextResponse(`Handler Error: ${err.message}`, {status: 500})
+  } catch (err: unknown) {
+    return new NextResponse('Internal server error', {status: 500})
   }
 }

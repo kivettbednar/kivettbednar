@@ -3,6 +3,14 @@ import {client} from '@/sanity/lib/client'
 import {sitemapQuery} from '@/sanity/lib/queries'
 import {headers} from 'next/headers'
 
+type SitemapEntry = {
+  _type: string
+  slug: string
+  _updatedAt?: string
+  startDateTime?: string
+  isCanceled?: boolean
+}
+
 /**
  * This file creates a sitemap (sitemap.xml) for the application. Learn more about sitemaps in Next.js here: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
  * Be sure to update the `changeFrequency` and `priority` values to match your application's content.
@@ -62,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       | undefined
     let url: string
 
-    for (const p of allPostsAndPages) {
+    for (const p of allPostsAndPages as SitemapEntry[]) {
       switch (p._type) {
         case 'page':
           priority = 0.8
@@ -79,6 +87,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency = 'weekly'
           url = `${baseUrl}/merch/${p.slug}`
           break
+        case 'event': {
+          // Skip canceled events from sitemap
+          if (p.isCanceled) continue
+          // Lower priority for past events
+          const eventDate = p.startDateTime ? new Date(p.startDateTime) : null
+          const isPast = eventDate && eventDate < new Date()
+          priority = isPast ? 0.3 : 0.8
+          changeFrequency = isPast ? 'never' : 'weekly'
+          url = `${baseUrl}/shows/${p.slug}`
+          break
+        }
         default:
           continue
       }

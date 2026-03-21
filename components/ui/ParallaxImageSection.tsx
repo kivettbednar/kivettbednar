@@ -1,6 +1,7 @@
 'use client'
 
-import {useRef, useState, useEffect} from 'react'
+import {useRef} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {motion, useScroll, useTransform, MotionValue} from 'framer-motion'
 import Image from 'next/image'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
@@ -66,14 +67,7 @@ export function ParallaxImageSection({
   children,
   darkOverlay = false,
 }: ParallaxImageSectionProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const {scrollYProgress} = useScroll({

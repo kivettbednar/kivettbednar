@@ -21,13 +21,13 @@ export async function GET() {
         ? 'Gelato API is configured and reachable.'
         : 'Gelato API is configured but not reachable. Check your API key and network connection.',
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Gelato status check error:', error)
     return NextResponse.json(
       {
         enabled: false,
         apiKeyConfigured: false,
-        error: error.message,
+        error: 'Status check failed',
         message: 'Failed to check Gelato API status',
       },
       {status: 500}

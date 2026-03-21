@@ -13,6 +13,7 @@ export type GelatoOrderItem = {
 
 export type GelatoRecipient = {
   addressLine1: string
+  addressLine2?: string
   city: string
   country: string
   postalCode: string
@@ -86,8 +87,10 @@ async function gelatoFetch(
   }
 
   for (let attempt = 0; attempt < retries; attempt++) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10000)
     try {
-      const res = await fetch(url, {...options, headers})
+      const res = await fetch(url, {...options, headers, signal: controller.signal})
 
       // If successful or client error (4xx), return immediately
       if (res.ok || (res.status >= 400 && res.status < 500)) {
@@ -107,6 +110,8 @@ async function gelatoFetch(
         continue
       }
       throw error
+    } finally {
+      clearTimeout(timeout)
     }
   }
 
@@ -121,14 +126,14 @@ export async function createGelatoOrder(params: {
   recipient: GelatoRecipient
   items: GelatoOrderItem[]
   marketplaceOrderId?: string
+  currency?: string
+  itemPrices?: Array<{itemIndex: number; priceCents: number}>
   metadata?: Record<string, string>
 }): Promise<GelatoOrder | null> {
   const config = getGelatoConfig()
 
   // Demo mode - return mock order
   if (!config.enabled) {
-    console.log('[DEMO MODE] Gelato order creation skipped - API key not configured')
-    console.log('Order details:', JSON.stringify(params, null, 2))
     return {
       orderId: `DEMO-${Date.now()}`,
       status: 'pending',
@@ -142,27 +147,39 @@ export async function createGelatoOrder(params: {
     const orderData = {
       orderReferenceId: params.marketplaceOrderId,
       customerReferenceId: params.marketplaceOrderId,
-      items: params.items.map(item => ({
-        itemReferenceId: `${item.productUid}-${Date.now()}`,
-        productUid: item.productUid,
-        quantity: item.quantity,
-        files: item.files || [],
-        ...(item.attributes && Object.keys(item.attributes).length > 0
-          ? {attributes: item.attributes}
-          : {}),
-      })),
-      shippingAddress: {
-        firstName: params.recipient.name?.split(' ')[0] || '',
-        lastName: params.recipient.name?.split(' ').slice(1).join(' ') || '',
-        addressLine1: params.recipient.addressLine1,
-        city: params.recipient.city,
-        postCode: params.recipient.postalCode,
-        country: params.recipient.country,
-        ...(params.recipient.state && {stateCode: params.recipient.state}),
-        ...(params.recipient.email && {email: params.recipient.email}),
-        ...(params.recipient.phone && {phone: params.recipient.phone}),
-        ...(params.recipient.company && {companyName: params.recipient.company}),
-      },
+      preventDuplicate: true,
+      ...(params.currency && {currency: params.currency}),
+      items: params.items.map((item, index) => {
+        const priceInfo = params.itemPrices?.find((p) => p.itemIndex === index)
+        return {
+          itemReferenceId: `${params.marketplaceOrderId || 'order'}-${index}-${item.productUid}`,
+          productUid: item.productUid,
+          quantity: item.quantity,
+          files: item.files || [],
+          ...(item.attributes && Object.keys(item.attributes).length > 0
+            ? {attributes: item.attributes}
+            : {}),
+          ...(priceInfo && {retailPriceInclVat: {amount: priceInfo.priceCents / 100, currency: params.currency || 'USD'}}),
+        }
+      }),
+      shippingAddress: (() => {
+        const nameParts = (params.recipient.name || '').trim().split(/\s+/).filter(Boolean)
+        const firstName = nameParts[0] || 'Customer'
+        const lastName = nameParts.slice(1).join(' ') || firstName
+        return {
+          firstName,
+          lastName,
+          addressLine1: params.recipient.addressLine1,
+          ...(params.recipient.addressLine2 && {addressLine2: params.recipient.addressLine2}),
+          city: params.recipient.city,
+          postCode: params.recipient.postalCode,
+          country: params.recipient.country,
+          ...(params.recipient.state && {stateCode: params.recipient.state}),
+          ...(params.recipient.email && {email: params.recipient.email}),
+          ...(params.recipient.phone && {phone: params.recipient.phone}),
+          ...(params.recipient.company && {companyName: params.recipient.company}),
+        }
+      })(),
       orderType: 'order',
       ...(params.metadata && {metadata: params.metadata}),
     }
@@ -198,7 +215,6 @@ export async function createGelatoOrder(params: {
 export async function getGelatoOrder(orderId: string): Promise<GelatoOrder | null> {
   const config = getGelatoConfig()
   if (!config.enabled) {
-    console.log('[DEMO MODE] Gelato order fetch skipped')
     return null
   }
 
@@ -222,7 +238,6 @@ export async function getGelatoOrder(orderId: string): Promise<GelatoOrder | nul
 export async function getGelatoCatalog(): Promise<GelatoProduct[]> {
   const config = getGelatoConfig()
   if (!config.enabled) {
-    console.log('[DEMO MODE] Gelato catalog fetch skipped')
     return []
   }
 
@@ -245,7 +260,6 @@ export async function getGelatoCatalog(): Promise<GelatoProduct[]> {
 export async function getGelatoProduct(productUid: string): Promise<GelatoProduct | null> {
   const config = getGelatoConfig()
   if (!config.enabled) {
-    console.log('[DEMO MODE] Gelato product fetch skipped')
     return null
   }
 
@@ -259,6 +273,170 @@ export async function getGelatoProduct(productUid: string): Promise<GelatoProduc
   } catch (error) {
     console.error('Failed to fetch Gelato product:', error)
     return null
+  }
+}
+
+/**
+ * Quote a Gelato order — returns shipping options and production costs
+ * Same payload as createGelatoOrder but uses the quote endpoint
+ */
+export async function quoteGelatoOrder(params: {
+  recipient: GelatoRecipient
+  items: GelatoOrderItem[]
+  currency?: string
+}): Promise<{
+  shippingMethods: Array<{
+    uid: string
+    name: string
+    price: {amount: number; currency: string}
+    minDeliveryDays: number
+    maxDeliveryDays: number
+  }>
+  itemCosts: Array<{productUid: string; price: {amount: number; currency: string}}>
+} | null> {
+  const config = getGelatoConfig()
+  if (!config.enabled) return null
+
+  try {
+    const nameParts = (params.recipient.name || '').trim().split(/\s+/).filter(Boolean)
+    const firstName = nameParts[0] || 'Customer'
+    const lastName = nameParts.slice(1).join(' ') || firstName
+
+    const quoteData = {
+      ...(params.currency && {currency: params.currency}),
+      items: params.items.map((item, index) => ({
+        itemReferenceId: `quote-${index}-${item.productUid}`,
+        productUid: item.productUid,
+        quantity: item.quantity,
+        files: item.files || [],
+        ...(item.attributes && Object.keys(item.attributes).length > 0
+          ? {attributes: item.attributes}
+          : {}),
+      })),
+      shippingAddress: {
+        firstName,
+        lastName,
+        addressLine1: params.recipient.addressLine1,
+        ...(params.recipient.addressLine2 && {addressLine2: params.recipient.addressLine2}),
+        city: params.recipient.city,
+        postCode: params.recipient.postalCode,
+        country: params.recipient.country,
+        ...(params.recipient.state && {stateCode: params.recipient.state}),
+        ...(params.recipient.email && {email: params.recipient.email}),
+      },
+    }
+
+    const res = await gelatoFetch('/orders:quote', {
+      method: 'POST',
+      body: JSON.stringify(quoteData),
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({message: 'Unknown error'}))
+      throw new Error(`Gelato quote error: ${error.message || res.statusText}`)
+    }
+
+    const data = await res.json()
+    return {
+      shippingMethods: (data.shipmentMethods || []).map((sm: Record<string, any>) => ({
+        uid: sm.uid || sm.shipmentMethodUid,
+        name: sm.name || sm.type || sm.uid,
+        price: sm.price || {amount: 0, currency: params.currency || 'USD'},
+        minDeliveryDays: sm.minDeliveryDays || sm.estimatedDeliveryDays?.min || 0,
+        maxDeliveryDays: sm.maxDeliveryDays || sm.estimatedDeliveryDays?.max || 0,
+      })),
+      itemCosts: (data.items || []).map((item: Record<string, any>) => ({
+        productUid: item.productUid,
+        price: item.price || {amount: 0, currency: params.currency || 'USD'},
+      })),
+    }
+  } catch (error) {
+    console.error('Failed to quote Gelato order:', error)
+    throw error
+  }
+}
+
+/**
+ * Cancel a Gelato order (only works before production starts)
+ */
+export async function cancelGelatoOrder(orderId: string): Promise<{success: boolean; error?: string}> {
+  const config = getGelatoConfig()
+  if (!config.enabled) {
+    return {success: false, error: 'Gelato API not configured'}
+  }
+
+  try {
+    const res = await gelatoFetch(`/orders/${orderId}:cancel`, {
+      method: 'POST',
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({message: 'Unknown error'}))
+      return {success: false, error: error.message || `HTTP ${res.status}`}
+    }
+
+    return {success: true}
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    console.error('Failed to cancel Gelato order:', error)
+    return {success: false, error: message}
+  }
+}
+
+/**
+ * Get available shipping methods for a destination country
+ */
+export async function getGelatoShippingMethods(country: string): Promise<Array<{
+  uid: string
+  name: string
+  type: string
+}>> {
+  const config = getGelatoConfig()
+  if (!config.enabled) return []
+
+  try {
+    const res = await gelatoFetch(`/shipment-methods?country=${encodeURIComponent(country)}`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.shipmentMethods || data || []).map((sm: Record<string, any>) => ({
+      uid: sm.uid || sm.shipmentMethodUid,
+      name: sm.name || sm.uid,
+      type: sm.type || 'standard',
+    }))
+  } catch (error) {
+    console.error('Failed to fetch Gelato shipping methods:', error)
+    return []
+  }
+}
+
+/**
+ * Get Gelato production cost for a product (useful for margin tracking)
+ */
+export async function getGelatoProductPrices(productUid: string, currency = 'USD'): Promise<Array<{
+  quantity: number
+  price: number
+  currency: string
+}>> {
+  const config = getGelatoConfig()
+  if (!config.enabled) return []
+
+  try {
+    const url = `https://product.gelatoapis.com/v3/products/${encodeURIComponent(productUid)}/prices?currency=${currency}`
+    const res = await fetch(url, {
+      headers: {
+        'X-API-KEY': config.apiKey,
+      },
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.prices || []).map((p: Record<string, any>) => ({
+      quantity: p.quantity || 1,
+      price: p.price || p.amount || 0,
+      currency: p.currency || currency,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch Gelato product prices:', error)
+    return []
   }
 }
 

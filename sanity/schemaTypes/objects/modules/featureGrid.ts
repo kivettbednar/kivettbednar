@@ -1,5 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {BlockElementIcon} from '@sanity/icons'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 export const featureGrid = defineType({
   name: 'featureGrid',
@@ -82,6 +83,7 @@ export const featureGrid = defineType({
                   title: 'Alt Text',
                   type: 'string',
                   description: 'Describe the image for accessibility',                }),
+                ...imagePositionFields,
               ],
               hidden: ({parent}) => parent?.iconType !== 'image',
             }),

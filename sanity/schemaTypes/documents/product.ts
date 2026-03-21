@@ -1,5 +1,6 @@
 import {PackageIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 /**
  * Product schema for POD (Print on Demand) merch via Gelato
@@ -24,7 +25,9 @@ export const product = defineType({
       options: {
         source: 'title',
         maxLength: 96,
-      },    }),
+      },
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'description',
       title: 'Description',
@@ -44,7 +47,9 @@ export const product = defineType({
             defineField({
               name: 'alt',
               title: 'Alt Text',
-              type: 'string',            }),
+              type: 'string',
+            }),
+            ...imagePositionFields,
           ],
         }),
       ],
@@ -190,7 +195,14 @@ export const product = defineType({
       name: 'gelatoProductUid',
       title: 'Gelato Product UID',
       type: 'string',
-      description: 'Gelato product identifier for fulfillment',    }),
+      description: 'Find this in your Gelato dashboard under Products → Product details. Leave blank for non-print-on-demand items.',
+    }),
+    defineField({
+      name: 'gelatoCostCents',
+      title: 'Gelato Cost (cents)',
+      type: 'number',
+      description: 'Production cost from Gelato in cents. Use /api/gelato/prices to look up. Your margin = Price - Cost.',
+    }),
     defineField({
       name: 'printAreas',
       title: 'Print Areas',
@@ -243,6 +255,7 @@ export const product = defineType({
       name: 'stockStatus',
       title: 'Stock Status',
       type: 'string',
+      description: 'Updated automatically when inventory tracking is enabled. Set manually for non-tracked products.',
       options: {
         list: [
           {title: 'In Stock', value: 'in_stock'},

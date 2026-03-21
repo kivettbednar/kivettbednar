@@ -13,9 +13,19 @@ export type SanityImage = {
 }
 
 export type ProductVariant = {
-  optionValues?: Record<string, string>
+  optionValues?: Array<{key?: string; value?: string; _key: string}>
   priceCents?: number
   sku?: string
+}
+
+export function variantOptionValuesToRecord(
+  optionValues?: Array<{key?: string; value?: string; _key: string}>
+): Record<string, string> {
+  const record: Record<string, string> = {}
+  for (const entry of optionValues || []) {
+    if (entry.key && entry.value) record[entry.key] = entry.value
+  }
+  return record
 }
 
 export type ProductOption = {

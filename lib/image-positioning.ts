@@ -4,6 +4,9 @@
  */
 
 import createImageUrlBuilder from '@sanity/image-url'
+import type {SanityImageSource} from '@sanity/image-url/lib/types/types'
+
+type ImageSource = SanityImageSource | {url?: string | null; [key: string]: unknown}
 
 // Client-safe configuration from public env vars
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
@@ -16,11 +19,12 @@ const builder = createImageUrlBuilder({projectId, dataset})
  * Uses public environment variables only
  * Also handles external URLs (like Unsplash) for demo products
  */
-export function urlFor(source: any) {
+export function urlFor(source: ImageSource | null | undefined) {
   // Handle external URLs directly (for demo products)
-  if (source?.url && typeof source.url === 'string' && source.url.startsWith('http')) {
+  if (typeof source === 'object' && source !== null && 'url' in source && typeof source.url === 'string' && source.url.startsWith('http')) {
+    const externalUrl = source.url
     const chainable = {
-      url: () => source.url,
+      url: () => externalUrl,
       width: (w: number) => chainable,
       height: (h: number) => chainable,
       fit: (mode: string) => chainable,
@@ -30,7 +34,7 @@ export function urlFor(source: any) {
   }
 
   // Handle Sanity image references normally
-  return builder.image(source)
+  return builder.image(source as SanityImageSource)
 }
 
 /**

@@ -1,6 +1,7 @@
 'use client'
 
-import {useRef, useState, useEffect} from 'react'
+import {useRef} from 'react'
+import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {motion, useScroll, useTransform} from 'framer-motion'
 import Image from 'next/image'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
@@ -11,6 +12,7 @@ interface SplitScreenImageProps {
   imagePosition?: 'left' | 'right'
   children: React.ReactNode
   darkBg?: boolean
+  verticalLabel?: string
 }
 
 export function SplitScreenImage({
@@ -19,28 +21,24 @@ export function SplitScreenImage({
   imagePosition = 'left',
   children,
   darkBg = false,
+  verticalLabel = 'ABOUT THE ARTIST',
 }: SplitScreenImageProps) {
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
   const containerRef = useRef<HTMLDivElement>(null)
   const {scrollYProgress} = useScroll({
     target: containerRef,
     offset: ['start end', 'end start'],
   })
 
-  const imageY = useTransform(scrollYProgress, [0, 1], [50, -50])
-  const contentY = useTransform(scrollYProgress, [0, 1], [-30, 30])
+  // Reduced parallax on mobile to avoid jank
+  const imageY = useTransform(scrollYProgress, [0, 1], isMobile ? [20, -20] : [50, -50])
+  const contentY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [-30, 30])
+  // Clip-path reveal: starts inset, opens to full on scroll
+  const clipInset = useTransform(scrollYProgress, [0.05, 0.4], [8, 0])
+  const clipPath = useTransform(clipInset, (v) => `inset(${v}%)`)
 
   const isLeft = imagePosition === 'left'
 
-  // Detect mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   return (
     <div
@@ -51,12 +49,18 @@ export function SplitScreenImage({
     >
       <div className="container mx-auto px-4 py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Image Column */}
+          {/* Image Column - responsive height */}
           <motion.div
             style={{y: imageY}}
-            className={`relative h-[600px] ${isLeft ? 'lg:order-1' : 'lg:order-2'}`}
+            className={`relative h-[350px] sm:h-[450px] md:h-[500px] lg:h-[600px] ${isLeft ? 'lg:order-1' : 'lg:order-2'}`}
           >
-            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+            <motion.div
+              className="relative w-full h-full overflow-hidden shadow-2xl"
+              style={{clipPath}}
+            >
+              {/* Gold border on left edge */}
+              <div className="absolute top-0 left-0 bottom-0 w-1 bg-accent-primary z-10" />
+
               <Image
                 src={typeof imageSrc === 'string' ? imageSrc : imageSrc.asset?.url || ''}
                 alt={imageAlt}
@@ -69,34 +73,28 @@ export function SplitScreenImage({
                     : getObjectPosition(imageSrc, isMobile)
                 }}
               />
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
+              {/* Stronger gradient overlay for text contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            </motion.div>
 
-              {/* Decorative Frame */}
-              <div className="absolute inset-0 border-4 border-border rounded-2xl" />
+            {/* Vertical text label along image edge */}
+            <div
+              className="absolute top-1/2 -left-3 hidden lg:block"
+              style={{
+                writingMode: 'vertical-rl',
+                transform: 'rotate(180deg) translateY(-50%)',
+              }}
+            >
+              <span className="text-accent-primary text-xs font-medium tracking-[0.2em] uppercase whitespace-nowrap opacity-70">
+                {verticalLabel}
+              </span>
             </div>
-
-            {/* Floating Accent */}
-            <motion.div
-              className="absolute -top-4 -right-4 w-32 h-32 bg-surface-elevated/50 rounded-full blur-3xl"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
           </motion.div>
 
           {/* Content Column */}
           <motion.div
             style={{y: contentY}}
-            className={`${isLeft ? 'lg:order-2' : 'lg:order-1'} ${
-              darkBg ? 'text-text-primary' : 'text-text-primary'
-            }`}
+            className={`${isLeft ? 'lg:order-2' : 'lg:order-1'} text-text-primary`}
           >
             {children}
           </motion.div>

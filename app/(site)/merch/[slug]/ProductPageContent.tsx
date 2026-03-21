@@ -9,18 +9,20 @@ import {RelatedProductsCarousel} from '@/components/merch/RelatedProductsCarouse
 import {PortableText} from '@portabletext/react'
 import {motion} from 'framer-motion'
 import {ShieldCheck, Star, Truck, Package, Guitar, Sparkles} from 'lucide-react'
+import type {Product, ProductListItem} from '@/types/product'
 
 type ProductPageContentProps = {
-  product: any
+  product: Product
   price: string
   productSlug: string
   mainImageUrl?: string
   thumbnailImages?: Array<{url: string; alt: string}>
   allImages?: Array<{url: string; alt: string}>
-  relatedProducts?: any[]
+  relatedProducts?: ProductListItem[]
+  trustBadges?: Array<{title: string; description: string; icon: string}>
 }
 
-export function ProductPageContent({product, price, productSlug, mainImageUrl, thumbnailImages, allImages, relatedProducts = []}: ProductPageContentProps) {
+export function ProductPageContent({product, price, productSlug, mainImageUrl, thumbnailImages, allImages, relatedProducts = [], trustBadges}: ProductPageContentProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
@@ -55,13 +57,13 @@ export function ProductPageContent({product, price, productSlug, mainImageUrl, t
                   <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-primary">${price}</span>
                   <span className="text-text-muted uppercase tracking-wide text-sm sm:text-base">{product.currency}</span>
                 </div>
-                {product.inStock !== false && (
+                {product.stockStatus !== 'out_of_stock' && (
                   <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-lg">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     <span className="text-green-400 text-sm font-medium uppercase tracking-wide">In Stock</span>
                   </div>
                 )}
-                {product.inStock === false && (
+                {product.stockStatus === 'out_of_stock' && (
                   <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/30 rounded-lg">
                     <div className="w-2 h-2 bg-red-500 rounded-full" />
                     <span className="text-red-400 text-sm font-medium uppercase tracking-wide">Out of Stock</span>
@@ -176,7 +178,7 @@ export function ProductPageContent({product, price, productSlug, mainImageUrl, t
                       <h3 className="font-bebas text-xl sm:text-2xl uppercase tracking-wide text-text-primary">
                         Select Options
                       </h3>
-                      {product.inStock !== false && (
+                      {product.stockStatus !== 'out_of_stock' && (
                         <div className="flex items-center gap-2 text-sm text-green-400">
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -193,6 +195,7 @@ export function ProductPageContent({product, price, productSlug, mainImageUrl, t
                         priceCents: product.priceCents,
                         currency: product.currency,
                         options: product.options || [],
+                        variants: product.variants || [],
                         imageUrl: product.images?.[0]?.asset?.url || undefined
                       }}
                     />
@@ -232,42 +235,32 @@ export function ProductPageContent({product, price, productSlug, mainImageUrl, t
                 {/* Trust Badges & Emotional Connection */}
                 <AnimatedSection animation="fadeUp" delay={0.5}>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
-                    <div className="bg-background/30 border border-border p-4 hover:border-accent-primary/50 transition-all duration-300 group">
-                      <div className="flex items-center gap-2 mb-2">
-                        <ShieldCheck className="w-5 h-5 text-accent-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                        <div className="text-accent-primary font-bold uppercase tracking-wider text-xs sm:text-sm">
-                          Authentic
+                    {(trustBadges && trustBadges.length > 0 ? trustBadges : [
+                      {title: 'Authentic', description: 'Official merchandise', icon: 'shield'},
+                      {title: 'Quality', description: 'Premium materials', icon: 'star'},
+                      {title: 'Free Shipping', description: 'On all orders', icon: 'truck'},
+                      {title: 'Blues Spirit', description: 'Crafted with soul', icon: 'guitar'},
+                    ]).map((badge, index) => {
+                      const IconComponent = {
+                        shield: ShieldCheck,
+                        star: Star,
+                        truck: Truck,
+                        guitar: Guitar,
+                        package: Package,
+                        sparkles: Sparkles,
+                      }[badge.icon] || ShieldCheck
+                      return (
+                        <div key={index} className="bg-background/30 border border-border p-4 hover:border-accent-primary/50 transition-all duration-300 group">
+                          <div className="flex items-center gap-2 mb-2">
+                            <IconComponent className="w-5 h-5 text-accent-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
+                            <div className="text-accent-primary font-bold uppercase tracking-wider text-xs sm:text-sm">
+                              {badge.title}
+                            </div>
+                          </div>
+                          <div className="text-text-muted text-xs sm:text-sm">{badge.description}</div>
                         </div>
-                      </div>
-                      <div className="text-text-muted text-xs sm:text-sm">Official merchandise</div>
-                    </div>
-                    <div className="bg-background/30 border border-border p-4 hover:border-accent-primary/50 transition-all duration-300 group">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Star className="w-5 h-5 text-accent-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                        <div className="text-accent-primary font-bold uppercase tracking-wider text-xs sm:text-sm">
-                          Quality
-                        </div>
-                      </div>
-                      <div className="text-text-muted text-xs sm:text-sm">Premium materials</div>
-                    </div>
-                    <div className="bg-background/30 border border-border p-4 hover:border-accent-primary/50 transition-all duration-300 group">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Truck className="w-5 h-5 text-accent-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                        <div className="text-accent-primary font-bold uppercase tracking-wider text-xs sm:text-sm">
-                          Free Shipping
-                        </div>
-                      </div>
-                      <div className="text-text-muted text-xs sm:text-sm">On all orders</div>
-                    </div>
-                    <div className="bg-background/30 border border-border p-4 hover:border-accent-primary/50 transition-all duration-300 group">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Guitar className="w-5 h-5 text-accent-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                        <div className="text-accent-primary font-bold uppercase tracking-wider text-xs sm:text-sm">
-                          Blues Spirit
-                        </div>
-                      </div>
-                      <div className="text-text-muted text-xs sm:text-sm">Crafted with soul</div>
-                    </div>
+                      )
+                    })}
                   </div>
                 </AnimatedSection>
               </div>
