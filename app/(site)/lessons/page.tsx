@@ -53,8 +53,11 @@ export default async function LessonsPage() {
   // Fallback if no content yet
   if (!lessonsPage) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl">Loading lessons content from Sanity Studio...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <div className="text-center max-w-md">
+          <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">Lessons Coming Soon</h1>
+          <p className="text-text-secondary">Guitar and blues lessons information will be available shortly. Check back soon.</p>
+        </div>
       </div>
     )
   }

@@ -12,7 +12,16 @@ export const promoCode = defineType({
       title: 'Code',
       type: 'string',
       description: 'The promo code customers will enter (e.g., "BLUES20")',
-      validation: (Rule) => Rule.required().uppercase().min(3).max(20),
+      validation: (Rule) =>
+        Rule.required()
+          .min(3)
+          .max(20)
+          .custom((value) => {
+            if (value && value !== value.toUpperCase()) {
+              return 'Promo code must be uppercase (e.g., "BLUES20")'
+            }
+            return true
+          }),
     }),
     defineField({
       name: 'description',
@@ -29,7 +38,6 @@ export const promoCode = defineType({
         list: [
           {title: 'Percentage', value: 'percentage'},
           {title: 'Fixed Amount', value: 'fixed'},
-          {title: 'Free Shipping', value: 'free_shipping'},
         ],
       },
       validation: (Rule) => Rule.required(),
@@ -39,6 +47,16 @@ export const promoCode = defineType({
       title: 'Discount Value',
       type: 'number',
       description: 'Percentage (e.g., 20 for 20% off) or cents (e.g., 1000 for $10 off)',
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .custom((value, context) => {
+            const parent = context?.parent as any
+            if (parent?.discountType === 'percentage' && value && value > 100) {
+              return 'Percentage discount cannot exceed 100%'
+            }
+            return true
+          }),
     }),
     defineField({
       name: 'minimumPurchaseCents',
@@ -116,8 +134,6 @@ export const promoCode = defineType({
         discount = `${discountValue}% off`
       } else if (discountType === 'fixed') {
         discount = `$${(discountValue / 100).toFixed(2)} off`
-      } else {
-        discount = 'Free shipping'
       }
       return {
         title: code,

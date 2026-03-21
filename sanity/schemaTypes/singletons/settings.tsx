@@ -153,7 +153,9 @@ export const settings = defineType({
       name: 'contactEmail',
       title: 'Contact Email',
       type: 'string',
-      description: 'Primary contact email address',    }),
+      description: 'Primary contact email address',
+      validation: (Rule) => Rule.email(),
+    }),
     defineField({
       name: 'bookingUrl',
       title: 'Booking/Scheduling URL',

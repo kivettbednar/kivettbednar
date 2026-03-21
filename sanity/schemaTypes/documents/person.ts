@@ -15,7 +15,9 @@ export const person = defineType({
     defineField({
       name: 'firstName',
       title: 'First Name',
-      type: 'string',    }),
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'lastName',
       title: 'Last Name',

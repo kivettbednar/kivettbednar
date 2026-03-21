@@ -13,6 +13,8 @@ import {
   StarIcon,
   TagsIcon,
   InfoOutlineIcon,
+  CreditCardIcon,
+  CheckmarkCircleIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
 import pluralize from 'pluralize-esm'
@@ -33,6 +35,8 @@ const SINGLETON_TYPES = [
   'merchPage',
   'navigation',
   'uiText',
+  'checkoutSettings',
+  'orderConfirmationPage',
   'assist.instruction.context',
 ]
 
@@ -83,6 +87,12 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('merchPage')
                 .child(S.document().schemaType('merchPage').documentId('merchPage'))
                 .icon(BasketIcon),
+
+              S.listItem()
+                .title('Order Confirmation Page')
+                .id('orderConfirmationPage')
+                .child(S.document().schemaType('orderConfirmationPage').documentId('orderConfirmationPage'))
+                .icon(CheckmarkCircleIcon),
             ])
         ),
 
@@ -231,6 +241,14 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         ),
                     ])
                 ),
+
+              S.divider(),
+
+              S.listItem()
+                .title('Checkout Settings')
+                .id('checkoutSettings')
+                .child(S.document().schemaType('checkoutSettings').documentId('checkoutSettings'))
+                .icon(CreditCardIcon),
             ])
         ),
 
@@ -253,7 +271,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
                 ),
               S.divider(),
-              ...['pending', 'submitted', 'in_production', 'shipped', 'delivered', 'canceled', 'failed'].map(
+              ...['pending', 'submitted', 'in_production', 'shipped', 'delivered', 'canceled', 'failed', 'gelato_failed'].map(
                 (status) =>
                   S.listItem()
                     .title(

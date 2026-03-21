@@ -1,6 +1,7 @@
 import React from 'react'
 import {HomeIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 /**
  * Home Page singleton schema - content for the homepage
@@ -17,6 +18,7 @@ export const homePage = defineType({
         title: 'Hero Slider Images',
         type: 'array',
         description: 'Images for the hero slider (recommended: 4-6 high-quality images)',
+        validation: (Rule) => Rule.min(1).error('At least one hero slide is required'),
         of: [
           defineArrayMember({
             type: 'object',
@@ -46,46 +48,7 @@ export const homePage = defineType({
                 description: 'Describe the image for accessibility (optional - defaults to "Kivett Bednar blues musician")',
                 initialValue: 'Kivett Bednar blues musician',
               }),
-              defineField({
-                name: 'desktopPosition',
-                title: 'Desktop Position (Optional)',
-                type: 'string',
-                description: 'Override image position on desktop screens',
-                options: {
-                  list: [
-                    {title: 'Top Left', value: 'top-left'},
-                    {title: 'Top Center', value: 'top-center'},
-                    {title: 'Top Right', value: 'top-right'},
-                    {title: 'Center Left', value: 'center-left'},
-                    {title: 'Center', value: 'center'},
-                    {title: 'Center Right', value: 'center-right'},
-                    {title: 'Bottom Left', value: 'bottom-left'},
-                    {title: 'Bottom Center', value: 'bottom-center'},
-                    {title: 'Bottom Right', value: 'bottom-right'},
-                  ],
-                  layout: 'dropdown',
-                },
-              }),
-              defineField({
-                name: 'mobilePosition',
-                title: 'Mobile Position (Optional)',
-                type: 'string',
-                description: 'Override image position on mobile screens',
-                options: {
-                  list: [
-                    {title: 'Top Left', value: 'top-left'},
-                    {title: 'Top Center', value: 'top-center'},
-                    {title: 'Top Right', value: 'top-right'},
-                    {title: 'Center Left', value: 'center-left'},
-                    {title: 'Center', value: 'center'},
-                    {title: 'Center Right', value: 'center-right'},
-                    {title: 'Bottom Left', value: 'bottom-left'},
-                    {title: 'Bottom Center', value: 'bottom-center'},
-                    {title: 'Bottom Right', value: 'bottom-right'},
-                  ],
-                  layout: 'dropdown',
-                },
-              }),
+              ...imagePositionFields,
             ],
             preview: {
               select: {
@@ -330,6 +293,14 @@ export const homePage = defineType({
         group: 'about',
       }),
       defineField({
+        name: 'aboutVerticalLabel',
+        title: 'About Section Vertical Label',
+        type: 'string',
+        description: 'Small vertical text label along the about image edge (e.g., "ABOUT THE ARTIST")',
+        initialValue: 'ABOUT THE ARTIST',
+        group: 'about',
+      }),
+      defineField({
         name: 'aboutImage',
         title: 'About Section Image',
         type: 'image',
@@ -344,6 +315,7 @@ export const homePage = defineType({
             description: 'Optional - defaults to "Kivett Bednar with guitar"',
             initialValue: 'Kivett Bednar with guitar',
           }),
+          ...imagePositionFields,
         ],
         group: 'about',
       }),
@@ -391,6 +363,7 @@ export const homePage = defineType({
             description: 'Optional - defaults to album title',
             initialValue: 'Album cover',
           }),
+          ...imagePositionFields,
         ],
         group: 'album',
       }),
@@ -516,6 +489,7 @@ export const homePage = defineType({
             description: 'Optional - defaults to "Kivett Bednar live performance"',
             initialValue: 'Kivett Bednar live performance',
           }),
+          ...imagePositionFields,
         ],
         group: 'performance',
       }),
@@ -630,8 +604,16 @@ export const homePage = defineType({
       defineField({
         name: 'featuredVideoUrl',
         title: 'Featured Video URL',
-        type: 'url',
-        description: 'YouTube video ID or full URL for the featured "Live Performance" video (e.g., https://www.youtube.com/watch?v=75M50Bfksa0 or just 75M50Bfksa0)',
+        type: 'string',
+        description: 'YouTube video URL or video ID (e.g., "https://www.youtube.com/watch?v=75M50Bfksa0" or "75M50Bfksa0")',
+        group: 'featuredVideo',
+      }),
+      defineField({
+        name: 'featuredVideoTitle',
+        title: 'Featured Video Title (Accessibility)',
+        type: 'string',
+        description: 'Title attribute for the featured video iframe (for screen readers)',
+        initialValue: 'Kivett Bednar Live Performance',
         group: 'featuredVideo',
       }),
   
@@ -771,6 +753,22 @@ export const homePage = defineType({
         description: 'YouTube video ID or full URL for second studio session video',
         group: 'studio',
       }),
+      defineField({
+        name: 'studioVideo1Title',
+        title: 'Studio Video 1 Title (Accessibility)',
+        type: 'string',
+        description: 'Title attribute for the first studio video iframe (for screen readers)',
+        initialValue: 'Kivett Bednar Studio Session 1',
+        group: 'studio',
+      }),
+      defineField({
+        name: 'studioVideo2Title',
+        title: 'Studio Video 2 Title (Accessibility)',
+        type: 'string',
+        description: 'Title attribute for the second studio video iframe (for screen readers)',
+        initialValue: 'Kivett Bednar Studio Session 2',
+        group: 'studio',
+      }),
   
       // Newsletter Section
       defineField({
@@ -791,6 +789,80 @@ export const homePage = defineType({
         group: 'newsletter',
       }),
   
+      // Marquee Ticker
+      defineField({
+        name: 'marqueeTopItems',
+        title: 'Marquee Ticker - Top Row',
+        type: 'array',
+        description: 'Scrolling text items in the top row of the marquee ticker (left-scrolling). Each item alternates between bold display font and elegant italic.',
+        of: [
+          defineArrayMember({
+            type: 'object',
+            name: 'marqueeItem',
+            fields: [
+              defineField({
+                name: 'text',
+                title: 'Text',
+                type: 'string',
+              }),
+              defineField({
+                name: 'style',
+                title: 'Style',
+                type: 'string',
+                options: {
+                  list: [
+                    {title: 'Bold Display (Anton)', value: 'anton'},
+                    {title: 'Elegant Italic (Playfair)', value: 'playfair'},
+                  ],
+                  layout: 'radio',
+                },
+                initialValue: 'anton',
+              }),
+            ],
+            preview: {
+              select: {title: 'text', subtitle: 'style'},
+            },
+          }),
+        ],
+        group: 'hero',
+      }),
+      defineField({
+        name: 'marqueeBottomItems',
+        title: 'Marquee Ticker - Bottom Row',
+        type: 'array',
+        description: 'Scrolling text items in the bottom row (right-scrolling).',
+        of: [
+          defineArrayMember({
+            type: 'object',
+            name: 'marqueeItem',
+            fields: [
+              defineField({
+                name: 'text',
+                title: 'Text',
+                type: 'string',
+              }),
+              defineField({
+                name: 'style',
+                title: 'Style',
+                type: 'string',
+                options: {
+                  list: [
+                    {title: 'Bold Display (Anton)', value: 'anton'},
+                    {title: 'Elegant Italic (Playfair)', value: 'playfair'},
+                  ],
+                  layout: 'radio',
+                },
+                initialValue: 'anton',
+              }),
+            ],
+            preview: {
+              select: {title: 'text', subtitle: 'style'},
+            },
+          }),
+        ],
+        group: 'hero',
+      }),
+
       // Button Labels
       defineField({
         name: 'heroButtonText',
@@ -882,6 +954,21 @@ export const homePage = defineType({
         initialValue: true,
         group: 'visibility',
       }),
+      defineField({
+        name: 'seoTitle',
+        title: 'SEO Title',
+        type: 'string',
+        description: 'Override the page title in search results (defaults to "Kivett Bednar | Blues Guitarist & Musician")',
+        group: 'seo',
+      }),
+      defineField({
+        name: 'seoDescription',
+        title: 'SEO Description',
+        type: 'text',
+        rows: 2,
+        description: 'Override the meta description for search engines',
+        group: 'seo',
+      }),
     ],
     groups: [
       {
@@ -940,6 +1027,10 @@ export const homePage = defineType({
       {
         name: 'visibility',
         title: 'Section Visibility',
+      },
+      {
+        name: 'seo',
+        title: 'SEO',
       },
     ],
   preview: {

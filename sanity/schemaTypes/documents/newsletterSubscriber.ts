@@ -1,14 +1,21 @@
 import {defineType, defineField} from 'sanity'
+import {EnvelopeIcon} from '@sanity/icons'
 
 export const newsletterSubscriber = defineType({
   name: 'newsletterSubscriber',
   title: 'Newsletter Subscribers',
   type: 'document',
+  icon: EnvelopeIcon,
   fields: [
     defineField({
       name: 'email',
       title: 'Email Address',
-      type: 'string',    }),
+      type: 'string',
+      validation: (Rule) =>
+        Rule.required()
+          .email()
+          .error('A valid email address is required'),
+    }),
     defineField({
       name: 'subscribedAt',
       title: 'Subscribed At',
@@ -43,7 +50,7 @@ export const newsletterSubscriber = defineType({
     prepare({email, status, subscribedAt}) {
       return {
         title: email,
-        subtitle: `${status} - ${new Date(subscribedAt).toLocaleDateString()}`,
+        subtitle: `${status} - ${subscribedAt ? new Date(subscribedAt).toLocaleDateString() : 'Unknown'}`,
       }
     },
   },

@@ -14,7 +14,9 @@ export const song = defineType({
     defineField({
       name: 'title',
       title: 'Song Title',
-      type: 'string',    }),
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: 'key',
       title: 'Key',
@@ -37,7 +39,9 @@ export const song = defineType({
       name: 'order',
       title: 'Order',
       type: 'number',
-      description: 'Display order in setlist',    }),
+      description: 'Display order in setlist',
+      validation: (rule) => rule.required().positive().integer(),
+    }),
   ],
   orderings: [
     {
@@ -60,7 +64,7 @@ export const song = defineType({
     prepare({title, subtitle, order}) {
       return {
         title: `${order}. ${title}`,
-        subtitle: `Key: ${subtitle}`,
+        subtitle: subtitle ? `Key: ${subtitle}` : 'No key set',
       }
     },
   },
