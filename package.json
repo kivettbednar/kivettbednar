@@ -42,7 +42,7 @@
     "dotenv": "^17.2.3",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.468.0",
-    "next": "^16.2.1",
+    "next": "^15.5.14",
     "next-sanity": "^10.0.14",
     "pluralize-esm": "^9.0.5",
     "postcss": "^8.5.6",
