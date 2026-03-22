@@ -69,7 +69,16 @@ export const product = defineType({
       name: 'compareAtPriceCents',
       title: 'Compare At Price (cents)',
       type: 'number',
-      description: 'Original price before discount - creates "Was $X, Now $Y" display',
+      description: 'Original price before discount - creates "Was $X, Now $Y" display. Must be higher than sale price.',
+      validation: (Rule) =>
+        Rule.integer().positive().custom((value, context) => {
+          if (!value) return true
+          const parent = context?.parent as {priceCents?: number}
+          if (parent?.priceCents && value <= parent.priceCents) {
+            return 'Compare-at price must be higher than the sale price'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'onSale',

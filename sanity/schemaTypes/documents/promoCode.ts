@@ -97,6 +97,15 @@ export const promoCode = defineType({
       title: 'Valid Until',
       type: 'datetime',
       description: 'When this promo code expires',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (!value) return true
+          const parent = context?.parent as {validFrom?: string}
+          if (parent?.validFrom && value <= parent.validFrom) {
+            return 'Expiry date must be after the start date'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'applicableProducts',

@@ -1,7 +1,6 @@
 "use client"
 
-import {useEffect, useState} from 'react'
-import {useRouter} from 'next/navigation'
+import {useEffect, useRef, useState} from 'react'
 import {useCart} from '@/components/ui/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -13,7 +12,6 @@ import {formatPrice} from '@/lib/format'
 
 export default function CheckoutPage() {
   const {items, totalCents, promoCode, finalTotalCents} = useCart()
-  const router = useRouter()
   const [isRedirecting, setIsRedirecting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [checkoutSettings, setCheckoutSettings] = useState<{
@@ -27,8 +25,10 @@ export default function CheckoutPage() {
   }, [])
 
   // On mount, check if Stripe is enabled and redirect to Stripe checkout
+  const hasInitiated = useRef(false)
   useEffect(() => {
-    if (items.length === 0) return
+    if (items.length === 0 || hasInitiated.current) return
+    hasInitiated.current = true
 
     async function redirectToStripe() {
       try {
@@ -62,14 +62,17 @@ export default function CheckoutPage() {
 
         setError(data.error || 'Failed to create checkout session. Please try again.')
         setIsRedirecting(false)
+        hasInitiated.current = false
       } catch {
         setError('Something went wrong. Please return to your cart and try again.')
         setIsRedirecting(false)
+        hasInitiated.current = false
       }
     }
 
     redirectToStripe()
-  }, [items, promoCode])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (items.length === 0) {
     return (

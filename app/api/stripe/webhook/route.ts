@@ -278,14 +278,24 @@ export async function POST(req: NextRequest) {
     // Handle refunds — update order status + restore inventory
     if (event.type === 'charge.refunded') {
       const charge = event.data.object as Stripe.Charge
-      const sessionId = charge.metadata?.sessionId || charge.payment_intent
+      const paymentIntent = typeof charge.payment_intent === 'string'
+        ? charge.payment_intent
+        : charge.payment_intent?.id
 
-      if (sessionId) {
-        // Find order by Stripe session ID or payment intent
-        const order = await writeClient.fetch(
-          `*[_type == "order" && (stripeSessionId == $sid || stripeSessionId match $sid)][0]{ _id, status, items }`,
-          {sid: String(sessionId)}
-        )
+      if (paymentIntent) {
+        // Look up the checkout session from the payment intent, then find the order
+        let order = null as { _id: string; status: string; items: Array<{productSlug?: string; quantity?: number}> } | null
+        try {
+          const sessions = await stripe.checkout.sessions.list({payment_intent: paymentIntent, limit: 1})
+          if (sessions.data.length > 0) {
+            order = await writeClient.fetch(
+              `*[_type == "order" && stripeSessionId == $sid][0]{ _id, status, items }`,
+              {sid: sessions.data[0].id}
+            )
+          }
+        } catch (e) {
+          console.error('Failed to look up session for refund:', e)
+        }
 
         if (order && order.status !== 'refunded') {
           await writeClient.patch(order._id).set({
@@ -316,16 +326,7 @@ export async function POST(req: NextRequest) {
             }
           }
 
-          // Notify admin
-          try {
-            const {sendNewOrderNotification} = await import('@/lib/email')
-            const adminEmail = process.env.ADMIN_EMAIL
-            if (adminEmail) {
-              const {sendEmail: sendAdminEmail} = await import('@/lib/email') as any
-              // Use the general notification — admin will see "Refunded" in Sanity
-              console.log(`[REFUND] Order ${order._id} marked as refunded`)
-            }
-          } catch {}
+          console.info(`[REFUND] Order ${order._id} marked as refunded`)
         }
       }
     }
@@ -333,29 +334,32 @@ export async function POST(req: NextRequest) {
     // Handle disputes — flag order for admin attention
     if (event.type === 'charge.dispute.created') {
       const dispute = event.data.object as Stripe.Dispute
-      const chargeId = typeof dispute.charge === 'string' ? dispute.charge : dispute.charge?.id
+      const paymentIntentId = typeof dispute.payment_intent === 'string'
+        ? dispute.payment_intent
+        : dispute.payment_intent?.id
 
-      if (chargeId) {
-        // Find order linked to this charge's payment intent
-        const paymentIntentId = typeof dispute.payment_intent === 'string'
-          ? dispute.payment_intent
-          : dispute.payment_intent?.id
-
-        if (paymentIntentId) {
-          const order = await writeClient.fetch(
-            `*[_type == "order" && stripeSessionId match $pid][0]{ _id, status, email, name }`,
-            {pid: String(paymentIntentId)}
-          )
-
-          if (order) {
-            await writeClient.patch(order._id).set({
-              status: 'disputed',
-              notes: `Dispute opened on ${new Date().toISOString()}. Reason: ${dispute.reason || 'unknown'}. Review in Stripe Dashboard.`,
-              updatedAt: new Date().toISOString(),
-            }).commit()
-
-            console.error(`[DISPUTE] Order ${order._id} disputed by ${order.email}. Reason: ${dispute.reason}`)
+      if (paymentIntentId) {
+        let order = null as { _id: string; status: string; email?: string; name?: string } | null
+        try {
+          const sessions = await stripe.checkout.sessions.list({payment_intent: paymentIntentId, limit: 1})
+          if (sessions.data.length > 0) {
+            order = await writeClient.fetch(
+              `*[_type == "order" && stripeSessionId == $sid][0]{ _id, status, email, name }`,
+              {sid: sessions.data[0].id}
+            )
           }
+        } catch (e) {
+          console.error('Failed to look up session for dispute:', e)
+        }
+
+        if (order) {
+          await writeClient.patch(order._id).set({
+            status: 'disputed',
+            notes: `Dispute opened on ${new Date().toISOString()}. Reason: ${dispute.reason || 'unknown'}. Review in Stripe Dashboard.`,
+            updatedAt: new Date().toISOString(),
+          }).commit()
+
+          console.error(`[DISPUTE] Order ${order._id} disputed by ${order.email}. Reason: ${dispute.reason}`)
         }
       }
     }

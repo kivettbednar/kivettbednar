@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useMemo} from 'react'
+import {useState, useMemo, useEffect} from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {ProductCard} from '@/components/ui/ProductCard'
@@ -90,6 +90,10 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
   }, [products, selectedCategory, selectedCollection, sortBy, searchQuery, collections])
 
   // Reset pagination when filters change
+  useEffect(() => {
+    setVisibleCount(PRODUCTS_PER_PAGE)
+  }, [selectedCategory, selectedCollection, sortBy, searchQuery])
+
   const displayedProducts = filteredAndSortedProducts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredAndSortedProducts.length
 

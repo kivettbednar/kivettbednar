@@ -1,11 +1,11 @@
 import type {Metadata} from 'next'
+import {notFound} from 'next/navigation'
 
 import PageBuilderPage from '@/app/components/PageBuilder'
 import {sanityFetch} from '@/sanity/lib/live'
 import {client} from '@/sanity/lib/client'
 import {pageBySlugQuery, pagesSlugs} from '@/sanity/lib/queries'
 import {PageBySlugQueryResult} from '@/sanity.types'
-import {PageOnboarding} from '@/app/components/Onboarding'
 
 type Props = {
   params: Promise<{slug: string}>
@@ -63,11 +63,7 @@ export default async function Page(props: Props) {
   ])
 
   if (!page?._id) {
-    return (
-      <div className="py-40">
-        <PageOnboarding />
-      </div>
-    )
+    notFound()
   }
 
   return (
