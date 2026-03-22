@@ -10,6 +10,7 @@ import {motion} from 'framer-motion'
 import {ShoppingCart} from 'lucide-react'
 import {useCart} from './CartContext'
 import {useToast} from './Toast'
+import {formatPrice} from '@/lib/format'
 
 type Product = {
   _id: string
@@ -67,9 +68,9 @@ export function ProductCard({product}: {product: Product}) {
     setTimeout(() => setIsAddingToCart(false), 500)
   }, [product, hasOptions, addItem, showToast])
 
-  const price = (product.priceCents / 100).toFixed(2)
+  const price = formatPrice(product.priceCents)
   const compareAtPrice = product.compareAtPriceCents
-    ? (product.compareAtPriceCents / 100).toFixed(2)
+    ? formatPrice(product.compareAtPriceCents)
     : null
 
   // Calculate stock status
@@ -201,7 +202,7 @@ export function ProductCard({product}: {product: Product}) {
         </div>
 
             {/* Quick Add / View Button */}
-            <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <div className="absolute top-4 right-4 z-20 hover-reveal">
               {!isOutOfStock && !hasOptions ? (
                 <motion.button
                   onClick={handleQuickAdd}

@@ -1,0 +1,84 @@
+@theme {
+  /* Font Families - Premium Typography (loaded via next/font/google in layout.tsx) */
+  --font-inter: var(--font-inter-nf), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-bebas: var(--font-anton-nf), Impact, "Helvetica Neue Condensed", "Helvetica Neue", "Arial Black", "Franklin Gothic Bold", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-playfair-nf), Georgia, "Times New Roman", serif;
+
+  /* Dark Cinematic Foundation */
+  --color-background: #0a0a0a;
+  --color-surface: #1a1a1a;
+  --color-surface-elevated: #26262e;
+
+  /* Text - High contrast */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #dddddd;
+  --color-text-muted: #999999;
+
+  /* Gold Spectrum - Full palette for nuanced usage */
+  --color-gold-50: #fefdf8;
+  --color-gold-100: #fdf9e7;
+  --color-gold-200: #f9efc4;
+  --color-gold-300: #f3de8a;
+  --color-gold-400: #e9c84d;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #b8922c;
+  --color-gold-700: #8f6f22;
+  --color-gold-800: #6b531b;
+  --color-gold-900: #4a3914;
+
+  /* Accent Colors - Strategic bright colors */
+  --color-accent-primary: #D4AF37; /* Metallic Gold - authentic gold color */
+  --color-accent-warm: #e8a54d; /* Warm gold for highlights */
+  --color-accent-secondary: #4a9eff; /* Electric blue */
+  --color-accent-red: #a71a19; /* Deep red option */
+
+  /* Borders & Dividers */
+  --color-border: #3d3d3d;
+  --color-border-subtle: #2a2a2a;
+
+  /* Overlays */
+  --overlay-dark: rgba(0, 0, 0, 0.6);
+  --overlay-darker: rgba(0, 0, 0, 0.8);
+
+  /* Surface Gradients */
+  --gradient-surface: linear-gradient(135deg, #1a1a1a 0%, #0d0e12 100%);
+  --gradient-card: linear-gradient(135deg, #1f1f24 0%, #16161a 100%);
+  --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #e9c84d 50%, #D4AF37 100%);
+  --gradient-gold-subtle: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(233, 200, 77, 0.05) 100%);
+
+  /* Ambient Light Effects */
+  --ambient-gold: radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+  --ambient-warm: radial-gradient(ellipse at 50% 100%, rgba(232, 165, 77, 0.05) 0%, transparent 50%);
+
+  /* Shadow System - Layered for depth */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 10px 40px -10px rgba(212, 175, 55, 0.3);
+  --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.2), 0 0 40px rgba(212, 175, 55, 0.1);
+
+  /* Shadcn/UI Theme Variables (adapted for dark) */
+  --color-foreground: #ffffff;
+  --color-card: #1a1a1a;
+  --color-card-foreground: #ffffff;
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: #ffffff;
+  --color-primary: #D4AF37;
+  --color-primary-foreground: #000000;
+  --color-secondary: #26262e;
+  --color-secondary-foreground: #ffffff;
+  --color-muted: #26262e;
+  --color-muted-foreground: #999999;
+  --color-accent: #D4AF37;
+  --color-accent-foreground: #000000;
+  --color-destructive: #a71a19;
+  --color-destructive-foreground: #ffffff;
+  --color-input: #26262e;
+  --color-ring: #D4AF37;
+
+  --default-transition-duration: 300ms;
+  --radius: 0;
+
+}

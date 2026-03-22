@@ -732,6 +732,44 @@ export const productSearchQuery = defineQuery(`*[_type == "product" && (
   tags
 }`)
 
+// Collections
+export const allCollectionsQuery = defineQuery(`*[_type == "productCollection"] | order(displayOrder asc, _createdAt desc){
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  image{asset->, alt},
+  featured,
+  displayOrder,
+  "productSlugs": products[]->slug.current
+}`)
+
+export const collectionBySlugQuery = defineQuery(`*[_type == "productCollection" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  image{asset->, alt},
+  "products": products[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},
+    priceCents,
+    compareAtPriceCents,
+    onSale,
+    currency,
+    category,
+    stockStatus,
+    featured,
+    badges,
+    tags,
+    inventoryQuantity,
+    trackInventory,
+    lowStockThreshold
+  }
+}`)
+
 // Promo codes
 export const promoCodeByCodeQuery = defineQuery(`*[_type == "promoCode" && code == $code && active == true][0]{
   _id,

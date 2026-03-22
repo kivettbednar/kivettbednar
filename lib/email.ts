@@ -32,8 +32,10 @@ function getAdminEmail(): string {
   return process.env.ADMIN_EMAIL || "admin@your-domain.com";
 }
 
+import {formatPrice} from '@/lib/format'
+
 function formatCents(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
+  return `$${formatPrice(cents)}`;
 }
 
 async function sendEmail(to: string, subject: string, html: string): Promise<{ success: boolean; error?: string }> {
@@ -177,6 +179,25 @@ export async function sendContactFormSubmission(data: {
     data.subject ? `Contact: ${data.subject}` : `Contact Form — ${data.name}`,
     html
   );
+}
+
+export async function sendFulfillmentFailureAlert(order: {
+  orderId: string;
+  email: string;
+  name?: string;
+  error?: string;
+}) {
+  const html = `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+      <h2 style="color:#d32f2f">Fulfillment Failed</h2>
+      <p>A Gelato fulfillment has failed and requires attention.</p>
+      <p><strong>Order ID:</strong> ${escapeHtml(order.orderId)}</p>
+      <p><strong>Customer:</strong> ${escapeHtml(order.name || 'N/A')} (${escapeHtml(order.email)})</p>
+      ${order.error ? `<p><strong>Error:</strong> ${escapeHtml(order.error)}</p>` : ''}
+      <p>Please check the order in Sanity Studio and use the "Retry Gelato Order" action if appropriate.</p>
+    </div>`;
+
+  return sendEmail(getAdminEmail(), `ALERT: Fulfillment Failed — ${order.orderId}`, html);
 }
 
 export async function sendNewOrderNotification(order: {

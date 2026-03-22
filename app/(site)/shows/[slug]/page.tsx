@@ -161,7 +161,7 @@ export default async function EventPage({params}: Props) {
     : heroImageDesktop
 
   // Default hero image: prefer CMS setting, fallback to static path
-  const defaultHeroImage = showsPage?.defaultEventImage?.asset?.url || '/images/performance/stage-main.jpg'
+  const defaultHeroImage = (showsPage as any)?.defaultEventImage?.asset?.url || '/images/performance/stage-main.jpg'
   const hasHeroImage = heroImageDesktop?.asset?.url
 
   // Generate Google Maps link

@@ -21,12 +21,13 @@ export async function POST(req: Request) {
       return NextResponse.json({error: result.reason}, {status: promoCode ? 400 : 404})
     }
 
+    const promo = promoCode as any
     return NextResponse.json({
       success: true,
-      code: promoCode.code,
-      discountType: promoCode.discountType,
+      code: promo.code,
+      discountType: promo.discountType,
       discountCents: result.discountCents,
-      description: promoCode.description,
+      description: promo.description,
     })
   } catch (error: unknown) {
     console.error('Promo code error:', error)

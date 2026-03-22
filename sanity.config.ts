@@ -16,6 +16,9 @@ import {
   type DocumentLocation,
 } from 'sanity/presentation'
 import {assist} from '@sanity/assist'
+import {cancelGelatoOrderAction} from './sanity/actions/cancelGelatoOrder'
+import {retryGelatoOrderAction} from './sanity/actions/retryGelatoOrder'
+import {adminGuideTool} from './sanity/tools/adminGuide'
 
 // Environment variables for project configuration
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'your-projectID'
@@ -38,8 +41,9 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
       return slug ? `/posts/${slug}` : undefined
     case 'page':
       return slug ? `/${slug}` : undefined
+    case 'product':
+      return slug ? `/merch/${slug}` : undefined
     default:
-      console.warn('Invalid document type:', documentType)
       return undefined
   }
 }
@@ -76,6 +80,10 @@ export default defineConfig({
           {
             route: '/posts/:slug',
             filter: `_type == "post" && slug.current == $slug || _id == $slug`,
+          },
+          {
+            route: '/merch/:slug',
+            filter: `_type == "product" && slug.current == $slug`,
           },
         ]),
         // Locations Resolver API allows you to define where data is being used in your application. https://www.sanity.io/docs/presentation-resolver-api#8d8bca7bfcd7
@@ -122,6 +130,24 @@ export default defineConfig({
               ].filter(Boolean) as DocumentLocation[],
             }),
           }),
+          product: defineLocations({
+            select: {
+              title: 'title',
+              slug: 'slug.current',
+            },
+            resolve: (doc) => ({
+              locations: [
+                {
+                  title: doc?.title || 'Untitled',
+                  href: resolveHref('product', doc?.slug)!,
+                },
+                {
+                  title: 'Merch',
+                  href: '/merch',
+                } satisfies DocumentLocation,
+              ].filter(Boolean) as DocumentLocation[],
+            }),
+          }),
         },
       },
     }),
@@ -132,10 +158,20 @@ export default defineConfig({
     unsplashImageAsset(),
     assist(),
     visionTool(),
+    adminGuideTool(),
   ],
 
   // Schema configuration, imported from ./src/schemaTypes/index.ts
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    actions: (prev, context) => {
+      if (context.schemaType === 'order') {
+        return [...prev, cancelGelatoOrderAction, retryGelatoOrderAction]
+      }
+      return prev
+    },
   },
 })

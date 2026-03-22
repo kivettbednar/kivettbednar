@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
   // Verify webhook signature
   const secret = process.env.GELATO_WEBHOOK_SECRET
   if (!secret) {
-    console.warn('Gelato webhook: GELATO_WEBHOOK_SECRET not configured')
-    return new NextResponse('Webhook secret not configured', {status: 501})
+    console.error('Gelato webhook: GELATO_WEBHOOK_SECRET not configured')
+    return new NextResponse('Unauthorized', {status: 401})
   }
   const body = await req.text()
   const sig = req.headers.get('x-gelato-signature') || req.headers.get('x-signature')
@@ -121,6 +121,21 @@ export async function POST(req: NextRequest) {
       .patch(existingOrder._id)
       .set(updateData)
       .commit()
+
+    // Send admin alert if fulfillment failed
+    if (updateData.status === 'failed' && existingOrder.email) {
+      try {
+        const {sendFulfillmentFailureAlert} = await import('@/lib/email')
+        await sendFulfillmentFailureAlert({
+          orderId: existingOrder._id,
+          email: existingOrder.email,
+          name: existingOrder.name || undefined,
+          error: rawStatus || 'Gelato fulfillment failed',
+        })
+      } catch (e) {
+        console.error('Failed to send fulfillment failure alert:', e)
+      }
+    }
 
     // Send shipping update email if tracking info received (and not already sent)
     if (trackingNumber && existingOrder.email && trackingNumber !== existingOrder.trackingNumber) {

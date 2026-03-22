@@ -5,6 +5,7 @@ import {sanityFetch} from '@/sanity/lib/live'
 import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery} from '@/sanity/lib/queries'
 import {ProductPageContent} from './ProductPageContent'
 import {urlFor} from '@/sanity/lib/image'
+import {formatPrice} from '@/lib/format'
 
 type Props = {
   params: Promise<{slug: string}>
@@ -68,8 +69,8 @@ export default async function ProductPage({params}: Props) {
 
   let relatedProducts: unknown[] = []
   try {
-    if (product.relatedProducts?.length > 0) {
-      relatedProducts = product.relatedProducts
+    if ((product.relatedProducts as any)?.length > 0) {
+      relatedProducts = product.relatedProducts as any
     } else if (product.category) {
       relatedProducts = await sanityFetch({
         query: relatedProductsByCategoryQuery,
@@ -78,9 +79,9 @@ export default async function ProductPage({params}: Props) {
     }
   } catch { /* related products are non-critical */ }
 
-  const price = product.priceCents ? (product.priceCents / 100).toFixed(2) : '0.00'
+  const price = product.priceCents ? formatPrice(product.priceCents) : '0.00'
 
-  const productSlug: string = product.slug?.current || '';
+  const productSlug: string = (product.slug as any)?.current || product.slug || '';
 
   // Build image URLs on server
   const mainImageUrl = product.images?.[0]?.asset
@@ -88,16 +89,16 @@ export default async function ProductPage({params}: Props) {
     : undefined
 
   const thumbnailImages = product.images && product.images.length > 1
-    ? product.images.slice(1, 5).map((img: {asset: {url?: string}; alt?: string}) => ({
-        url: urlFor(img.asset).width(200).height(200).url(),
+    ? product.images.slice(1, 5).map((img: any) => ({
+        url: img.asset ? urlFor(img.asset).width(200).height(200).url() : '',
         alt: img.alt || ''
       }))
     : undefined
 
   // Build all images for lightbox (larger resolution)
   const allImages = product.images
-    ? product.images.map((img: {asset: {url?: string}; alt?: string}) => ({
-        url: urlFor(img.asset).width(1600).height(1600).url(),
+    ? product.images.map((img: any) => ({
+        url: img.asset ? urlFor(img.asset).width(1600).height(1600).url() : '',
         alt: img.alt || product.title || 'Product image'
       }))
     : []
@@ -136,14 +137,14 @@ export default async function ProductPage({params}: Props) {
         dangerouslySetInnerHTML={{__html: JSON.stringify(productJsonLd)}}
       />
       <ProductPageContent
-        product={product}
+        product={product as any}
         price={price}
         productSlug={productSlug}
         mainImageUrl={mainImageUrl}
         thumbnailImages={thumbnailImages}
         allImages={allImages}
         relatedProducts={relatedProducts as import('@/types/product').ProductListItem[]}
-        trustBadges={merchPage?.trustBadges}
+        trustBadges={merchPage?.trustBadges || undefined}
       />
     </>
   )

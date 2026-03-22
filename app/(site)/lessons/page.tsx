@@ -87,8 +87,8 @@ export default async function LessonsPage() {
         </div>
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-center">
-            {(lessonsPage.stats && lessonsPage.stats.length > 0
-              ? lessonsPage.stats
+            {((lessonsPage.stats as any) && (lessonsPage.stats as any).length > 0
+              ? (lessonsPage.stats as any)
               : [
                   {_key: 'default-1', label: 'Years Experience', value: '20', suffix: '+'},
                   {_key: 'default-2', label: 'Students Taught', value: '500', suffix: '+'},
@@ -165,7 +165,7 @@ export default async function LessonsPage() {
               </AnimatedSection>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {lessonsPage.learningItems.map((item: {_key?: string; title: string; description: string; icon?: string}, index: number) => {
+                {lessonsPage.learningItems.map((item: any, index: number) => {
                   const iconKey = item.icon || defaultIcons[index % defaultIcons.length]
                   const IconComponent = iconMap[iconKey] || Guitar
 

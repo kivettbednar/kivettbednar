@@ -125,8 +125,8 @@ export default async function HomePage() {
 
       {/* Marquee Ticker Band */}
       <MarqueeTicker
-        topItems={homePage.marqueeTopItems?.length ? homePage.marqueeTopItems : undefined}
-        bottomItems={homePage.marqueeBottomItems?.length ? homePage.marqueeBottomItems : undefined}
+        topItems={(homePage.marqueeTopItems as any)?.length ? (homePage.marqueeTopItems as any) : undefined}
+        bottomItems={(homePage.marqueeBottomItems as any)?.length ? (homePage.marqueeBottomItems as any) : undefined}
       />
 
       {/* Featured Video Section - Cinematic Split Layout */}
@@ -398,8 +398,8 @@ export default async function HomePage() {
         {homePage.galleryImages && homePage.galleryImages.length > 0 && (
           <FloatingGallery
             images={homePage.galleryImages
-              .filter((img: {image?: {asset?: {url?: string | null} | null}; alt?: string | null; width?: number | null; height?: number | null}) => img.image?.asset?.url)
-              .map((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; width?: number | null; height?: number | null}) => ({
+              .filter((img: any) => img.image?.asset?.url)
+              .map((img: any) => ({
                 src: img.image!.asset!.url!,
                 alt: img.alt || img.image?.alt || 'Gallery image',
                 width: img.width || 1200,

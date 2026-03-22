@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       let matchingVariant: {priceCents?: number} | null = null
       const opts = it.options
       if (opts && product.variants) {
-        matchingVariant = product.variants.find((v: {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number}) => {
+        matchingVariant = (product.variants as any[]).find((v: {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number}) => {
           if (!v.optionValues) return false
           const ov = variantOptionValuesToRecord(v.optionValues)
           return Object.entries(opts).every(
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       }
 
       // Reject invalid options that don't match any variant
-      if (it.options && Object.keys(it.options).length > 0 && product.variants?.length > 0 && !matchingVariant) {
+      if (it.options && Object.keys(it.options).length > 0 && (product.variants as any)?.length > 0 && !matchingVariant) {
         return NextResponse.json({error: `Invalid options for "${product.title}"`}, {status: 400})
       }
 
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
           currency: (product.currency as string) || 'USD',
           unit_amount: unitAmount,
           product_data: {
-            name: product.title,
+            name: product.title || '',
             images: product.images?.[0]?.asset?.url ? [product.images[0].asset.url] : [],
             metadata: {
               productId: product._id,
@@ -112,14 +112,15 @@ export async function POST(req: Request) {
 
           // Check product/category restrictions
           if (discountAmountCents > 0 && promoCode) {
-            const hasProductRestrictions = promoCode.applicableProducts && promoCode.applicableProducts.length > 0
-            const hasCategoryRestrictions = promoCode.applicableCategories && promoCode.applicableCategories.length > 0
+            const promo = promoCode as any
+            const hasProductRestrictions = promo.applicableProducts && promo.applicableProducts.length > 0
+            const hasCategoryRestrictions = promo.applicableCategories && promo.applicableCategories.length > 0
 
             if (hasProductRestrictions || hasCategoryRestrictions) {
               const applicableProductIds = new Set(
-                (promoCode.applicableProducts || []).map((p: {_id: string}) => p._id)
+                (promo.applicableProducts || []).map((p: {_id: string}) => p._id)
               )
-              const applicableCategories = new Set(promoCode.applicableCategories || [])
+              const applicableCategories = new Set(promo.applicableCategories || [])
 
               const hasMatchingItem = validatedProducts.some((vp) => {
                 if (hasProductRestrictions && applicableProductIds.has(vp._id)) return true

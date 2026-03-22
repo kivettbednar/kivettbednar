@@ -271,7 +271,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
                 ),
               S.divider(),
-              ...['pending', 'submitted', 'in_production', 'shipped', 'delivered', 'canceled', 'failed', 'gelato_failed'].map(
+              ...['pending', 'submitted', 'in_production', 'shipped', 'delivered', 'canceled', 'refunded', 'disputed', 'failed', 'gelato_failed'].map(
                 (status) =>
                   S.listItem()
                     .title(

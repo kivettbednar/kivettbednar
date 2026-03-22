@@ -9,6 +9,7 @@ import {motion} from 'framer-motion'
 import {CheckCircle, Package, Truck, ChevronRight} from 'lucide-react'
 import {clientBrowser} from '@/sanity/lib/client-browser'
 import {orderConfirmationPageQuery} from '@/sanity/lib/queries'
+import {formatPrice} from '@/lib/format'
 
 type OrderData = {
   orderId: string
@@ -48,6 +49,7 @@ function OrderConfirmationContent() {
   const [showContent, setShowContent] = useState(false)
   const [loading, setLoading] = useState(true)
   const [pageContent, setPageContent] = useState<Record<string, string> | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id')
@@ -57,9 +59,9 @@ function OrderConfirmationContent() {
       clientBrowser.fetch(orderConfirmationPageQuery).then(setPageContent).catch(() => {})
 
       // Try Stripe session lookup first with retry logic for webhook race condition
-      // Webhooks can take 2-15s; use exponential backoff: 1s, 2s, 3s, 4s, 5s, 5s = 20s total
+      // Webhooks can take 2-45s; use escalating backoff: total ~60s
       if (sessionId) {
-        const retryDelays = [1000, 2000, 3000, 4000, 5000, 5000]
+        const retryDelays = [1000, 2000, 3000, 4000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000]
         for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
           try {
             const res = await fetch(`/api/orders/${sessionId}`)
@@ -122,7 +124,7 @@ function OrderConfirmationContent() {
     }
 
     loadOrder()
-  }, [clear, searchParams])
+  }, [clear, searchParams, retryCount])
 
   if (loading) {
     return (
@@ -147,9 +149,22 @@ function OrderConfirmationContent() {
           <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">
             {pageContent?.noOrderHeading || 'No Order Found'}
           </h1>
-          <p className="text-text-secondary mb-8">
+          <p className="text-text-secondary mb-4">
             {pageContent?.noOrderText || "We couldn't find your order information."}
           </p>
+          {searchParams.get('session_id') && (
+            <p className="text-text-muted text-sm mb-4">
+              If you just completed a purchase, your order may still be processing.
+            </p>
+          )}
+          {searchParams.get('session_id') && (
+            <button
+              onClick={() => { setLoading(true); setRetryCount(c => c + 1); }}
+              className="inline-flex items-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold uppercase tracking-wider px-6 py-3 mb-4 transition-all duration-300"
+            >
+              Check Again
+            </button>
+          )}
           <Link href="/merch" className="btn-primary inline-flex">
             Browse Merch
           </Link>
@@ -291,7 +306,7 @@ function OrderConfirmationContent() {
                       Order Total
                     </div>
                     <div className="text-2xl font-bold text-accent-primary">
-                      ${(orderData.totalCents / 100).toFixed(2)}
+                      ${formatPrice(orderData.totalCents)}
                     </div>
                   </div>
                   <div>
@@ -398,10 +413,10 @@ function OrderConfirmationContent() {
                       </div>
                       <div className="text-right">
                         <div className="text-xl font-bold text-accent-primary">
-                          ${((it.priceCents * it.quantity) / 100).toFixed(2)}
+                          ${formatPrice(it.priceCents * it.quantity)}
                         </div>
                         <div className="text-sm text-text-muted">
-                          ${(it.priceCents / 100).toFixed(2)} each
+                          ${formatPrice(it.priceCents)} each
                         </div>
                       </div>
                     </motion.div>
@@ -415,7 +430,7 @@ function OrderConfirmationContent() {
                     Total
                   </span>
                   <span className="text-4xl font-bold text-accent-primary">
-                    ${(orderData.totalCents / 100).toFixed(2)}
+                    ${formatPrice(orderData.totalCents)}
                   </span>
                 </div>
               </div>

@@ -5,7 +5,8 @@ import {contactPageQuery, settingsQuery, uiTextQuery} from '@/sanity/lib/queries
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
-import {Mail, Calendar, Music, Instagram, Facebook, Youtube, MapPin, ChevronRight, ExternalLink} from 'lucide-react'
+import {Mail, Calendar, Music, Instagram, Facebook, Youtube, MapPin, ChevronRight, ExternalLink, MessageSquare} from 'lucide-react'
+import {ContactForm} from '@/components/ui/ContactForm'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
@@ -257,6 +258,32 @@ export default async function ContactPage() {
                 </a>
               </AnimatedSection>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="bg-background py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <AnimatedSection animation="fadeIn">
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="h-px bg-accent-primary w-12" />
+                  <MessageSquare className="w-5 h-5 text-accent-primary" />
+                  <div className="h-px bg-accent-primary w-12" />
+                </div>
+                <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-3">
+                  Send a Message
+                </h2>
+                <p className="text-text-secondary">
+                  Have a question or want to get in touch? Fill out the form below.
+                </p>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection animation="fadeUp" delay={0.2}>
+              <ContactForm />
+            </AnimatedSection>
           </div>
         </div>
       </section>

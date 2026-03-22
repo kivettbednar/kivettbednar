@@ -1,5 +1,6 @@
 import {defineField, defineType, defineArrayMember} from 'sanity'
 import {BasketIcon} from '@sanity/icons'
+import {TrackingUrlInput, StripeSessionIdInput} from '@/sanity/components/OrderExternalLinks'
 
 export const order = defineType({
   name: 'order',
@@ -12,6 +13,7 @@ export const order = defineType({
       title: 'Stripe Session ID',
       type: 'string',
       description: 'Stripe checkout session ID',
+      components: {input: StripeSessionIdInput},
     }),
     defineField({
       name: 'email',
@@ -101,6 +103,7 @@ export const order = defineType({
       title: 'Gelato Status',
       type: 'string',
       description: 'Raw status string from Gelato — updated automatically by their webhook. Do not edit manually.',
+      readOnly: true,
     }),
     defineField({
       name: 'status',
@@ -115,6 +118,8 @@ export const order = defineType({
           {title: 'Shipped', value: 'shipped'},
           {title: 'Delivered', value: 'delivered'},
           {title: 'Canceled', value: 'canceled'},
+          {title: 'Refunded', value: 'refunded'},
+          {title: 'Disputed', value: 'disputed'},
           {title: 'Failed', value: 'failed'},
           {title: 'Gelato Failed', value: 'gelato_failed'},
         ],
@@ -177,6 +182,7 @@ export const order = defineType({
       title: 'Tracking URL',
       type: 'url',
       description: 'URL to track shipment',
+      components: {input: TrackingUrlInput},
     }),
     defineField({
       name: 'notes',

@@ -1,6 +1,6 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
-import {merchPageQuery, allProductsQuery} from '@/sanity/lib/queries'
+import {merchPageQuery, allProductsQuery, allCollectionsQuery} from '@/sanity/lib/queries'
 import {MerchPageContent} from './MerchPageContent'
 import type {ProductListItem} from '@/types/product'
 
@@ -24,9 +24,18 @@ export async function generateMetadata(): Promise<Metadata> {
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
 
+export type CollectionData = {
+  _id: string
+  title: string | null
+  slug: string | null
+  description: string | null
+  productSlugs: Array<string | null> | null
+}
+
 export default async function MerchPage() {
   let merchPage = null
   let products: ProductListItem[] = []
+  let collections: CollectionData[] = []
 
   try {
     // Fetch merch page content from Sanity
@@ -36,14 +45,20 @@ export default async function MerchPage() {
   }
 
   try {
-    // Fetch products from Sanity
-    const sanityProducts = await sanityFetch({query: allProductsQuery}).then((r) => r.data)
+    // Fetch products and collections in parallel
+    const [sanityProducts, sanityCollections] = await Promise.all([
+      sanityFetch({query: allProductsQuery}).then((r) => r.data),
+      sanityFetch({query: allCollectionsQuery}).then((r) => r.data).catch(() => []),
+    ])
     if (sanityProducts && sanityProducts.length > 0) {
-      products = sanityProducts
+      products = sanityProducts as unknown as ProductListItem[]
+    }
+    if (sanityCollections && sanityCollections.length > 0) {
+      collections = sanityCollections
     }
   } catch (error) {
     console.warn('Failed to fetch products from Sanity:', error)
   }
 
-  return <MerchPageContent merchPage={merchPage} products={products} />
+  return <MerchPageContent merchPage={merchPage} products={products} collections={collections} />
 }

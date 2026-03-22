@@ -6,8 +6,9 @@ import Image from 'next/image'
 import {ProductCard} from '@/components/ui/ProductCard'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {motion} from 'framer-motion'
-import {Search, Filter} from 'lucide-react'
+import {Search, Filter, Tag} from 'lucide-react'
 import type {ProductListItem} from '@/types/product'
+import type {CollectionData} from './page'
 
 type MerchPageData = {
   heroHeading?: string | null
@@ -27,12 +28,17 @@ type MerchPageData = {
 type Props = {
   merchPage: MerchPageData | null
   products: ProductListItem[]
+  collections?: CollectionData[]
 }
 
-export function MerchPageContent({merchPage, products}: Props) {
+const PRODUCTS_PER_PAGE = 24
+
+export function MerchPageContent({merchPage, products, collections}: Props) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [selectedCollection, setSelectedCollection] = useState<string>('all')
   const [sortBy, setSortBy] = useState<string>('featured')
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_PAGE)
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
@@ -51,6 +57,15 @@ export function MerchPageContent({merchPage, products}: Props) {
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((p) => p.category === selectedCategory)
+    }
+
+    // Filter by collection
+    if (selectedCollection !== 'all' && collections?.length) {
+      const col = collections.find(c => c.slug === selectedCollection)
+      if (col?.productSlugs) {
+        const slugSet = new Set(col.productSlugs.filter(Boolean))
+        filtered = filtered.filter((p) => p.slug && slugSet.has(p.slug))
+      }
     }
 
     // Sort products
@@ -72,7 +87,11 @@ export function MerchPageContent({merchPage, products}: Props) {
     })
 
     return sorted
-  }, [products, selectedCategory, sortBy, searchQuery])
+  }, [products, selectedCategory, selectedCollection, sortBy, searchQuery, collections])
+
+  // Reset pagination when filters change
+  const displayedProducts = filteredAndSortedProducts.slice(0, visibleCount)
+  const hasMore = visibleCount < filteredAndSortedProducts.length
 
   const categories = [
     {value: 'all', label: 'All Products'},
@@ -243,6 +262,28 @@ export function MerchPageContent({merchPage, products}: Props) {
                         </div>
                       </div>
 
+                      {/* Collection Filter */}
+                      {collections && collections.length > 0 && (
+                        <div className="w-full lg:w-72">
+                          <label className="block text-xs uppercase tracking-[0.2em] font-bold text-accent-primary mb-4 flex items-center gap-2">
+                            <Tag className="w-4 h-4" />
+                            Collection
+                          </label>
+                          <select
+                            value={selectedCollection}
+                            onChange={(e) => setSelectedCollection(e.target.value)}
+                            className="w-full bg-surface-elevated border-2 border-border px-5 py-3 text-text-primary focus:border-accent-primary focus:outline-none transition-all uppercase tracking-wider text-sm font-bold cursor-pointer hover:border-accent-primary/50"
+                          >
+                            <option value="all">All Collections</option>
+                            {collections.map((col) => (
+                              <option key={col._id} value={col.slug || col._id}>
+                                {col.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
                       {/* Sort */}
                       <div className="w-full lg:w-72">
                         <label className="block text-xs uppercase tracking-[0.2em] font-bold text-accent-primary mb-4">
@@ -268,12 +309,14 @@ export function MerchPageContent({merchPage, products}: Props) {
                         Displaying {filteredAndSortedProducts.length}{' '}
                         {filteredAndSortedProducts.length === 1 ? 'product' : 'products'}
                       </p>
-                      {(selectedCategory !== 'all' || sortBy !== 'featured' || searchQuery) && (
+                      {(selectedCategory !== 'all' || selectedCollection !== 'all' || sortBy !== 'featured' || searchQuery) && (
                         <button
                           onClick={() => {
                             setSelectedCategory('all')
+                            setSelectedCollection('all')
                             setSortBy('featured')
                             setSearchQuery('')
+                            setVisibleCount(PRODUCTS_PER_PAGE)
                           }}
                           className="text-accent-primary hover:text-accent-primary/80 uppercase tracking-wider text-xs font-bold transition-colors"
                         >
@@ -287,13 +330,28 @@ export function MerchPageContent({merchPage, products}: Props) {
 
                 {/* Products Grid - Enhanced Layout */}
                 {filteredAndSortedProducts.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {filteredAndSortedProducts.map((product) => (
-                      <div key={product._id} className="h-full">
-                        <ProductCard product={product} />
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                      {displayedProducts.map((product) => (
+                        <div key={product._id} className="h-full">
+                          <ProductCard product={product} />
+                        </div>
+                      ))}
+                    </div>
+                    {hasMore && (
+                      <div className="text-center mt-16">
+                        <button
+                          onClick={() => setVisibleCount(prev => prev + PRODUCTS_PER_PAGE)}
+                          className="inline-flex items-center gap-3 px-10 py-4 border-2 border-border text-text-primary font-bold uppercase tracking-wider hover:border-accent-primary hover:text-accent-primary transition-all duration-300"
+                        >
+                          Load More Products
+                          <span className="text-text-muted text-sm">
+                            ({filteredAndSortedProducts.length - visibleCount} remaining)
+                          </span>
+                        </button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 ) : (
                   <AnimatedSection animation="fadeUp" delay={0.2}>
                     <div className="text-center py-32">

@@ -8,6 +8,7 @@ import {PromoCodeInput} from '@/components/ui/PromoCodeInput'
 import {motion} from 'framer-motion'
 import {ShoppingCart, Trash2, ChevronRight, Package, ShieldCheck} from 'lucide-react'
 import {useState, useEffect} from 'react'
+import {formatPrice} from '@/lib/format'
 
 export default function CartPage() {
   const {items, totalCents, updateQty, removeItem, clear, promoCode, applyPromoCode, removePromoCode, finalTotalCents} = useCart()
@@ -193,10 +194,10 @@ export default function CartPage() {
                             {/* Price - Mobile only */}
                             <div className="sm:hidden mt-2">
                               <div className="text-xl font-bold text-accent-primary">
-                                ${((it.priceCents * it.quantity) / 100).toFixed(2)}
+                                ${formatPrice(it.priceCents * it.quantity)}
                               </div>
                               <div className="text-xs text-text-muted mt-0.5">
-                                {it.currency} ${(it.priceCents / 100).toFixed(2)} each
+                                {it.currency} ${formatPrice(it.priceCents)} each
                               </div>
                             </div>
                           </div>
@@ -240,10 +241,10 @@ export default function CartPage() {
                         {/* Price - Desktop only */}
                         <div className="hidden sm:block text-right flex-shrink-0">
                           <div className="text-xl md:text-2xl font-bold text-accent-primary group-hover:scale-105 transition-transform origin-right">
-                            ${((it.priceCents * it.quantity) / 100).toFixed(2)}
+                            ${formatPrice(it.priceCents * it.quantity)}
                           </div>
                           <div className="text-xs md:text-sm text-text-muted mt-1">
-                            {it.currency} ${(it.priceCents / 100).toFixed(2)} each
+                            {it.currency} ${formatPrice(it.priceCents)} each
                           </div>
                         </div>
                       </motion.div>
@@ -274,7 +275,7 @@ export default function CartPage() {
                       <div className="flex justify-between">
                         <span className="text-text-secondary">Subtotal</span>
                         <span className="font-bold text-text-primary">
-                          ${(totalCents / 100).toFixed(2)}
+                          ${formatPrice(totalCents)}
                         </span>
                       </div>
                       {promoCode && promoCode.discountCents > 0 && (
@@ -288,7 +289,7 @@ export default function CartPage() {
                             )}
                           </span>
                           <span className="font-bold">
-                            -${(promoCode.discountCents / 100).toFixed(2)}
+                            -${formatPrice(promoCode.discountCents)}
                           </span>
                         </div>
                       )}
@@ -317,7 +318,7 @@ export default function CartPage() {
                         Total
                       </span>
                       <span className="text-3xl font-bold text-accent-primary">
-                        ${(finalTotalCents / 100).toFixed(2)}
+                        ${formatPrice(finalTotalCents)}
                       </span>
                     </div>
 

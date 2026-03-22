@@ -7,27 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {cn} from '@/lib/utils'
 import {getObjectPosition, type SanityImageWithPositioning, type PositionValue} from '@/lib/image-positioning'
-
-// Text size mapping for Tailwind JIT compiler
-const textSizeMap: Record<string, string> = {
-  'text-2xl': 'text-2xl',
-  'text-3xl': 'text-3xl',
-  'text-4xl': 'text-4xl',
-  'text-5xl': 'text-5xl',
-  'text-6xl': 'text-6xl',
-  'text-7xl': 'text-7xl',
-  'text-8xl': 'text-8xl',
-  'text-9xl': 'text-9xl',
-}
-
-const desktopSizeMap: Record<string, string> = {
-  'text-4xl': 'md:text-4xl',
-  'text-5xl': 'md:text-5xl',
-  'text-6xl': 'md:text-6xl',
-  'text-7xl': 'md:text-7xl',
-  'text-8xl': 'md:text-8xl',
-  'text-9xl': 'md:text-9xl',
-}
+import {textSizeMap, desktopSizeMap} from '@/lib/tailwind-maps'
 
 interface HeroSlide {
   _key: string

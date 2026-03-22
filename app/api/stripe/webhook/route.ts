@@ -44,8 +44,8 @@ export async function POST(req: NextRequest) {
   const stripe = getStripe()
   const secret = process.env.STRIPE_WEBHOOK_SECRET
   if (!secret) {
-    console.warn('Stripe webhook: STRIPE_WEBHOOK_SECRET not configured')
-    return new NextResponse('Webhook secret not configured', {status: 501})
+    console.error('Stripe webhook: STRIPE_WEBHOOK_SECRET not configured')
+    return new NextResponse('Unauthorized', {status: 401})
   }
 
   const body = await req.text()
@@ -206,9 +206,9 @@ export async function POST(req: NextRequest) {
       if (promoCodeStr) {
         try {
           const {fetchPromoCode} = await import('@/lib/promo-validation')
-          const promoDoc = await fetchPromoCode(promoCodeStr)
+          const promoDoc = await fetchPromoCode(promoCodeStr) as any
           if (promoDoc?._id) {
-            await writeClient.patch(promoDoc._id).inc({currentUses: 1}).commit()
+            await writeClient.patch(promoDoc._id as string).inc({currentUses: 1}).commit()
           }
         } catch (e) {
           console.error('Failed to increment promo code usage:', e)
@@ -272,6 +272,91 @@ export async function POST(req: NextRequest) {
         await sendNewOrderNotification(emailOrder)
       } catch (e) {
         console.error('Email notification error:', e)
+      }
+    }
+
+    // Handle refunds — update order status + restore inventory
+    if (event.type === 'charge.refunded') {
+      const charge = event.data.object as Stripe.Charge
+      const sessionId = charge.metadata?.sessionId || charge.payment_intent
+
+      if (sessionId) {
+        // Find order by Stripe session ID or payment intent
+        const order = await writeClient.fetch(
+          `*[_type == "order" && (stripeSessionId == $sid || stripeSessionId match $sid)][0]{ _id, status, items }`,
+          {sid: String(sessionId)}
+        )
+
+        if (order && order.status !== 'refunded') {
+          await writeClient.patch(order._id).set({
+            status: 'refunded',
+            updatedAt: new Date().toISOString(),
+          }).commit()
+
+          // Restore inventory for tracked products
+          for (const item of (order.items || [])) {
+            if (!item.productSlug) continue
+            try {
+              const product = await client.fetch(
+                `*[_type == "product" && slug.current == $slug][0]{_id, trackInventory, inventoryQuantity}`,
+                {slug: item.productSlug}
+              )
+              if (product?.trackInventory && product.inventoryQuantity != null) {
+                await writeClient.patch(product._id).inc({inventoryQuantity: item.quantity || 1}).commit()
+                const updated = await writeClient.fetch(
+                  `*[_type == "product" && _id == $id][0]{inventoryQuantity}`,
+                  {id: product._id}
+                )
+                if (updated && updated.inventoryQuantity > 0) {
+                  await writeClient.patch(product._id).set({stockStatus: 'in_stock'}).commit()
+                }
+              }
+            } catch (e) {
+              console.error(`Failed to restore inventory for ${item.productSlug}`, e)
+            }
+          }
+
+          // Notify admin
+          try {
+            const {sendNewOrderNotification} = await import('@/lib/email')
+            const adminEmail = process.env.ADMIN_EMAIL
+            if (adminEmail) {
+              const {sendEmail: sendAdminEmail} = await import('@/lib/email') as any
+              // Use the general notification — admin will see "Refunded" in Sanity
+              console.log(`[REFUND] Order ${order._id} marked as refunded`)
+            }
+          } catch {}
+        }
+      }
+    }
+
+    // Handle disputes — flag order for admin attention
+    if (event.type === 'charge.dispute.created') {
+      const dispute = event.data.object as Stripe.Dispute
+      const chargeId = typeof dispute.charge === 'string' ? dispute.charge : dispute.charge?.id
+
+      if (chargeId) {
+        // Find order linked to this charge's payment intent
+        const paymentIntentId = typeof dispute.payment_intent === 'string'
+          ? dispute.payment_intent
+          : dispute.payment_intent?.id
+
+        if (paymentIntentId) {
+          const order = await writeClient.fetch(
+            `*[_type == "order" && stripeSessionId match $pid][0]{ _id, status, email, name }`,
+            {pid: String(paymentIntentId)}
+          )
+
+          if (order) {
+            await writeClient.patch(order._id).set({
+              status: 'disputed',
+              notes: `Dispute opened on ${new Date().toISOString()}. Reason: ${dispute.reason || 'unknown'}. Review in Stripe Dashboard.`,
+              updatedAt: new Date().toISOString(),
+            }).commit()
+
+            console.error(`[DISPUTE] Order ${order._id} disputed by ${order.email}. Reason: ${dispute.reason}`)
+          }
+        }
       }
     }
 

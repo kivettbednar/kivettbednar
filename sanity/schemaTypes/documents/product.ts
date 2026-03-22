@@ -1,6 +1,9 @@
 import {PackageIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {imagePositionFields} from '@/sanity/lib/image-fields'
+import {formatPrice} from '@/lib/format'
+import {MarginDisplay} from '@/sanity/components/MarginDisplay'
+import {GelatoProductUidInput} from '@/sanity/components/GelatoProductUidInput'
 
 /**
  * Product schema for POD (Print on Demand) merch via Gelato
@@ -181,7 +184,7 @@ export const product = defineType({
                     .map((opt: {key?: string; value?: string}) => `${opt.key}: ${opt.value}`)
                     .join(', ')
                 : 'No options'
-              const price = priceCents ? ` - $${(priceCents / 100).toFixed(2)}` : ''
+              const price = priceCents ? ` - $${formatPrice(priceCents)}` : ''
               return {
                 title: values,
                 subtitle: `Variant${price}`,
@@ -196,12 +199,14 @@ export const product = defineType({
       title: 'Gelato Product UID',
       type: 'string',
       description: 'Find this in your Gelato dashboard under Products → Product details. Leave blank for non-print-on-demand items.',
+      components: {input: GelatoProductUidInput},
     }),
     defineField({
       name: 'gelatoCostCents',
       title: 'Gelato Cost (cents)',
       type: 'number',
       description: 'Production cost from Gelato in cents. Use /api/gelato/prices to look up. Your margin = Price - Cost.',
+      components: {input: MarginDisplay},
     }),
     defineField({
       name: 'printAreas',
@@ -430,7 +435,7 @@ export const product = defineType({
       media: 'images.0',
     },
     prepare({title, priceCents, currency, media}) {
-      const price = priceCents ? `${currency} $${(priceCents / 100).toFixed(2)}` : 'No price'
+      const price = priceCents ? `${currency} $${formatPrice(priceCents)}` : 'No price'
       return {
         title,
         subtitle: price,
