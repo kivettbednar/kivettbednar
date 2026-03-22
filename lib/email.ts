@@ -20,15 +20,36 @@ function getApiKey(): string | null {
   return key;
 }
 
-function getFromAddress(): string {
+let _cachedFrom: string | null = null;
+let _cachedAdmin: string | null = null;
+let _settingsFetchedAt = 0;
+
+async function loadEmailSettings() {
+  const now = Date.now();
+  if (_cachedFrom && _cachedAdmin && now - _settingsFetchedAt < 60_000) return;
+  try {
+    const {getEmailFrom, getAdminEmail: getAdmin} = await import('@/lib/store-settings');
+    _cachedFrom = await getEmailFrom();
+    _cachedAdmin = await getAdmin();
+    _settingsFetchedAt = now;
+  } catch {
+    // Fall through to env var defaults
+  }
+}
+
+async function getFromAddress(): Promise<string> {
+  await loadEmailSettings();
+  if (_cachedFrom && !_cachedFrom.includes('your-domain.com')) return _cachedFrom;
   const from = process.env.EMAIL_FROM || "Kivett Bednar Music <orders@your-domain.com>";
   if (from.includes('your-domain.com')) {
-    console.error('[EMAIL] EMAIL_FROM env var not configured — using placeholder domain. Emails will fail.');
+    console.error('[EMAIL] Email "from" address not configured in Store Settings or EMAIL_FROM env var.');
   }
   return from;
 }
 
-function getAdminEmail(): string {
+async function getAdminEmail(): Promise<string> {
+  await loadEmailSettings();
+  if (_cachedAdmin && !_cachedAdmin.includes('your-domain.com')) return _cachedAdmin;
   return process.env.ADMIN_EMAIL || "admin@your-domain.com";
 }
 
@@ -45,9 +66,9 @@ async function sendEmail(to: string, subject: string, html: string): Promise<{ s
     return { success: false, error: 'Email not configured (no API key)' };
   }
 
-  const from = getFromAddress();
+  const from = await getFromAddress();
   if (from.includes('your-domain.com') || to.includes('your-domain.com')) {
-    console.error('[EMAIL ERROR] Placeholder email domain detected — configure EMAIL_FROM and ADMIN_EMAIL env vars');
+    console.error('[EMAIL ERROR] Placeholder email domain detected — configure Store Settings in Sanity or EMAIL_FROM/ADMIN_EMAIL env vars');
     return { success: false, error: 'Email not configured' };
   }
 
@@ -175,7 +196,7 @@ export async function sendContactFormSubmission(data: {
     </div>`;
 
   return sendEmail(
-    getAdminEmail(),
+    await getAdminEmail(),
     data.subject ? `Contact: ${data.subject}` : `Contact Form — ${data.name}`,
     html
   );
@@ -197,7 +218,7 @@ export async function sendFulfillmentFailureAlert(order: {
       <p>Please check the order in Sanity Studio and use the "Retry Gelato Order" action if appropriate.</p>
     </div>`;
 
-  return sendEmail(getAdminEmail(), `ALERT: Fulfillment Failed — ${order.orderId}`, html);
+  return sendEmail(await getAdminEmail(), `ALERT: Fulfillment Failed — ${order.orderId}`, html);
 }
 
 export async function sendNewOrderNotification(order: {
@@ -220,5 +241,5 @@ export async function sendNewOrderNotification(order: {
       <p><strong>Total:</strong> ${formatCents(order.totalCents)}</p>
     </div>`;
 
-  return sendEmail(getAdminEmail(), `New Order — ${order.orderId}`, html);
+  return sendEmail(await getAdminEmail(), `New Order — ${order.orderId}`, html);
 }

@@ -21,6 +21,7 @@ import {setlistPage} from './singletons/setlistPage'
 import {merchPage} from './singletons/merchPage'
 import {uiText} from './singletons/uiText'
 import {checkoutSettings} from './singletons/checkoutSettings'
+import {storeSettings} from './singletons/storeSettings'
 import {orderConfirmationPage} from './singletons/orderConfirmationPage'
 import {song} from './documents/song'
 import {link} from './objects/link'
@@ -51,6 +52,7 @@ export const schemaTypes = [
   setlistPage,
   merchPage,
   checkoutSettings,
+  storeSettings,
   orderConfirmationPage,
   // Documents
   page,

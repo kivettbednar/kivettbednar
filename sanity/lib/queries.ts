@@ -22,6 +22,23 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   }
 }`)
 
+// Store Settings (admin-controlled operational config)
+export const storeSettingsQuery = defineQuery(`*[_type == "storeSettings"][0]{
+  storeEnabled,
+  storeName,
+  siteUrl,
+  currency,
+  adminEmail,
+  emailFromName,
+  emailFromAddress,
+  orderConfirmationSubject,
+  shippingUpdateSubject,
+  shippingCountries,
+  processingTime,
+  returnPolicyDays,
+  returnPolicyNotes
+}`)
+
 // UI Text & Labels
 export const uiTextQuery = defineQuery(`*[_type == "uiText"][0]{
   _id,

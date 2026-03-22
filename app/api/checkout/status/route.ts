@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server'
+import {isStoreEnabled} from '@/lib/store-settings'
 
 export async function GET() {
-  const stripeEnabled = process.env.STRIPE_ENABLED === 'true' && !!process.env.STRIPE_SECRET_KEY
-  return NextResponse.json({stripeEnabled})
+  const enabled = (await isStoreEnabled()) && !!process.env.STRIPE_SECRET_KEY
+  return NextResponse.json({stripeEnabled: enabled})
 }

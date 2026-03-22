@@ -18,7 +18,8 @@ const CheckoutBodySchema = z.object({
 })
 
 export async function POST(req: Request) {
-  if (process.env.STRIPE_ENABLED !== 'true') {
+  const {isStoreEnabled} = await import('@/lib/store-settings')
+  if (!(await isStoreEnabled()) || !process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json({error: 'Checkout is disabled'}, {status: 501})
   }
   try {
@@ -166,10 +167,10 @@ export async function POST(req: Request) {
       mode: 'payment',
       line_items,
       shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'GB', 'IE', 'DE', 'FR', 'ES', 'IT', 'AU', 'NZ'],
+        allowed_countries: (await import('@/lib/store-settings').then(m => m.getShippingCountries())) as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
       },
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/cart?canceled=1`,
+      success_url: `${await import('@/lib/store-settings').then(m => m.getSiteUrl())}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${await import('@/lib/store-settings').then(m => m.getSiteUrl())}/cart?canceled=1`,
       metadata: {
         cartSize: String(items.length),
         promoCode: promoCodeStr || '',

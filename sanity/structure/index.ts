@@ -36,6 +36,7 @@ const SINGLETON_TYPES = [
   'navigation',
   'uiText',
   'checkoutSettings',
+  'storeSettings',
   'orderConfirmationPage',
   'assist.instruction.context',
 ]
@@ -352,6 +353,12 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
           S.list()
             .title('Settings')
             .items([
+              S.listItem()
+                .title('Store Settings')
+                .id('storeSettings')
+                .child(S.document().schemaType('storeSettings').documentId('storeSettings'))
+                .icon(BasketIcon),
+
               S.listItem()
                 .title('Site Settings')
                 .id('siteSettings')
