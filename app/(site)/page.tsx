@@ -2,7 +2,7 @@ import {Metadata} from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import {sanityFetch} from '@/sanity/lib/live'
-import {upcomingEventsQuery, homePageQuery, uiTextQuery, settingsQuery} from '@/sanity/lib/queries'
+import {upcomingEventsQuery, homePageQuery, uiTextQuery} from '@/sanity/lib/queries'
 import {EventCard} from '@/components/ui/EventCard'
 import {HeroSlider} from '@/components/ui/HeroSlider'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
@@ -41,10 +41,11 @@ function getYouTubeId(urlOrId: string): string {
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const [{data: homePage}, {data: settings}] = await Promise.all([
+    const [homeResult, siteSettings] = await Promise.all([
       sanityFetch({query: homePageQuery}),
-      sanityFetch({query: settingsQuery}),
+      getSiteSettings(),
     ])
+    const homePage = homeResult?.data
     return {
       title: homePage?.seoTitle || 'Kivett Bednar | Blues Guitarist & Musician',
       description: homePage?.seoDescription || 'Gritty Texas Blues meets the heart of the Pacific Northwest',
@@ -53,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: homePage?.seoTitle || 'Kivett Bednar | Blues Guitarist & Musician',
         description: homePage?.seoDescription || 'Gritty Texas Blues meets the heart of the Pacific Northwest',
         url: baseUrl,
-        images: settings?.ogImage?.asset?.url ? [{url: settings.ogImage.asset.url}] : [],
+        images: siteSettings?.ogImage?.asset?.url ? [{url: siteSettings.ogImage.asset.url}] : [],
       },
     }
   } catch {
@@ -71,18 +72,18 @@ export default async function HomePage() {
   let homePage = null
   let events = null
   let uiText = null
-  let settings = null
+  let siteSettings = null
 
   try {
     // Fetch home page content and upcoming shows using live-enabled queries
-    ;[homePage, events, uiText, settings] = await Promise.all([
+    ;[homePage, events, uiText, siteSettings] = await Promise.all([
       sanityFetch({query: homePageQuery}).then((r) => r.data),
       sanityFetch({
         query: upcomingEventsQuery,
         params: {now: new Date().toISOString(), limit: 3},
       }).then((r) => r.data),
       sanityFetch({query: uiTextQuery}).then((r) => r.data),
-      sanityFetch({query: settingsQuery}).then((r) => r.data),
+      getSiteSettings(),
     ])
   } catch (error) {
     console.warn('Failed to fetch homepage data, using fallback content:', error)
@@ -330,11 +331,11 @@ export default async function HomePage() {
                   </div>
                   <div className="md:flex-shrink-0">
                     <a
-                      href={`mailto:${settings?.contactEmail || 'kivettbednar@gmail.com'}`}
+                      href={`mailto:${siteSettings?.contactEmail || 'kivettbednar@gmail.com'}`}
                       className="btn-primary w-full md:w-auto text-center text-base sm:text-lg"
                       style={{overflowWrap: 'anywhere'}}
                     >
-                      {settings?.contactEmail || 'kivettbednar@gmail.com'}
+                      {siteSettings?.contactEmail || 'kivettbednar@gmail.com'}
                     </a>
                   </div>
                 </div>
@@ -508,3 +509,4 @@ export default async function HomePage() {
     </div>
   )
 }
+import {getSiteSettings} from '@/lib/site-settings'

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {eventBySlugQuery, eventsSlugs, showsPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {eventBySlugQuery, eventsSlugs, showsPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {urlFor} from '@/sanity/lib/image'
 import {PortableText} from '@portabletext/react'
@@ -14,6 +14,7 @@ import {getObjectPosition} from '@/lib/image-positioning'
 import {MapPin, Calendar, Clock, ExternalLink, Ticket} from 'lucide-react'
 import {EventActions} from './EventActions'
 import type {SanityImageWithPositioning} from '@/lib/image-positioning'
+import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
 type Performer = {name: string; role?: string; bio?: string}
 
@@ -47,10 +48,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
   const [event, siteSettings] = await Promise.all([
     client.fetch(eventBySlugQuery, {slug}, {next: {revalidate: 60}}),
-    client.fetch(`*[_type == "settings"][0]{showShowsPage}`, {}, {next: {revalidate: 60}}),
+    getSiteSettings(),
   ])
 
-  if (siteSettings?.showShowsPage === false) {
+  if (!isPageEnabled(siteSettings, 'shows')) {
     return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
   }
 
@@ -88,13 +89,13 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function EventPage({params}: Props) {
   const {slug} = await params
-  const [event, showsPage, settings] = await Promise.all([
+  const [event, showsPage, siteSettings] = await Promise.all([
     sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data),
     sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null),
-    sanityFetch({query: settingsQuery}).then((r) => r.data).catch(() => null),
+    getSiteSettings(),
   ])
 
-  if ((settings?.showShowsPage as boolean | null) === false) {
+  if (!isPageEnabled(siteSettings, 'shows')) {
     return <PageUnavailable pageName="Shows" />
   }
 

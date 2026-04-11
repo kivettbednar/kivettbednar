@@ -2,11 +2,12 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {ProductPageContent} from './ProductPageContent'
 import {urlFor} from '@/sanity/lib/image'
 import {formatPrice, formatCurrency} from '@/lib/format'
+import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
 type Props = {
   params: Promise<{slug: string}>
@@ -22,10 +23,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   try {
     const [productData, siteSettings] = await Promise.all([
       client.fetch(productBySlugQuery, {slug}, {next: {revalidate: 60}}),
-      client.fetch(`*[_type == "settings"][0]{showMerchPage}`, {}, {next: {revalidate: 60}}),
+      getSiteSettings(),
     ])
     product = productData
-    if (siteSettings?.showMerchPage === false) {
+    if (!isPageEnabled(siteSettings, 'merch')) {
       return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
     }
   } catch (error) {
@@ -65,12 +66,12 @@ export default async function ProductPage({params}: Props) {
   const {slug} = await params
 
   // Fetch product and settings
-  const [product, settings] = await Promise.all([
+  const [product, siteSettings] = await Promise.all([
     sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data),
-    sanityFetch({query: settingsQuery}).then((r) => r.data).catch(() => null),
+    getSiteSettings(),
   ])
 
-  if ((settings?.showMerchPage as boolean | null) === false) {
+  if (!isPageEnabled(siteSettings, 'merch')) {
     return <PageUnavailable pageName="Merch" />
   }
 

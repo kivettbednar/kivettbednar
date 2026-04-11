@@ -1,24 +1,26 @@
 import {Metadata} from 'next'
 import Link from 'next/link'
 import {sanityFetch} from '@/sanity/lib/live'
-import {contactPageQuery, settingsQuery, uiTextQuery} from '@/sanity/lib/queries'
+import {contactPageQuery, uiTextQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {Mail, Calendar, Music, Instagram, Facebook, Youtube, MapPin, ChevronRight, ExternalLink, MessageSquare} from 'lucide-react'
 import {ContactForm} from '@/components/ui/ContactForm'
+import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const [{data: contactPage}, {data: siteSettings}] = await Promise.all([
+    const [contactResult, siteSettings] = await Promise.all([
       sanityFetch({query: contactPageQuery}),
-      sanityFetch({query: settingsQuery}),
+      getSiteSettings(),
     ])
-    if ((siteSettings?.showContactPage as boolean | null) === false) {
+    if (!isPageEnabled(siteSettings, 'contact')) {
       return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
     }
+    const contactPage = contactResult?.data
     return {
       title: contactPage?.seoTitle || 'Contact | Kivett Bednar',
       description: contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries',
@@ -44,20 +46,20 @@ const socialIcons: Record<string, React.ComponentType<{className?: string}>> = {
 
 export default async function ContactPage() {
   let contactPage = null
-  let settings = null
   let uiText = null
 
   try {
-    ;[contactPage, settings, uiText] = await Promise.all([
+    ;[contactPage, uiText] = await Promise.all([
       sanityFetch({query: contactPageQuery}).then((r) => r.data),
-      sanityFetch({query: settingsQuery}).then((r) => r.data),
       sanityFetch({query: uiTextQuery}).then((r) => r.data),
     ])
   } catch (error) {
     console.warn('Failed to fetch contact page data, using fallback content:', error)
   }
 
-  if ((settings?.showContactPage as boolean | null) === false) {
+  const siteSettings = await getSiteSettings()
+
+  if (!isPageEnabled(siteSettings, 'contact')) {
     return <PageUnavailable pageName="Contact" />
   }
 
@@ -99,10 +101,10 @@ export default async function ContactPage() {
             {/* Contact Cards Grid */}
             <div className="grid md:grid-cols-2 gap-6 mb-12">
               {/* Email Card */}
-              {settings?.contactEmail && (
+              {siteSettings?.contactEmail && (
                 <AnimatedSection animation="fadeUp" delay={0.1}>
                   <a
-                    href={`mailto:${settings.contactEmail}`}
+                    href={`mailto:${siteSettings.contactEmail}`}
                     className="group block h-full"
                   >
                     <div className="relative h-full bg-surface-elevated border border-border hover:border-accent-primary/50 p-8 transition-all duration-500 overflow-hidden">
@@ -123,7 +125,7 @@ export default async function ContactPage() {
                         {contactPage?.directContactHeading || 'Email Me'}
                       </h3>
                       <p className="text-accent-primary font-mono text-lg mb-4 break-all">
-                        {settings.contactEmail}
+                        {siteSettings.contactEmail}
                       </p>
                       <p className="text-text-secondary text-sm leading-relaxed">
                         {contactPage?.directContactDescription || "Whether you're booking a show, inquiring about lessons, or just want to say hello — I'd love to hear from you."}
@@ -308,7 +310,7 @@ export default async function ContactPage() {
       </section>
 
       {/* Social Media Section */}
-      {settings?.socialLinks && settings.socialLinks.length > 0 && (
+      {siteSettings?.socialLinks && siteSettings.socialLinks.length > 0 && (
         <section className="bg-background py-24">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
@@ -324,7 +326,7 @@ export default async function ContactPage() {
               </AnimatedSection>
 
               <div className="flex flex-wrap justify-center gap-4">
-                {settings.socialLinks.map((link: {platform: string | null; url: string | null}, index: number) => {
+                {siteSettings.socialLinks.map((link: {platform: string | null; url: string | null}, index: number) => {
                   const IconComponent = socialIcons[link.platform?.toLowerCase() ?? ''] || ExternalLink
                   return (
                     <AnimatedSection key={link.url || index} animation="fadeUp" delay={0.1 * index}>

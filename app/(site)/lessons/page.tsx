@@ -1,23 +1,25 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
-import {lessonsPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {lessonsPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {SplitScreenImage} from '@/components/ui/SplitScreenImage'
 import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
 import {Guitar, Music, Mic2, BookOpen, Users, Award, Sparkles, ChevronRight} from 'lucide-react'
+import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const [{data: lessonsPage}, {data: siteSettings}] = await Promise.all([
+    const [lessonsResult, siteSettings] = await Promise.all([
       sanityFetch({query: lessonsPageQuery}),
-      sanityFetch({query: settingsQuery}),
+      getSiteSettings(),
     ])
-    if ((siteSettings?.showLessonsPage as boolean | null) === false) {
+    if (!isPageEnabled(siteSettings, 'lessons')) {
       return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
     }
+    const lessonsPage = lessonsResult?.data
     return {
       title: lessonsPage?.seoTitle || 'Lessons | Kivett Bednar',
       description: lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome',
@@ -46,18 +48,18 @@ const iconMap: Record<string, React.ComponentType<{className?: string}>> = {
 
 export default async function LessonsPage() {
   let lessonsPage = null
-  let settings = null
+  let siteSettings = null
 
   try {
-    ;[lessonsPage, settings] = await Promise.all([
+    ;[lessonsPage, siteSettings] = await Promise.all([
       sanityFetch({query: lessonsPageQuery}).then((r) => r.data),
-      sanityFetch({query: settingsQuery}).then((r) => r.data),
+      getSiteSettings(),
     ])
   } catch (error) {
     console.warn('Failed to fetch lessons page data, using fallback content:', error)
   }
 
-  if ((settings?.showLessonsPage as boolean | null) === false) {
+  if (!isPageEnabled(siteSettings, 'lessons')) {
     return <PageUnavailable pageName="Lessons" />
   }
 
@@ -249,18 +251,18 @@ export default async function LessonsPage() {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    {settings?.contactEmail && (
+                    {siteSettings?.contactEmail && (
                       <a
-                        href={`mailto:${settings.contactEmail}`}
+                        href={`mailto:${siteSettings.contactEmail}`}
                         className="group inline-flex items-center justify-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-lg uppercase tracking-wider px-8 py-4 transition-all duration-300"
                       >
                         {lessonsPage.emailButtonText || 'Email Me'}
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </a>
                     )}
-                    {settings?.bookingUrl && (
+                    {siteSettings?.bookingUrl && (
                       <a
-                        href={settings.bookingUrl}
+                        href={siteSettings.bookingUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-secondary"

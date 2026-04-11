@@ -10,11 +10,10 @@ import {Toaster} from 'sonner'
 import DraftModeToast from '@/app/components/DraftModeToast'
 import {GrainOverlay} from '@/components/ui/GrainOverlay'
 import * as demo from '@/sanity/lib/demo'
-import {client} from '@/sanity/lib/client'
 import {SanityLive} from '@/sanity/lib/live'
-import {settingsQuery} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage} from '@/sanity/lib/utils'
 import {handleError} from './client-utils'
+import {getSiteSettings} from '@/lib/site-settings'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,20 +42,7 @@ const anton = Anton({
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
  */
 export async function generateMetadata(): Promise<Metadata> {
-  let settings: import('@/sanity.types').SettingsQueryResult | null
-  try {
-    settings = await client.fetch(
-      settingsQuery,
-      {},
-      {
-        // Metadata should never contain stega
-        next: {revalidate: 60},
-      },
-    )
-  } catch {
-    // Fallback to demo content if Sanity is unavailable during build
-    settings = null
-  }
+  const settings = await getSiteSettings()
   const title = settings?.title || demo.title
   const description = settings?.description || demo.description
 
