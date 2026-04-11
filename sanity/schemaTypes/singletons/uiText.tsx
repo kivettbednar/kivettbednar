@@ -43,6 +43,11 @@ export const uiText = defineType({
       type: 'string',
       initialValue: 'Setlist',    }),
     defineField({
+      name: 'navAmps',
+      title: 'Navigation: Amps',
+      type: 'string',
+      initialValue: 'Amps',    }),
+    defineField({
       name: 'navMerch',
       title: 'Navigation: Merch',
       type: 'string',

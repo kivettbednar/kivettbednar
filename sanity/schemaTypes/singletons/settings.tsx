@@ -247,6 +247,14 @@ export const settings = defineType({
       group: 'pageVisibility',
     }),
     defineField({
+      name: 'showAmpsPage',
+      title: 'Show "Amps" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Amps page and its navigation link',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
       name: 'showMerchPage',
       title: 'Show "Merch" Page',
       type: 'boolean',

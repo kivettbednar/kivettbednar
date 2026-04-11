@@ -103,6 +103,7 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
     {value: 'music', label: 'Music'},
     {value: 'accessories', label: 'Accessories'},
     {value: 'prints', label: 'Posters & Prints'},
+    {value: 'amps', label: 'Amps & Cases'},
   ]
 
   // Use Sanity content or fallbacks

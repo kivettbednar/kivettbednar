@@ -23,6 +23,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   showShowsPage,
   showLessonsPage,
   showSetlistPage,
+  showAmpsPage,
   showMerchPage,
   showContactPage
 }`)
@@ -56,6 +57,7 @@ export const uiTextQuery = defineQuery(`*[_type == "uiText"][0]{
   navShows,
   navLessons,
   navSetlist,
+  navAmps,
   navMerch,
   navContact,
   footerNavigationHeading,
@@ -284,6 +286,9 @@ export const lessonsPageQuery = defineQuery(`*[_type == "lessonsPage"][0]{
   scheduleButtonText,
   testimonialQuote,
   testimonialAttribution,
+  packagesHeading,
+  packagesSubheading,
+  packagesCtaText,
   seoTitle,
   seoDescription
 }`)
@@ -415,6 +420,106 @@ export const merchPageQuery = defineQuery(`*[_type == "merchPage"][0]{
     description,
     icon
   },
+  seoTitle,
+  seoDescription
+}`)
+
+// Amps Page
+export const ampsPageQuery = defineQuery(`*[_type == "ampsPage"][0]{
+  _id,
+  heroHeading,
+  heroSubheading,
+  heroImage{
+    asset->,
+    alt
+  },
+  showcaseHeading,
+  showcaseText,
+  craftsmanshipHeading,
+  craftsmanshipText,
+  craftsmanshipImage{
+    asset->,
+    alt
+  },
+  shopHeading,
+  shopSubheading,
+  emptyStateHeading,
+  emptyStateText,
+  seoTitle,
+  seoDescription
+}`)
+
+// Amps products (category filter)
+export const ampsProductsQuery = defineQuery(`*[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  images[]{
+    asset->,
+    alt
+  },
+  priceCents,
+  compareAtPriceCents,
+  onSale,
+  currency,
+  category,
+  stockStatus,
+  featured,
+  badges,
+  tags,
+  inventoryQuantity,
+  trackInventory,
+  lowStockThreshold
+}`)
+
+// Lesson Packages
+export const allLessonPackagesQuery = defineQuery(`*[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {
+  _id,
+  title,
+  "slug": slug.current,
+  tagline,
+  image{
+    asset->,
+    alt
+  },
+  priceCents,
+  currency,
+  compareAtPriceCents,
+  duration,
+  sessionsCount,
+  sessionLength,
+  level,
+  format,
+  features,
+  includes,
+  featured,
+  badge,
+  active
+}`)
+
+export const lessonPackageBySlugQuery = defineQuery(`*[_type == "lessonPackage" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  tagline,
+  image{
+    asset->,
+    alt
+  },
+  description,
+  priceCents,
+  currency,
+  compareAtPriceCents,
+  duration,
+  sessionsCount,
+  sessionLength,
+  level,
+  format,
+  features,
+  includes,
+  featured,
+  badge,
+  active,
   seoTitle,
   seoDescription
 }`)

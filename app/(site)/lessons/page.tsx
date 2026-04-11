@@ -1,6 +1,8 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
-import {lessonsPageQuery} from '@/sanity/lib/queries'
+import Link from 'next/link'
+import {lessonsPageQuery, allLessonPackagesQuery} from '@/sanity/lib/queries'
+import {formatCurrency} from '@/lib/format'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
@@ -49,11 +51,13 @@ const iconMap: Record<string, React.ComponentType<{className?: string}>> = {
 export default async function LessonsPage() {
   let lessonsPage = null
   let siteSettings = null
+  let packages: any[] = []
 
   try {
-    ;[lessonsPage, siteSettings] = await Promise.all([
+    ;[lessonsPage, siteSettings, packages] = await Promise.all([
       sanityFetch({query: lessonsPageQuery}).then((r) => r.data),
       getSiteSettings(),
+      sanityFetch({query: allLessonPackagesQuery}).then((r) => r.data || []),
     ])
   } catch (error) {
     console.warn('Failed to fetch lessons page data, using fallback content:', error)
@@ -277,6 +281,89 @@ export default async function LessonsPage() {
           </div>
         </div>
       </section>
+
+      {/* Lesson Packages Section */}
+      {packages.length > 0 && (
+        <section className="bg-gradient-to-b from-background to-surface py-24">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <AnimatedSection animation="fadeIn">
+                <div className="text-center mb-16">
+                  <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-4">
+                    {lessonsPage.packagesHeading || 'Lesson Packages'}
+                  </h2>
+                  {lessonsPage.packagesSubheading && (
+                    <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+                      {lessonsPage.packagesSubheading}
+                    </p>
+                  )}
+                </div>
+              </AnimatedSection>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {packages.map((pkg: any, index: number) => (
+                  <AnimatedSection key={pkg._id} animation="fadeUp" delay={0.1 * index}>
+                    <div className={`relative h-full bg-surface-elevated border ${pkg.featured ? 'border-accent-primary' : 'border-border'} p-8 flex flex-col`}>
+                      {pkg.badge && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent-primary text-black px-4 py-1 text-xs font-bold uppercase tracking-wider">
+                          {pkg.badge}
+                        </div>
+                      )}
+
+                      <h3 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-2 mt-2">
+                        {pkg.title}
+                      </h3>
+
+                      {pkg.tagline && (
+                        <p className="text-text-secondary text-sm mb-4">{pkg.tagline}</p>
+                      )}
+
+                      <div className="flex items-baseline gap-2 mb-6">
+                        <span className="text-3xl font-bold text-accent-primary">
+                          {formatCurrency(pkg.priceCents, pkg.currency || 'USD')}
+                        </span>
+                        {pkg.compareAtPriceCents && (
+                          <span className="text-text-muted line-through text-sm">
+                            {formatCurrency(pkg.compareAtPriceCents, pkg.currency || 'USD')}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 mb-6 text-sm text-text-secondary">
+                        {pkg.duration && <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-accent-primary" />{pkg.duration}</div>}
+                        {pkg.sessionsCount && <div className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-accent-primary" />{pkg.sessionsCount} session{pkg.sessionsCount > 1 ? 's' : ''}{pkg.sessionLength ? ` (${pkg.sessionLength})` : ''}</div>}
+                        {pkg.level && <div className="flex items-center gap-2"><Users className="w-4 h-4 text-accent-primary" />{pkg.level === 'all' ? 'All Levels' : pkg.level.charAt(0).toUpperCase() + pkg.level.slice(1)}</div>}
+                      </div>
+
+                      {pkg.features && pkg.features.length > 0 && (
+                        <ul className="space-y-2 mb-8 flex-1">
+                          {pkg.features.slice(0, 5).map((f: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2 text-text-secondary text-sm">
+                              <Guitar className="w-3.5 h-3.5 text-accent-primary mt-0.5 flex-shrink-0" />
+                              <span>{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      <Link
+                        href={`/lessons/${pkg.slug}`}
+                        className={`block text-center font-bold uppercase tracking-wider py-4 transition-all duration-300 ${
+                          pkg.featured
+                            ? 'bg-accent-primary hover:bg-accent-primary/90 text-black'
+                            : 'border border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-black'
+                        }`}
+                      >
+                        {lessonsPage.packagesCtaText || 'Book This Package'}
+                      </Link>
+                    </div>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Testimonial Quote Section */}
       <section className="bg-background py-24">

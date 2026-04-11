@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server'
 import Stripe from 'stripe'
 import {z} from 'zod'
 import {client} from '@/sanity/lib/client'
-import {productBySlugQuery} from '@/sanity/lib/queries'
+import {productBySlugQuery, lessonPackageBySlugQuery} from '@/sanity/lib/queries'
 import {getStripe} from '@/lib/stripe'
 import {validatePromoCode, fetchPromoCode} from '@/lib/promo-validation'
 import {variantOptionValuesToRecord} from '@/types/product'
@@ -15,6 +15,7 @@ const CartItemSchema = z.object({
   slug: z.string().min(1).max(200),
   quantity: z.number().int().min(1).max(99),
   options: z.record(z.string(), z.string()).optional(),
+  type: z.enum(['product', 'lesson']).default('product'),
 })
 const CheckoutBodySchema = z.object({
   items: z.array(CartItemSchema).min(1).max(50),
@@ -40,67 +41,103 @@ export async function POST(req: Request) {
     // Validate items against Sanity and check stock
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
     const validatedProducts: Array<{slug: string; _id: string; category: string}> = []
+    let hasPhysicalProducts = false
+    let hasLessons = false
+
     for (const it of items) {
-      const product = await client.fetch(productBySlugQuery, {slug: it.slug})
-      if (!product) return NextResponse.json({error: 'Invalid product'}, {status: 400})
-      validatedProducts.push({slug: it.slug, _id: product._id, category: product.category || ''})
+      if (it.type === 'lesson') {
+        // Handle lesson package
+        const pkg = await client.fetch(lessonPackageBySlugQuery, {slug: it.slug})
+        if (!pkg) return NextResponse.json({error: 'Invalid lesson package'}, {status: 400})
+        if (!(pkg as any).active) return NextResponse.json({error: `"${(pkg as any).title}" is no longer available`}, {status: 400})
 
-      // Check stock availability
-      if (product.trackInventory && product.stockStatus === 'out_of_stock') {
-        return NextResponse.json(
-          {error: `"${product.title}" is out of stock`},
-          {status: 400}
-        )
-      }
-      if (product.trackInventory && product.inventoryQuantity !== null && product.inventoryQuantity < it.quantity) {
-        return NextResponse.json(
-          {error: `Only ${product.inventoryQuantity} of "${product.title}" available`},
-          {status: 400}
-        )
-      }
-
-      // Use server-side price only — never trust client-sent price
-      let unitAmount = product.priceCents as number
-      if (!unitAmount || unitAmount <= 0) {
-        return NextResponse.json({error: 'Product price not available'}, {status: 400})
-      }
-      // Check for variant-specific pricing
-      let matchingVariant: {priceCents?: number} | null = null
-      const opts = it.options
-      if (opts && product.variants) {
-        matchingVariant = (product.variants as any[]).find((v: {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number}) => {
-          if (!v.optionValues) return false
-          const ov = variantOptionValuesToRecord(v.optionValues)
-          return Object.entries(opts).every(
-            ([key, val]) => ov[key] === val || ov[key.toLowerCase()] === val
-          )
-        })
-        if (matchingVariant?.priceCents) {
-          unitAmount = matchingVariant.priceCents
+        const unitAmount = (pkg as any).priceCents as number
+        if (!unitAmount || unitAmount <= 0) {
+          return NextResponse.json({error: 'Package price not available'}, {status: 400})
         }
-      }
 
-      // Reject invalid options that don't match any variant
-      if (it.options && Object.keys(it.options).length > 0 && (product.variants as any)?.length > 0 && !matchingVariant) {
-        return NextResponse.json({error: `Invalid options for "${product.title}"`}, {status: 400})
-      }
-
-      line_items.push({
-        quantity: it.quantity,
-        price_data: {
-          currency: (product.currency as string) || 'USD',
-          unit_amount: unitAmount,
-          product_data: {
-            name: product.title || '',
-            images: product.images?.[0]?.asset?.url ? [product.images[0].asset.url] : [],
-            metadata: {
-              productId: product._id,
-              slug: it.slug,
-              options: it.options ? JSON.stringify(it.options) : '{}',
+        hasLessons = true
+        validatedProducts.push({slug: it.slug, _id: (pkg as any)._id, category: 'lessons'})
+        line_items.push({
+          quantity: 1,
+          price_data: {
+            currency: ((pkg as any).currency as string) || 'USD',
+            unit_amount: unitAmount,
+            product_data: {
+              name: (pkg as any).title || '',
+              images: (pkg as any).image?.asset?.url ? [(pkg as any).image.asset.url] : [],
+              metadata: {
+                type: 'lesson',
+                packageId: (pkg as any)._id,
+                slug: it.slug,
+              },
             },
           },
-        },
-      })
+        })
+      } else {
+        // Handle regular product
+        const product = await client.fetch(productBySlugQuery, {slug: it.slug})
+        if (!product) return NextResponse.json({error: 'Invalid product'}, {status: 400})
+        validatedProducts.push({slug: it.slug, _id: product._id, category: product.category || ''})
+        hasPhysicalProducts = true
+
+        // Check stock availability
+        if (product.trackInventory && product.stockStatus === 'out_of_stock') {
+          return NextResponse.json(
+            {error: `"${product.title}" is out of stock`},
+            {status: 400}
+          )
+        }
+        if (product.trackInventory && product.inventoryQuantity !== null && product.inventoryQuantity < it.quantity) {
+          return NextResponse.json(
+            {error: `Only ${product.inventoryQuantity} of "${product.title}" available`},
+            {status: 400}
+          )
+        }
+
+        // Use server-side price only — never trust client-sent price
+        let unitAmount = product.priceCents as number
+        if (!unitAmount || unitAmount <= 0) {
+          return NextResponse.json({error: 'Product price not available'}, {status: 400})
+        }
+        // Check for variant-specific pricing
+        let matchingVariant: {priceCents?: number} | null = null
+        const opts = it.options
+        if (opts && Object.keys(opts).length > 0 && !(opts.type === 'lesson') && product.variants) {
+          matchingVariant = (product.variants as any[]).find((v: {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number}) => {
+            if (!v.optionValues) return false
+            const ov = variantOptionValuesToRecord(v.optionValues)
+            return Object.entries(opts).every(
+              ([key, val]) => ov[key] === val || ov[key.toLowerCase()] === val
+            )
+          })
+          if (matchingVariant?.priceCents) {
+            unitAmount = matchingVariant.priceCents
+          }
+        }
+
+        // Reject invalid options that don't match any variant
+        if (it.options && Object.keys(it.options).length > 0 && !(it.options.type === 'lesson') && (product.variants as any)?.length > 0 && !matchingVariant) {
+          return NextResponse.json({error: `Invalid options for "${product.title}"`}, {status: 400})
+        }
+
+        line_items.push({
+          quantity: it.quantity,
+          price_data: {
+            currency: (product.currency as string) || 'USD',
+            unit_amount: unitAmount,
+            product_data: {
+              name: product.title || '',
+              images: product.images?.[0]?.asset?.url ? [product.images[0].asset.url] : [],
+              metadata: {
+                productId: product._id,
+                slug: it.slug,
+                options: it.options ? JSON.stringify(it.options) : '{}',
+              },
+            },
+          },
+        })
+      }
     }
 
     // Calculate cart total once for promo validation and discount distribution
@@ -173,9 +210,12 @@ export async function POST(req: Request) {
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       line_items,
-      shipping_address_collection: {
-        allowed_countries: (await import('@/lib/store-settings').then(m => m.getShippingCountries())) as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
-      },
+      // Only collect shipping for physical products
+      ...(hasPhysicalProducts ? {
+        shipping_address_collection: {
+          allowed_countries: (await import('@/lib/store-settings').then(m => m.getShippingCountries())) as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
+        },
+      } : {}),
       success_url: `${await import('@/lib/store-settings').then(m => m.getSiteUrl())}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${await import('@/lib/store-settings').then(m => m.getSiteUrl())}/cart?canceled=1`,
       metadata: {

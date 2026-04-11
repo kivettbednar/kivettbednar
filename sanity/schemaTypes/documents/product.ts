@@ -261,6 +261,7 @@ export const product = defineType({
           {title: 'Music', value: 'music'},
           {title: 'Accessories', value: 'accessories'},
           {title: 'Posters & Prints', value: 'prints'},
+          {title: 'Amps & Cases', value: 'amps'},
         ],
       },
       validation: (Rule) => Rule.required(),

@@ -28,6 +28,7 @@ export default async function SiteLayout({
     {key: 'shows', title: uiText?.navShows || 'Shows', href: '/shows'},
     {key: 'lessons', title: uiText?.navLessons || 'Lessons', href: '/lessons'},
     {key: 'setlist', title: uiText?.navSetlist || 'Setlist', href: '/setlist'},
+    {key: 'amps', title: uiText?.navAmps || 'Amps', href: '/amps'},
     {key: 'merch', title: uiText?.navMerch || 'Merch', href: '/merch'},
     {key: 'contact', title: uiText?.navContact || 'Contact', href: '/contact'},
   ]

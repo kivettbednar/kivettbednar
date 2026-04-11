@@ -241,6 +241,26 @@ export const lessonsPage = defineType({
       description: 'Who the quote is attributed to',
       initialValue: 'Kivett Bednar',
     }),
+    // Packages Section
+    defineField({
+      name: 'packagesHeading',
+      title: 'Packages Section Heading',
+      type: 'string',
+      initialValue: 'Lesson Packages',
+    }),
+    defineField({
+      name: 'packagesSubheading',
+      title: 'Packages Section Subheading',
+      type: 'text',
+      rows: 2,
+      initialValue: 'Choose the package that fits your goals and schedule.',
+    }),
+    defineField({
+      name: 'packagesCtaText',
+      title: 'Packages CTA Button Text',
+      type: 'string',
+      initialValue: 'Book This Package',
+    }),
     ...seoFields,
   ],
   preview: {

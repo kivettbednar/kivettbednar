@@ -10,6 +10,7 @@ const PAGE_FLAG_FIELDS = {
   shows: 'showShowsPage',
   lessons: 'showLessonsPage',
   setlist: 'showSetlistPage',
+  amps: 'showAmpsPage',
   merch: 'showMerchPage',
   contact: 'showContactPage',
 } as const

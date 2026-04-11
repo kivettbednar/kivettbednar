@@ -41,6 +41,7 @@ const SINGLETON_TYPES = [
   'privacyPolicy',
   'termsOfService',
   'returnsPolicy',
+  'ampsPage',
   'assist.instruction.context',
 ]
 
@@ -91,6 +92,12 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('merchPage')
                 .child(S.document().schemaType('merchPage').documentId('merchPage'))
                 .icon(BasketIcon),
+
+              S.listItem()
+                .title('Amps Page')
+                .id('ampsPage')
+                .child(S.document().schemaType('ampsPage').documentId('ampsPage'))
+                .icon(ComponentIcon),
 
               S.listItem()
                 .title('Order Confirmation Page')
@@ -179,6 +186,14 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                           S.documentList()
                             .title('Posters & Prints')
                             .filter('_type == "product" && category == "prints"')
+                        ),
+                      S.listItem()
+                        .title('Amps & Cases')
+                        .icon(ComponentIcon)
+                        .child(
+                          S.documentList()
+                            .title('Amps & Cases')
+                            .filter('_type == "product" && category == "amps"')
                         ),
                     ])
                 ),
@@ -326,6 +341,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
             .title('Events & Content')
             .items([
               S.documentTypeListItem('event').title('Events').icon(CalendarIcon),
+              S.documentTypeListItem('lessonPackage').title('Lesson Packages').icon(BookIcon),
               S.documentTypeListItem('song').title('Setlist Songs').icon(DocumentIcon),
               S.documentTypeListItem('page').title('Custom Pages').icon(DocumentIcon),
               S.documentTypeListItem('post').title('Blog Posts').icon(DocumentIcon),
