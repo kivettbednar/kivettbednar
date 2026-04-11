@@ -58,6 +58,36 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
   --shadow-gold: 0 10px 40px -10px rgba(212, 175, 55, 0.3);
   --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.2), 0 0 40px rgba(212, 175, 55, 0.1);
+  --shadow-accent-glow: 0 0 8px rgba(212, 175, 55, 0.4), 0 0 16px rgba(212, 175, 55, 0.2);
+  --shadow-surface-up: 0 -10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+
+  /* Text Shadows */
+  --shadow-text-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-text-md: 0 2px 4px rgba(0, 0, 0, 0.6);
+  --shadow-text-lg: 0 4px 8px rgba(0, 0, 0, 0.8), 0 8px 16px rgba(0, 0, 0, 0.4);
+  --shadow-text-hero: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5);
+
+  /* Gradients - Accent */
+  --gradient-accent-subtle: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent, rgba(212, 175, 55, 0.05));
+  --gradient-accent-horizontal: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+  --gradient-accent-radial: radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 60%);
+  --gradient-accent-top: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, transparent 30%);
+  --gradient-vignette: radial-gradient(ellipse at 50% 50%, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+  --gradient-progress: linear-gradient(90deg, #D4AF37, #e9c84d, #D4AF37);
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-content: 10;
+  --z-sticky: 20;
+  --z-header: 100;
+  --z-drawer: 200;
+  --z-modal: 300;
+  --z-lightbox: 400;
+  --z-toast: 500;
+  --z-grain-tint: 9997;
+  --z-vignette: 9998;
+  --z-grain: 9999;
 
   /* Shadcn/UI Theme Variables (adapted for dark) */
   --color-foreground: #ffffff;

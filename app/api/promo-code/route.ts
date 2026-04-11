@@ -1,7 +1,14 @@
 import {NextResponse} from 'next/server'
 import {validatePromoCode, fetchPromoCode} from '@/lib/promo-validation'
+import {createRateLimiter} from '@/lib/rate-limit'
+
+// 10 promo code checks per minute per IP
+const limiter = createRateLimiter({windowMs: 60_000, max: 10})
 
 export async function POST(req: Request) {
+  const limited = limiter.check(req)
+  if (limited) return limited
+
   try {
     const {code, cartTotal} = await req.json()
 

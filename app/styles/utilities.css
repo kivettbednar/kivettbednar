@@ -139,6 +139,15 @@
 }
 
 /* ======================
+   TEXT SHADOW UTILITIES
+   ====================== */
+
+.text-shadow-sm { text-shadow: var(--shadow-text-sm); }
+.text-shadow-md { text-shadow: var(--shadow-text-md); }
+.text-shadow-lg { text-shadow: var(--shadow-text-lg); }
+.text-shadow-hero { text-shadow: var(--shadow-text-hero); }
+
+/* ======================
    RESPONSIVE OBJECT POSITION
    Uses CSS custom properties so the correct position is applied
    from first paint — no JS hydration flash.

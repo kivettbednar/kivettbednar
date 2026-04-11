@@ -41,7 +41,11 @@ export const storeSettingsQuery = defineQuery(`*[_type == "storeSettings"][0]{
   shippingCountries,
   processingTime,
   returnPolicyDays,
-  returnPolicyNotes
+  returnPolicyNotes,
+  contactFormSubject,
+  fulfillmentFailureSubject,
+  newOrderSubject,
+  emailSignature
 }`)
 
 // UI Text & Labels
@@ -404,6 +408,31 @@ export const merchPageQuery = defineQuery(`*[_type == "merchPage"][0]{
   seoDescription
 }`)
 
+// Legal Pages
+export const privacyPolicyQuery = defineQuery(`*[_type == "privacyPolicy"][0]{
+  _id,
+  pageTitle,
+  lastUpdated,
+  seoDescription,
+  content
+}`)
+
+export const termsOfServiceQuery = defineQuery(`*[_type == "termsOfService"][0]{
+  _id,
+  pageTitle,
+  lastUpdated,
+  seoDescription,
+  content
+}`)
+
+export const returnsPolicyQuery = defineQuery(`*[_type == "returnsPolicy"][0]{
+  _id,
+  pageTitle,
+  lastUpdated,
+  seoDescription,
+  content
+}`)
+
 // Checkout Settings
 export const checkoutSettingsQuery = defineQuery(`*[_type == "checkoutSettings"][0]{
   _id,
@@ -418,7 +447,15 @@ export const checkoutSettingsQuery = defineQuery(`*[_type == "checkoutSettings"]
   cartHeading,
   cartEmptyHeading,
   cartEmptyText,
-  cartEmptyButtonText
+  cartEmptyButtonText,
+  secureCheckoutHeading,
+  redirectingHeading,
+  redirectingText,
+  redirectingSubtext,
+  orderSummaryHeading,
+  returnToCartText,
+  sslEncryptionText,
+  checkoutUnavailableHeading
 }`)
 
 // Order Confirmation Page

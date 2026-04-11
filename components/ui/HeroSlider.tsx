@@ -168,16 +168,12 @@ export function HeroSlider({
             ease: [0.22, 1, 0.36, 1],
           }}
           className={cn(
-            'font-bold text-white mb-6',
+            'font-bebas text-white mb-6 text-shadow-lg',
             textSizeMap[headingMobileSize] || 'text-5xl',
             desktopSizeMap[headingDesktopSize] || 'md:text-8xl',
             trackingMap[headingTracking] || 'tracking-tight',
             leadingMap[headingLineHeight] || 'leading-none'
           )}
-          style={{
-            textShadow: '0 4px 8px rgba(0,0,0,0.8), 0 8px 16px rgba(0,0,0,0.4)',
-            fontFamily: 'var(--font-bebas), system-ui, sans-serif'
-          }}
         >
           {heading}
         </motion.h1>
@@ -190,13 +186,10 @@ export function HeroSlider({
             ease: [0.22, 1, 0.36, 1],
           }}
           className={cn(
-            'text-2xl md:text-4xl lg:text-5xl mb-8 text-white text-elegant',
+            'text-2xl md:text-4xl lg:text-5xl mb-8 text-white text-elegant text-shadow-md',
             trackingMap[subheadingTracking] || 'tracking-normal',
             leadingMap[subheadingLineHeight] || 'leading-normal'
           )}
-          style={{
-            textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-          }}
         >
           {subheading}
         </motion.p>
@@ -232,32 +225,6 @@ export function HeroSlider({
           </Link>
         </motion.div>
       </div>
-
-      {/* Slide indicators */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-              className={`relative h-1 transition-all duration-500 ${
-                index === currentSlide ? 'w-12 bg-accent-primary' : 'w-6 bg-white/40 hover:bg-white/60'
-              }`}
-            >
-              {index === currentSlide && (
-                <motion.div
-                  className="absolute inset-0 bg-accent-primary"
-                  initial={{scaleX: 0}}
-                  animate={{scaleX: 1}}
-                  transition={{duration: 6, ease: 'linear'}}
-                  style={{transformOrigin: 'left'}}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Scroll indicator */}
       <motion.div

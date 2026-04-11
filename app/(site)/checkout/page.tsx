@@ -80,13 +80,13 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-background pt-20 flex items-center justify-center">
         <div className="bg-surface-elevated border border-border p-16 max-w-2xl mx-auto text-center">
           <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">
-            Your Cart is Empty
+            {(checkoutSettings?.cartEmptyHeading as string) || 'Your Cart is Empty'}
           </h1>
           <p className="text-text-secondary mb-8">
-            Add some items to your cart before checking out.
+            {(checkoutSettings?.cartEmptyText as string) || 'Add some items to your cart before checking out.'}
           </p>
           <Link href="/merch" className="btn-primary inline-flex">
-            Browse Merch
+            {(checkoutSettings?.cartEmptyButtonText as string) || 'Browse Merch'}
           </Link>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
                 <div className="h-px bg-accent-primary w-12" />
                 <Lock className="w-4 h-4 text-accent-primary" />
                 <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">
-                  Secure Checkout
+                  {(checkoutSettings?.secureCheckoutHeading as string) || 'Secure Checkout'}
                 </span>
                 <div className="h-px bg-accent-primary w-12" />
               </div>
@@ -168,13 +168,13 @@ export default function CheckoutPage() {
                   >
                     <Loader2 className="w-12 h-12 text-accent-primary animate-spin mx-auto mb-6" />
                     <h2 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-3">
-                      Setting Up Secure Payment
+                      {(checkoutSettings?.redirectingHeading as string) || 'Setting Up Secure Payment'}
                     </h2>
                     <p className="text-text-secondary mb-2">
-                      You&apos;ll be redirected to our secure payment partner (Stripe) to complete your purchase.
+                      {(checkoutSettings?.redirectingText as string) || "You'll be redirected to our secure payment partner (Stripe) to complete your purchase."}
                     </p>
                     <p className="text-text-muted text-sm">
-                      Your cart is saved and you won&apos;t be charged until you confirm.
+                      {(checkoutSettings?.redirectingSubtext as string) || "Your cart is saved and you won't be charged until you confirm."}
                     </p>
                   </motion.div>
                 )}
@@ -187,14 +187,14 @@ export default function CheckoutPage() {
                   >
                     <CreditCard className="w-10 h-10 text-red-400 mx-auto mb-4" />
                     <h2 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-3">
-                      Checkout Unavailable
+                      {(checkoutSettings?.checkoutUnavailableHeading as string) || 'Checkout Unavailable'}
                     </h2>
                     <p className="text-red-400 mb-6">{error}</p>
                     <Link
                       href="/cart"
                       className="inline-flex items-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold uppercase tracking-wider px-6 py-3 transition-all duration-300"
                     >
-                      ← Return to Cart
+                      {(checkoutSettings?.returnToCartText as string) || '← Return to Cart'}
                     </Link>
                   </motion.div>
                 )}
@@ -270,7 +270,7 @@ export default function CheckoutPage() {
                   <div className="absolute -bottom-px -right-px w-6 h-6 border-r-2 border-b-2 border-accent-primary" />
 
                   <h2 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-6">
-                    Order Summary
+                    {(checkoutSettings?.orderSummaryHeading as string) || 'Order Summary'}
                   </h2>
 
                   {/* Items */}
@@ -350,14 +350,14 @@ export default function CheckoutPage() {
                   {/* Secure checkout note */}
                   <div className="flex items-center justify-center gap-2 text-text-muted text-xs mb-4">
                     <Lock className="w-3 h-3" />
-                    <span>Secure 256-bit SSL encryption</span>
+                    <span>{(checkoutSettings?.sslEncryptionText as string) || 'Secure 256-bit SSL encryption'}</span>
                   </div>
 
                   <Link
                     href="/cart"
                     className="block text-center text-text-muted hover:text-accent-primary text-sm uppercase tracking-wide transition-colors"
                   >
-                    ← Return to Cart
+                    {(checkoutSettings?.returnToCartText as string) || '← Return to Cart'}
                   </Link>
                 </motion.div>
               </div>

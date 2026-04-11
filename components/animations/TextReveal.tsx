@@ -13,7 +13,8 @@ export function TextReveal({text, className = '', as: Tag = 'h2'}: TextRevealPro
   const containerRef = useRef<HTMLDivElement>(null)
   const {scrollYProgress} = useScroll({
     target: containerRef,
-    offset: ['start 0.9', 'start 0.25'],
+    // Wider trigger: starts near bottom of viewport, completes at upper third
+    offset: ['start 0.95', 'start 0.35'],
   })
 
   const words = text.split(' ')
@@ -61,7 +62,8 @@ function Word({
     }
   }, [])
 
-  const opacity = useTransform(progress, range, [0.15, 1])
+  // Higher base so text is readable before reveal animation completes
+  const opacity = useTransform(progress, range, [0.25, 1])
   const y = useTransform(progress, range, [8, 0])
   // Blur only on desktop - expensive repaint on mobile GPUs
   const blur = useTransform(progress, range, [blurEnabled ? 4 : 0, 0])

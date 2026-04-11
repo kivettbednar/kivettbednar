@@ -153,6 +153,18 @@ export default {
         heading: ['var(--font-oswald)', 'sans-serif'],
         bebas: ['var(--font-bebas)', 'system-ui', 'sans-serif'],
       },
+      zIndex: {
+        'content': 'var(--z-content)',
+        'sticky': 'var(--z-sticky)',
+        'header': 'var(--z-header)',
+        'drawer': 'var(--z-drawer)',
+        'modal': 'var(--z-modal)',
+        'lightbox': 'var(--z-lightbox)',
+        'toast': 'var(--z-toast)',
+        'grain-tint': 'var(--z-grain-tint)',
+        'vignette': 'var(--z-vignette)',
+        'grain': 'var(--z-grain)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

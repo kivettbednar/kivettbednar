@@ -88,10 +88,7 @@ export function AnimatedHero({title, subtitle, variant = 'shows', backgroundImag
           initial={{opacity: 0, y: 50, scale: 0.95}}
           animate={{opacity: 1, y: 0, scale: 1}}
           transition={{duration: 0.8, ease: [0.22, 1, 0.36, 1]}}
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white"
-          style={{
-            textShadow: '0 2px 4px rgba(0,0,0,0.5)'
-          }}
+          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white text-shadow-md"
         >
           {title}
         </motion.h1>

@@ -15,6 +15,10 @@ export type StoreSettings = {
   processingTime: string | null
   returnPolicyDays: number | null
   returnPolicyNotes: string | null
+  contactFormSubject: string | null
+  fulfillmentFailureSubject: string | null
+  newOrderSubject: string | null
+  emailSignature: string | null
 }
 
 let cached: StoreSettings | null = null

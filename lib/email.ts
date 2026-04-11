@@ -22,19 +22,51 @@ function getApiKey(): string | null {
 
 let _cachedFrom: string | null = null;
 let _cachedAdmin: string | null = null;
+let _cachedSubjects: {
+  orderConfirmation: string | null;
+  shippingUpdate: string | null;
+  contactForm: string | null;
+  fulfillmentFailure: string | null;
+  newOrder: string | null;
+} | null = null;
+let _cachedSignature: string | null = null;
 let _settingsFetchedAt = 0;
+
+function resolveTemplate(template: string, vars: Record<string, string>): string {
+  return Object.entries(vars).reduce(
+    (s, [key, val]) => s.replaceAll(`{${key}}`, val), template
+  );
+}
 
 async function loadEmailSettings() {
   const now = Date.now();
   if (_cachedFrom && _cachedAdmin && now - _settingsFetchedAt < 60_000) return;
   try {
-    const {getEmailFrom, getAdminEmail: getAdmin} = await import('@/lib/store-settings');
+    const {getEmailFrom, getAdminEmail: getAdmin, getStoreSettings} = await import('@/lib/store-settings');
     _cachedFrom = await getEmailFrom();
     _cachedAdmin = await getAdmin();
+    const settings = await getStoreSettings();
+    _cachedSubjects = {
+      orderConfirmation: settings.orderConfirmationSubject,
+      shippingUpdate: settings.shippingUpdateSubject,
+      contactForm: settings.contactFormSubject,
+      fulfillmentFailure: settings.fulfillmentFailureSubject,
+      newOrder: settings.newOrderSubject,
+    };
+    _cachedSignature = settings.emailSignature;
     _settingsFetchedAt = now;
   } catch {
     // Fall through to env var defaults
   }
+}
+
+function getSubject(key: keyof NonNullable<typeof _cachedSubjects>, fallback: string, vars: Record<string, string>): string {
+  const template = _cachedSubjects?.[key] || fallback;
+  return resolveTemplate(template, vars);
+}
+
+function getSignature(): string {
+  return _cachedSignature || 'Kivett Bednar Music';
 }
 
 async function getFromAddress(): Promise<string> {
@@ -111,14 +143,19 @@ export async function sendOrderConfirmation(order: {
   name?: string;
   items: Array<{ title: string; quantity: number; priceCents: number }>;
   totalCents: number;
+  currency?: string;
 }) {
+  await loadEmailSettings();
+  const currency = order.currency || 'USD';
+  const signature = getSignature();
+
   const itemRows = order.items
     .map(
       (i) =>
         `<tr>
           <td style="padding:8px;border-bottom:1px solid #eee">${escapeHtml(i.title)}</td>
           <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${i.quantity}</td>
-          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${formatCents(i.priceCents * i.quantity)}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${formatCents(i.priceCents * i.quantity, currency)}</td>
         </tr>`
     )
     .join("");
@@ -141,15 +178,16 @@ export async function sendOrderConfirmation(order: {
         <tfoot>
           <tr>
             <td colspan="2" style="padding:8px;text-align:right;font-weight:bold">Total</td>
-            <td style="padding:8px;text-align:right;font-weight:bold">${formatCents(order.totalCents)}</td>
+            <td style="padding:8px;text-align:right;font-weight:bold">${formatCents(order.totalCents, currency)}</td>
           </tr>
         </tfoot>
       </table>
       <p>We'll let you know when your order ships.</p>
-      <p>Thanks,<br/>Kivett Bednar Music</p>
+      <p>Thanks,<br/>${escapeHtml(signature)}</p>
     </div>`;
 
-  return sendEmail(order.email, `Order Confirmation - ${order.orderId}`, html);
+  const subject = getSubject('orderConfirmation', 'Order Confirmation - {orderNumber}', {orderNumber: order.orderId});
+  return sendEmail(order.email, subject, html);
 }
 
 export async function sendShippingUpdate(order: {
@@ -160,6 +198,8 @@ export async function sendShippingUpdate(order: {
   trackingUrl?: string;
   carrier?: string;
 }) {
+  await loadEmailSettings();
+  const signature = getSignature();
   const trackingInfo = order.trackingNumber
     ? `<p><strong>Tracking Number:</strong> ${
         order.trackingUrl
@@ -174,10 +214,11 @@ export async function sendShippingUpdate(order: {
       <p>Hi ${escapeHtml(order.name || "there")},</p>
       <p>Great news — your order <strong>${escapeHtml(order.orderId)}</strong> is on its way!</p>
       ${trackingInfo}
-      <p>Thanks,<br/>Kivett Bednar Music</p>
+      <p>Thanks,<br/>${escapeHtml(signature)}</p>
     </div>`;
 
-  return sendEmail(order.email, `Shipping Update - ${order.orderId}`, html);
+  const subject = getSubject('shippingUpdate', 'Shipping Update - {orderNumber}', {orderNumber: order.orderId});
+  return sendEmail(order.email, subject, html);
 }
 
 export async function sendContactFormSubmission(data: {
@@ -195,11 +236,11 @@ export async function sendContactFormSubmission(data: {
       <p style="color:#888;font-size:12px">Reply directly to this email to respond to ${escapeHtml(data.name)}.</p>
     </div>`;
 
-  return sendEmail(
-    await getAdminEmail(),
-    data.subject ? `Contact: ${data.subject}` : `Contact Form — ${data.name}`,
-    html
-  );
+  await loadEmailSettings();
+  const subject = data.subject
+    ? resolveTemplate(_cachedSubjects?.contactForm || 'Contact Form — {name}', {name: data.name, subject: data.subject})
+    : resolveTemplate(_cachedSubjects?.contactForm || 'Contact Form — {name}', {name: data.name, subject: ''});
+  return sendEmail(await getAdminEmail(), subject, html);
 }
 
 export async function sendFulfillmentFailureAlert(order: {
@@ -218,7 +259,9 @@ export async function sendFulfillmentFailureAlert(order: {
       <p>Please check the order in Sanity Studio and use the "Retry Gelato Order" action if appropriate.</p>
     </div>`;
 
-  return sendEmail(await getAdminEmail(), `ALERT: Fulfillment Failed — ${order.orderId}`, html);
+  await loadEmailSettings();
+  const subject = getSubject('fulfillmentFailure', 'ALERT: Fulfillment Failed — {orderNumber}', {orderNumber: order.orderId});
+  return sendEmail(await getAdminEmail(), subject, html);
 }
 
 export async function sendNewOrderNotification(order: {
@@ -227,9 +270,11 @@ export async function sendNewOrderNotification(order: {
   name?: string;
   items: Array<{ title: string; quantity: number; priceCents: number }>;
   totalCents: number;
+  currency?: string;
 }) {
+  const currency = order.currency || 'USD';
   const itemList = order.items
-    .map((i) => `<li>${escapeHtml(i.title)} x${i.quantity} — ${formatCents(i.priceCents * i.quantity)}</li>`)
+    .map((i) => `<li>${escapeHtml(i.title)} x${i.quantity} — ${formatCents(i.priceCents * i.quantity, currency)}</li>`)
     .join("");
 
   const html = `
@@ -238,8 +283,10 @@ export async function sendNewOrderNotification(order: {
       <p><strong>Order ID:</strong> ${escapeHtml(order.orderId)}</p>
       <p><strong>Customer:</strong> ${escapeHtml(order.name || "N/A")} (${escapeHtml(order.email)})</p>
       <ul>${itemList}</ul>
-      <p><strong>Total:</strong> ${formatCents(order.totalCents)}</p>
+      <p><strong>Total:</strong> ${formatCents(order.totalCents, currency)}</p>
     </div>`;
 
-  return sendEmail(await getAdminEmail(), `New Order — ${order.orderId}`, html);
+  await loadEmailSettings();
+  const subject = getSubject('newOrder', 'New Order — {orderNumber}', {orderNumber: order.orderId});
+  return sendEmail(await getAdminEmail(), subject, html);
 }

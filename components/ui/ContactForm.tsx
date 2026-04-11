@@ -1,12 +1,17 @@
 'use client'
 
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {Send, CheckCircle, AlertCircle} from 'lucide-react'
 
 export function ContactForm() {
   const [formData, setFormData] = useState({name: '', email: '', subject: '', message: ''})
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [csrfToken, setCsrfToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/csrf').then(r => r.json()).then(d => setCsrfToken(d.token)).catch(() => {})
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,7 +21,10 @@ export function ContactForm() {
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          ...(csrfToken ? {'x-csrf-token': csrfToken} : {}),
+        },
         body: JSON.stringify(formData),
       })
       const data = await res.json()

@@ -23,6 +23,9 @@ import {uiText} from './singletons/uiText'
 import {checkoutSettings} from './singletons/checkoutSettings'
 import {storeSettings} from './singletons/storeSettings'
 import {orderConfirmationPage} from './singletons/orderConfirmationPage'
+import {privacyPolicy} from './singletons/privacyPolicy'
+import {termsOfService} from './singletons/termsOfService'
+import {returnsPolicy} from './singletons/returnsPolicy'
 import {song} from './documents/song'
 import {link} from './objects/link'
 import {blockContent} from './objects/blockContent'
@@ -54,6 +57,9 @@ export const schemaTypes = [
   checkoutSettings,
   storeSettings,
   orderConfirmationPage,
+  privacyPolicy,
+  termsOfService,
+  returnsPolicy,
   // Documents
   page,
   post,

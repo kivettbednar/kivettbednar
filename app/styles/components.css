@@ -209,6 +209,58 @@ a:not([class]):hover {
 }
 
 /* ======================
+   LEGAL / PROSE CONTENT
+   ====================== */
+
+.prose-custom {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.prose-custom p {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.prose-custom h2,
+.prose-custom h3 {
+  font-family: var(--font-bebas);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-text-primary);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom h2 {
+  font-size: 1.75rem;
+}
+
+.prose-custom h3 {
+  font-size: 1.25rem;
+}
+
+.prose-custom ul,
+.prose-custom ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.prose-custom li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-custom a {
+  color: var(--color-accent-primary);
+  text-decoration: underline;
+}
+
+.prose-custom strong {
+  color: var(--color-text-primary);
+}
+
+/* ======================
    GLASSMORPHISM & PREMIUM EFFECTS
    ====================== */
 

@@ -38,6 +38,9 @@ const SINGLETON_TYPES = [
   'checkoutSettings',
   'storeSettings',
   'orderConfirmationPage',
+  'privacyPolicy',
+  'termsOfService',
+  'returnsPolicy',
   'assist.instruction.context',
 ]
 
@@ -94,6 +97,26 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('orderConfirmationPage')
                 .child(S.document().schemaType('orderConfirmationPage').documentId('orderConfirmationPage'))
                 .icon(CheckmarkCircleIcon),
+
+              S.divider(),
+
+              S.listItem()
+                .title('Privacy Policy')
+                .id('privacyPolicy')
+                .child(S.document().schemaType('privacyPolicy').documentId('privacyPolicy'))
+                .icon(DocumentIcon),
+
+              S.listItem()
+                .title('Terms of Service')
+                .id('termsOfService')
+                .child(S.document().schemaType('termsOfService').documentId('termsOfService'))
+                .icon(DocumentIcon),
+
+              S.listItem()
+                .title('Returns & Refunds')
+                .id('returnsPolicy')
+                .child(S.document().schemaType('returnsPolicy').documentId('returnsPolicy'))
+                .icon(DocumentIcon),
             ])
         ),
 

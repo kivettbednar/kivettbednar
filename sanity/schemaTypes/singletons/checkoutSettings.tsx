@@ -87,6 +87,61 @@ export const checkoutSettings = defineType({
       description: 'Button text on empty cart page',
       initialValue: 'Browse Merch',
     }),
+    // Checkout page labels
+    defineField({
+      name: 'secureCheckoutHeading',
+      title: 'Secure Checkout Heading',
+      type: 'string',
+      description: 'Main heading on checkout page',
+      initialValue: 'Secure Checkout',
+    }),
+    defineField({
+      name: 'redirectingHeading',
+      title: 'Redirecting Heading',
+      type: 'string',
+      description: 'Heading shown while redirecting to Stripe',
+      initialValue: 'Setting Up Secure Payment',
+    }),
+    defineField({
+      name: 'redirectingText',
+      title: 'Redirecting Text',
+      type: 'text',
+      rows: 2,
+      description: 'Text shown while redirecting to Stripe',
+      initialValue: "You'll be redirected to our secure payment partner (Stripe) to complete your purchase.",
+    }),
+    defineField({
+      name: 'redirectingSubtext',
+      title: 'Redirecting Subtext',
+      type: 'string',
+      description: 'Secondary text shown while redirecting',
+      initialValue: "Your cart is saved and you won't be charged until you confirm.",
+    }),
+    defineField({
+      name: 'orderSummaryHeading',
+      title: 'Order Summary Heading',
+      type: 'string',
+      initialValue: 'Order Summary',
+    }),
+    defineField({
+      name: 'returnToCartText',
+      title: 'Return to Cart Text',
+      type: 'string',
+      initialValue: '← Return to Cart',
+    }),
+    defineField({
+      name: 'sslEncryptionText',
+      title: 'SSL Encryption Text',
+      type: 'string',
+      description: 'Security text shown at bottom of checkout',
+      initialValue: 'Secure 256-bit SSL encryption',
+    }),
+    defineField({
+      name: 'checkoutUnavailableHeading',
+      title: 'Checkout Unavailable Heading',
+      type: 'string',
+      initialValue: 'Checkout Unavailable',
+    }),
   ],
   preview: {
     prepare() {

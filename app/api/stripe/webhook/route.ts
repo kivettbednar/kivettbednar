@@ -267,6 +267,7 @@ export async function POST(req: NextRequest) {
             priceCents: oi.priceCents,
           })),
           totalCents,
+          currency: session.currency?.toUpperCase() || 'USD',
         }
         await sendOrderConfirmation(emailOrder)
         await sendNewOrderNotification(emailOrder)

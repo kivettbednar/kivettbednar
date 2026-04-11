@@ -6,6 +6,10 @@ import {productBySlugQuery} from '@/sanity/lib/queries'
 import {getStripe} from '@/lib/stripe'
 import {validatePromoCode, fetchPromoCode} from '@/lib/promo-validation'
 import {variantOptionValuesToRecord} from '@/types/product'
+import {createRateLimiter} from '@/lib/rate-limit'
+
+// 10 checkout attempts per minute per IP
+const limiter = createRateLimiter({windowMs: 60_000, max: 10})
 
 const CartItemSchema = z.object({
   slug: z.string().min(1).max(200),
@@ -18,6 +22,9 @@ const CheckoutBodySchema = z.object({
 })
 
 export async function POST(req: Request) {
+  const limited = limiter.check(req)
+  if (limited) return limited
+
   const {isStoreEnabled} = await import('@/lib/store-settings')
   if (!(await isStoreEnabled()) || !process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json({error: 'Checkout is disabled'}, {status: 501})
