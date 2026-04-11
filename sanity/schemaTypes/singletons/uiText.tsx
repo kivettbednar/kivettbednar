@@ -103,11 +103,71 @@ export const uiText = defineType({
       type: 'string',
       initialValue: 'Sending...',    }),
     defineField({
+      name: 'formSuccessHeading',
+      title: 'Form: Success Heading',
+      type: 'string',
+      initialValue: 'Message Sent',    }),
+    defineField({
       name: 'formSuccessMessage',
       title: 'Form: Success Message',
       type: 'text',
       rows: 2,
-      initialValue: 'Thank you! Your message has been sent successfully.',    }),
+      initialValue: "Thanks for reaching out! I'll get back to you as soon as possible.",    }),
+    defineField({
+      name: 'formSendAnotherText',
+      title: 'Form: Send Another Button',
+      type: 'string',
+      initialValue: 'Send Another Message',    }),
+    defineField({
+      name: 'formPlaceholderName',
+      title: 'Form Placeholder: Name',
+      type: 'string',
+      initialValue: 'Your name',    }),
+    defineField({
+      name: 'formPlaceholderEmail',
+      title: 'Form Placeholder: Email',
+      type: 'string',
+      initialValue: 'your@email.com',    }),
+    defineField({
+      name: 'formPlaceholderSubject',
+      title: 'Form Placeholder: Subject',
+      type: 'string',
+      initialValue: "What's this about?",    }),
+    defineField({
+      name: 'formPlaceholderMessage',
+      title: 'Form Placeholder: Message',
+      type: 'string',
+      initialValue: 'Your message...',    }),
+
+    // Newsletter
+    defineField({
+      name: 'newsletterButtonText',
+      title: 'Newsletter: Button Text',
+      type: 'string',
+      initialValue: 'Join the List',    }),
+    defineField({
+      name: 'newsletterSuccessText',
+      title: 'Newsletter: Success Text',
+      type: 'string',
+      initialValue: 'Subscribed',    }),
+    defineField({
+      name: 'newsletterPlaceholder',
+      title: 'Newsletter: Placeholder',
+      type: 'string',
+      initialValue: 'Enter your email',    }),
+    defineField({
+      name: 'newsletterDisclaimer',
+      title: 'Newsletter: Privacy Disclaimer',
+      type: 'string',
+      initialValue: 'We respect your privacy. Unsubscribe at any time.',    }),
+
+    // Footer
+    defineField({
+      name: 'footerBookingText',
+      title: 'Footer: Booking/Contact Text',
+      type: 'string',
+      description: 'Short text above the contact link in the footer',
+      initialValue: 'For booking inquiries, lessons, or just to say hello.',    }),
 
     // Common Button Labels
     defineField({

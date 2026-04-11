@@ -56,6 +56,7 @@ export default async function SiteLayout({
           socialFacebookLabel={uiText?.socialFacebook || undefined}
           socialInstagramLabel={uiText?.socialInstagram || undefined}
           copyrightText={uiText?.footerCopyrightText || undefined}
+          bookingText={uiText?.footerBookingText || undefined}
         />
       </CartProvider>
     </ToastProvider>

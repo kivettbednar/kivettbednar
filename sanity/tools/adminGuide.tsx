@@ -150,6 +150,9 @@ function PagesTab() {
             ['Setlist Page', 'Setlist display settings'],
             ['Merch Page', 'Store header and layout'],
             ['Order Confirmation Page', 'Post-checkout thank-you page'],
+            ['Privacy Policy', 'Your privacy policy — editable with the rich text editor'],
+            ['Terms of Service', 'Terms and conditions for your site and store'],
+            ['Returns & Refunds', 'Your return and refund policy'],
           ].map(([name, desc]) => (
             <Text size={2} key={name}>
               <strong>{name}</strong> &mdash; {desc}
@@ -162,6 +165,31 @@ function PagesTab() {
         The Home Page has visibility toggles that let you show or hide entire
         sections (hero, events, testimonials, etc.) without deleting any content.
       </Tip>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Page Visibility</SubHeading>
+          <Text size={2}>
+            Go to <strong>Settings &gt; Site Settings &gt; Page Visibility</strong> to
+            toggle any page on or off. Disabled pages are hidden from navigation,
+            and anyone visiting the URL directly sees a friendly &ldquo;unavailable&rdquo; message.
+          </Text>
+          <Text size={2}>
+            Pages you can toggle: Shows, Lessons, Setlist, Merch, Contact.
+          </Text>
+        </Stack>
+      </Card>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Legal Pages</SubHeading>
+          <Text size={2}>
+            Privacy Policy, Terms of Service, and Returns &amp; Refunds are under
+            Site Pages. Edit them with the rich text editor — use H2 headings for
+            section titles. If you leave the content empty, default text will display.
+          </Text>
+        </Stack>
+      </Card>
     </Stack>
   )
 }
@@ -229,8 +257,9 @@ function StoreTab() {
         <Stack space={3}>
           <SubHeading>Checkout Settings</SubHeading>
           <Text size={2}>
-            Configure shipping options, tax settings, and other store-wide
-            checkout preferences.
+            Customize every label on the checkout page: headings, button text,
+            trust badges, delivery estimates, SSL message, and empty cart text.
+            All have sensible defaults that work out of the box.
           </Text>
         </Stack>
       </Card>
@@ -363,8 +392,14 @@ function IntegrationsTab() {
         <Stack space={3}>
           <SubHeading>Resend (Email)</SubHeading>
           <Text size={2}>
-            Order confirmations and shipping notifications are sent automatically
-            via Resend. Email templates are managed in code, not in the Studio.
+            Order confirmations, shipping updates, and contact form notifications
+            are sent automatically via Resend.
+          </Text>
+          <Text size={2}>
+            <strong>Email subject lines</strong> and your <strong>sign-off name</strong> are
+            editable in <strong>Settings &gt; Store Settings &gt; Email</strong> tab.
+            Use <code>{'{orderNumber}'}</code> and <code>{'{name}'}</code> as
+            placeholders in subject templates.
           </Text>
         </Stack>
       </Card>
@@ -410,7 +445,15 @@ function TipsTab() {
 
       <Tip>
         <strong>UI Text:</strong> Nearly every user-facing label is editable in
-        Settings &gt; UI Text. Check there before requesting a code change.
+        Settings &gt; UI Text. This includes: navigation labels, form field labels
+        and placeholders, button text, footer text, newsletter form text, success
+        messages, and social media labels. Check there before requesting a code change.
+      </Tip>
+
+      <Tip>
+        <strong>Page Visibility:</strong> You can temporarily hide any page
+        (Shows, Lessons, Setlist, Merch, Contact) without deleting content. Go to
+        Settings &gt; Site Settings &gt; Page Visibility.
       </Tip>
     </Stack>
   )
@@ -420,7 +463,74 @@ function TipsTab() {
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
-type TabId = 'quickstart' | 'pages' | 'store' | 'orders' | 'integrations' | 'tips'
+function SettingsTab() {
+  return (
+    <Stack space={5}>
+      <Stack space={3}>
+        <SectionHeading>Settings</SectionHeading>
+        <Text size={2} muted>
+          Global configuration for your site, store, and content.
+        </Text>
+      </Stack>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Site Settings</SubHeading>
+          <Text size={2}>
+            <strong>General tab:</strong> Site title, description, Open Graph image,
+            contact email, booking URL, and social media links.
+          </Text>
+          <Text size={2}>
+            <strong>Page Visibility tab:</strong> Toggle any page on or off —
+            Shows, Lessons, Setlist, Merch, Contact. Disabled pages hide from
+            navigation and show a friendly message if visited directly.
+          </Text>
+        </Stack>
+      </Card>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Store Settings</SubHeading>
+          <Text size={2}>
+            <strong>General tab:</strong> Enable/disable checkout, store name, currency.
+          </Text>
+          <Text size={2}>
+            <strong>Email tab:</strong> Admin email, sender name and address,
+            email subject lines (with <code>{'{orderNumber}'}</code> and <code>{'{name}'}</code>{' '}
+            placeholders), and your email sign-off name.
+          </Text>
+          <Text size={2}>
+            <strong>Shipping tab:</strong> Allowed countries, processing time,
+            return policy days and notes.
+          </Text>
+        </Stack>
+      </Card>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>UI Text &amp; Labels</SubHeading>
+          <Text size={2}>
+            Every user-facing label on the site: navigation links, form field
+            labels, button text, placeholders, success messages, footer text,
+            newsletter form text, and social media labels.
+          </Text>
+        </Stack>
+      </Card>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Navigation</SubHeading>
+          <Text size={2}>
+            Main navigation and footer link structure. The nav labels themselves
+            are in UI Text, but the link structure is here.
+          </Text>
+        </Stack>
+      </Card>
+    </Stack>
+  )
+}
+
+type TabId = 'quickstart' | 'pages' | 'store' | 'orders' | 'integrations' | 'settings' | 'tips'
 
 const TABS: {id: TabId; label: string; icon: React.ReactNode}[] = [
   {id: 'quickstart', label: 'Quick Start', icon: <HomeIcon />},
@@ -428,6 +538,7 @@ const TABS: {id: TabId; label: string; icon: React.ReactNode}[] = [
   {id: 'store', label: 'Store', icon: <TagIcon />},
   {id: 'orders', label: 'Orders', icon: <PackageIcon />},
   {id: 'integrations', label: 'Integrations', icon: <PlugIcon />},
+  {id: 'settings', label: 'Settings', icon: <CogIcon />},
   {id: 'tips', label: 'Tips', icon: <BulbOutlineIcon />},
 ]
 
@@ -484,6 +595,11 @@ function AdminGuide() {
           {activeTab === 'integrations' && (
             <TabPanel id="panel-integrations" aria-labelledby="tab-integrations">
               <IntegrationsTab />
+            </TabPanel>
+          )}
+          {activeTab === 'settings' && (
+            <TabPanel id="panel-settings" aria-labelledby="tab-settings">
+              <SettingsTab />
             </TabPanel>
           )}
           {activeTab === 'tips' && (

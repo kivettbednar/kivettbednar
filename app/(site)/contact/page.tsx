@@ -293,7 +293,15 @@ export default async function ContactPage() {
               </div>
             </AnimatedSection>
             <AnimatedSection animation="fadeUp" delay={0.2}>
-              <ContactForm />
+              <ContactForm
+                successHeading={uiText?.formSuccessHeading || undefined}
+                successMessage={uiText?.formSuccessMessage || undefined}
+                sendAnotherText={uiText?.formSendAnotherText || undefined}
+                placeholderName={uiText?.formPlaceholderName || undefined}
+                placeholderEmail={uiText?.formPlaceholderEmail || undefined}
+                placeholderSubject={uiText?.formPlaceholderSubject || undefined}
+                placeholderMessage={uiText?.formPlaceholderMessage || undefined}
+              />
             </AnimatedSection>
           </div>
         </div>

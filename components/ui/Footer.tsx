@@ -15,6 +15,7 @@ interface FooterProps {
   socialFacebookLabel?: string
   socialInstagramLabel?: string
   copyrightText?: string
+  bookingText?: string
 }
 
 // Social media icons
@@ -67,6 +68,7 @@ export function Footer({
   socialFacebookLabel,
   socialInstagramLabel,
   copyrightText,
+  bookingText,
 }: FooterProps) {
   const currentYear = new Date().getFullYear()
   const [showScrollTop, setShowScrollTop] = useState(false)
@@ -174,7 +176,7 @@ export function Footer({
               </h4>
               <div className="space-y-4">
                 <p className="text-text-muted text-sm">
-                  For booking inquiries, lessons, or just to say hello.
+                  {bookingText || 'For booking inquiries, lessons, or just to say hello.'}
                 </p>
                 <Link
                   href="/contact"

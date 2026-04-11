@@ -3,7 +3,25 @@
 import {useState, useEffect} from 'react'
 import {Send, CheckCircle, AlertCircle} from 'lucide-react'
 
-export function ContactForm() {
+interface ContactFormProps {
+  successHeading?: string
+  successMessage?: string
+  sendAnotherText?: string
+  placeholderName?: string
+  placeholderEmail?: string
+  placeholderSubject?: string
+  placeholderMessage?: string
+}
+
+export function ContactForm({
+  successHeading = 'Message Sent',
+  successMessage = "Thanks for reaching out! I'll get back to you as soon as possible.",
+  sendAnotherText = 'Send Another Message',
+  placeholderName = 'Your name',
+  placeholderEmail = 'your@email.com',
+  placeholderSubject = "What's this about?",
+  placeholderMessage = 'Your message...',
+}: ContactFormProps = {}) {
   const [formData, setFormData] = useState({name: '', email: '', subject: '', message: ''})
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -47,16 +65,16 @@ export function ContactForm() {
       <div className="bg-surface-elevated border border-accent-primary/30 p-12 text-center">
         <CheckCircle className="w-12 h-12 text-accent-primary mx-auto mb-4" />
         <h3 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-3">
-          Message Sent
+          {successHeading}
         </h3>
         <p className="text-text-secondary mb-6">
-          Thanks for reaching out! I&apos;ll get back to you as soon as possible.
+          {successMessage}
         </p>
         <button
           onClick={() => setStatus('idle')}
           className="text-accent-primary hover:text-accent-primary/80 uppercase tracking-wider text-sm font-bold transition-colors"
         >
-          Send Another Message
+          {sendAnotherText}
         </button>
       </div>
     )
@@ -78,7 +96,7 @@ export function ContactForm() {
             value={formData.name}
             onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
             className="w-full bg-background border border-border px-4 py-3 text-text-primary focus:border-accent-primary focus:outline-none transition-colors"
-            placeholder="Your name"
+            placeholder={placeholderName}
           />
         </div>
         <div>
@@ -93,7 +111,7 @@ export function ContactForm() {
             value={formData.email}
             onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
             className="w-full bg-background border border-border px-4 py-3 text-text-primary focus:border-accent-primary focus:outline-none transition-colors"
-            placeholder="your@email.com"
+            placeholder={placeholderEmail}
           />
         </div>
       </div>
@@ -109,7 +127,7 @@ export function ContactForm() {
           value={formData.subject}
           onChange={(e) => setFormData(prev => ({...prev, subject: e.target.value}))}
           className="w-full bg-background border border-border px-4 py-3 text-text-primary focus:border-accent-primary focus:outline-none transition-colors"
-          placeholder="What's this about?"
+          placeholder={placeholderSubject}
         />
       </div>
 
@@ -126,7 +144,7 @@ export function ContactForm() {
           value={formData.message}
           onChange={(e) => setFormData(prev => ({...prev, message: e.target.value}))}
           className="w-full bg-background border border-border px-4 py-3 text-text-primary focus:border-accent-primary focus:outline-none transition-colors resize-vertical"
-          placeholder="Your message..."
+          placeholder={placeholderMessage}
         />
       </div>
 

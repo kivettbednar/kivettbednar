@@ -4,7 +4,19 @@ import {useState, FormEvent} from 'react'
 import {motion, AnimatePresence} from 'framer-motion'
 import {Mail, Check, AlertCircle, Loader2} from 'lucide-react'
 
-export function NewsletterForm() {
+interface NewsletterFormProps {
+  buttonText?: string
+  successText?: string
+  placeholder?: string
+  disclaimer?: string
+}
+
+export function NewsletterForm({
+  buttonText = 'Join the List',
+  successText = 'Subscribed',
+  placeholder = 'Enter your email',
+  disclaimer = 'We respect your privacy. Unsubscribe at any time.',
+}: NewsletterFormProps = {}) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
@@ -59,7 +71,7 @@ export function NewsletterForm() {
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              placeholder="Enter your email"
+              placeholder={placeholder}
               required
               disabled={status === 'loading' || status === 'success'}
               className="w-full pl-12 pr-4 py-4 bg-transparent text-white placeholder:text-text-muted focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
@@ -80,10 +92,10 @@ export function NewsletterForm() {
               {status === 'success' ? (
                 <>
                   <Check className="w-4 h-4" />
-                  Subscribed
+                  {successText}
                 </>
               ) : (
-                'Join the List'
+                buttonText
               )}
             </span>
 
@@ -129,7 +141,7 @@ export function NewsletterForm() {
       </AnimatePresence>
 
       <p className="text-sm text-text-muted mt-4 text-center">
-        We respect your privacy. Unsubscribe at any time.
+        {disclaimer}
       </p>
     </div>
   )

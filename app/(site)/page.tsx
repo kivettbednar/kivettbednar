@@ -494,7 +494,12 @@ export default async function HomePage() {
               <p className="text-xl text-text-secondary mb-10 max-w-2xl mx-auto">
                 {homePage.newsletterText || 'Get the latest show announcements, new music releases, and exclusive content delivered to your inbox.'}
               </p>
-              <NewsletterForm />
+              <NewsletterForm
+                buttonText={uiText?.newsletterButtonText || undefined}
+                successText={uiText?.newsletterSuccessText || undefined}
+                placeholder={uiText?.newsletterPlaceholder || undefined}
+                disclaimer={uiText?.newsletterDisclaimer || undefined}
+              />
             </AnimatedSection>
           </div>
         </div>
