@@ -2,6 +2,7 @@ import {Metadata} from 'next'
 import Link from 'next/link'
 import {sanityFetch} from '@/sanity/lib/live'
 import {contactPageQuery, settingsQuery, uiTextQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
@@ -11,7 +12,13 @@ import {ContactForm} from '@/components/ui/ContactForm'
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const {data: contactPage} = await sanityFetch({query: contactPageQuery})
+    const [{data: contactPage}, {data: siteSettings}] = await Promise.all([
+      sanityFetch({query: contactPageQuery}),
+      sanityFetch({query: settingsQuery}),
+    ])
+    if ((siteSettings?.showContactPage as boolean | null) === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
     return {
       title: contactPage?.seoTitle || 'Contact | Kivett Bednar',
       description: contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries',
@@ -48,6 +55,10 @@ export default async function ContactPage() {
     ])
   } catch (error) {
     console.warn('Failed to fetch contact page data, using fallback content:', error)
+  }
+
+  if ((settings?.showContactPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Contact" />
   }
 
   return (

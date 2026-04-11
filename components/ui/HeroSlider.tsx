@@ -90,7 +90,6 @@ export function HeroSlider({
       ref={sectionRef}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-background"
       style={{
-        contentVisibility: 'auto',
         containIntrinsicSize: '100vh',
       }}
     >
@@ -106,34 +105,31 @@ export function HeroSlider({
           }}
         >
           <motion.div
-            style={{y: backgroundY}}
-            className="absolute inset-0"
+            style={{y: backgroundY, willChange: 'transform'}}
+            className="absolute inset-0 transform-gpu"
           >
-            <div className="absolute inset-0 animate-ken-burns">
+            <div className="absolute inset-0 animate-ken-burns transform-gpu">
               {(() => {
-                // Use mobile image if available and on mobile, otherwise use desktop image
                 const activeImage = isMobile && slide.mobileImage?.asset?.url ? slide.mobileImage : slide.image
                 const imageUrl = activeImage?.asset?.url
-
-                // Combine image data with slide-level position settings
                 const imageWithPosition = {
                   ...activeImage,
                   desktopPosition: slide.desktopPosition as PositionValue | undefined,
-                  mobilePosition: slide.mobilePosition as PositionValue | undefined
+                  mobilePosition: slide.mobilePosition as PositionValue | undefined,
                 }
+                const desktopPos = getObjectPosition(imageWithPosition, false)
+                const mobilePos = getObjectPosition(imageWithPosition, true)
 
                 return imageUrl ? (
                   <Image
                     src={imageUrl}
                     alt={slide.alt || activeImage?.alt || 'Kivett Bednar'}
                     fill
-                    className="object-cover"
+                    className="object-cover responsive-object-position"
                     priority={index === 0}
                     quality={95}
                     sizes="100vw"
-                    style={{
-                      objectPosition: getObjectPosition(imageWithPosition, isMobile)
-                    }}
+                    style={{'--obj-pos-desktop': desktopPos, '--obj-pos-mobile': mobilePos} as React.CSSProperties}
                   />
                 ) : null
               })()}
@@ -149,8 +145,7 @@ export function HeroSlider({
         {/* Decorative accent line */}
         <motion.div
           initial={{opacity: 0, scaleX: 0}}
-          whileInView={{opacity: 1, scaleX: 1}}
-          viewport={{once: true, amount: 0.3}}
+          animate={{opacity: 1, scaleX: 1}}
           transition={{
             duration: 0.8,
             delay: 0.1,
@@ -167,8 +162,7 @@ export function HeroSlider({
 
         <motion.h1
           initial={{opacity: 0, y: 50, scale: 0.95, filter: 'blur(10px)'}}
-          whileInView={{opacity: 1, y: 0, scale: 1, filter: 'blur(0px)'}}
-          viewport={{once: true, amount: 0.3}}
+          animate={{opacity: 1, y: 0, scale: 1, filter: 'blur(0px)'}}
           transition={{
             duration: 0.8,
             ease: [0.22, 1, 0.36, 1],
@@ -189,8 +183,7 @@ export function HeroSlider({
         </motion.h1>
         <motion.p
           initial={{opacity: 0, y: 30, filter: 'blur(5px)'}}
-          whileInView={{opacity: 1, y: 0, filter: 'blur(0px)'}}
-          viewport={{once: true, amount: 0.3}}
+          animate={{opacity: 1, y: 0, filter: 'blur(0px)'}}
           transition={{
             duration: 0.8,
             delay: 0.15,
@@ -210,8 +203,7 @@ export function HeroSlider({
         {tagline && (
           <motion.p
             initial={{opacity: 0, y: 20}}
-            whileInView={{opacity: 1, y: 0}}
-            viewport={{once: true, amount: 0.3}}
+            animate={{opacity: 1, y: 0}}
             transition={{
               duration: 0.6,
               delay: 0.25,
@@ -224,8 +216,7 @@ export function HeroSlider({
         )}
         <motion.div
           initial={{opacity: 0, y: 20}}
-          whileInView={{opacity: 1, y: 0}}
-          viewport={{once: true, amount: 0.3}}
+          animate={{opacity: 1, y: 0}}
           transition={{
             duration: 0.6,
             delay: 0.35,

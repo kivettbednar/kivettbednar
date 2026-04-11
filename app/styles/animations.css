@@ -4,13 +4,13 @@
 
 @keyframes ken-burns {
   0% {
-    transform: scale(1) translate(0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
   50% {
-    transform: scale(1.08) translate(-1%, -1%);
+    transform: scale(1.08) translate3d(-1%, -1%, 0);
   }
   100% {
-    transform: scale(1) translate(0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
 }
 
@@ -18,7 +18,8 @@
 .animate-ken-burns {
   animation: ken-burns 12s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
   backface-visibility: hidden;
-  perspective: 1000px;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 
@@ -26,7 +27,8 @@
 .animate-ken-burns-hero {
   animation: ken-burns 20s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
   backface-visibility: hidden;
-  perspective: 1000px;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 

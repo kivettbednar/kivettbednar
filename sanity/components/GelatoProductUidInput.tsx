@@ -10,16 +10,26 @@ type VerifyState = 'idle' | 'loading' | 'found' | 'not_found' | 'error'
 export function GelatoProductUidInput(props: StringInputProps) {
   const [state, setState] = useState<VerifyState>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const studioToken = process.env.NEXT_PUBLIC_STUDIO_API_TOKEN
 
   const handleVerify = useCallback(async () => {
     const uid = props.value
     if (!uid) return
+    if (!studioToken) {
+      setState('error')
+      setErrorMsg('NEXT_PUBLIC_STUDIO_API_TOKEN is not configured.')
+      return
+    }
 
     setState('loading')
     setErrorMsg('')
 
     try {
-      const res = await fetch(`/api/gelato/catalog?productUid=${encodeURIComponent(uid)}`)
+      const res = await fetch(`/api/gelato/catalog?productUid=${encodeURIComponent(uid)}`, {
+        headers: {
+          'x-studio-token': studioToken,
+        },
+      })
       if (res.ok) {
         setState('found')
       } else if (res.status === 404) {
@@ -34,7 +44,7 @@ export function GelatoProductUidInput(props: StringInputProps) {
       setState('error')
       setErrorMsg(e instanceof Error ? e.message : 'Network error')
     }
-  }, [props.value])
+  }, [props.value, studioToken])
 
   return (
     <Stack space={2}>

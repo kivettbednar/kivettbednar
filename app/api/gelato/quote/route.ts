@@ -1,6 +1,7 @@
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {z} from 'zod'
 import {quoteGelatoOrder} from '@/lib/gelato'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -28,7 +29,9 @@ const QuoteSchema = z.object({
  * POST /api/gelato/quote
  * Get shipping options and production costs for a potential Gelato order
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   try {
     const body = await req.json()
     const parsed = QuoteSchema.safeParse(body)

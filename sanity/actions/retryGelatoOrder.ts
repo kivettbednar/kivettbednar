@@ -2,6 +2,8 @@ import {type DocumentActionComponent, useClient} from 'sanity'
 import {useState} from 'react'
 import {ResetIcon} from '@sanity/icons'
 
+const studioToken = process.env.NEXT_PUBLIC_STUDIO_API_TOKEN
+
 export const retryGelatoOrderAction: DocumentActionComponent = (props) => {
   const {id, draft, published} = props
   const doc = draft || published
@@ -29,9 +31,15 @@ export const retryGelatoOrderAction: DocumentActionComponent = (props) => {
           onConfirm: async () => {
             setIsRunning(true)
             try {
+              if (!studioToken) {
+                throw new Error('NEXT_PUBLIC_STUDIO_API_TOKEN is not configured.')
+              }
               const res = await fetch('/api/gelato/retry', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-studio-token': studioToken,
+                },
                 body: JSON.stringify({orderId: id}),
               })
               const data = await res.json()

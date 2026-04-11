@@ -53,10 +53,10 @@ async function getAdminEmail(): Promise<string> {
   return process.env.ADMIN_EMAIL || "admin@your-domain.com";
 }
 
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
-function formatCents(cents: number): string {
-  return `$${formatPrice(cents)}`;
+function formatCents(cents: number, currency = 'USD'): string {
+  return formatCurrency(cents, currency);
 }
 
 async function sendEmail(to: string, subject: string, html: string): Promise<{ success: boolean; error?: string }> {

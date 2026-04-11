@@ -1,6 +1,7 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
 import {lessonsPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {SplitScreenImage} from '@/components/ui/SplitScreenImage'
@@ -10,7 +11,13 @@ import {Guitar, Music, Mic2, BookOpen, Users, Award, Sparkles, ChevronRight} fro
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const {data: lessonsPage} = await sanityFetch({query: lessonsPageQuery})
+    const [{data: lessonsPage}, {data: siteSettings}] = await Promise.all([
+      sanityFetch({query: lessonsPageQuery}),
+      sanityFetch({query: settingsQuery}),
+    ])
+    if ((siteSettings?.showLessonsPage as boolean | null) === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
     return {
       title: lessonsPage?.seoTitle || 'Lessons | Kivett Bednar',
       description: lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome',
@@ -48,6 +55,10 @@ export default async function LessonsPage() {
     ])
   } catch (error) {
     console.warn('Failed to fetch lessons page data, using fallback content:', error)
+  }
+
+  if ((settings?.showLessonsPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Lessons" />
   }
 
   // Fallback if no content yet

@@ -1,8 +1,9 @@
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {z} from 'zod'
 import {createGelatoOrder} from '@/lib/gelato'
 import {writeClient} from '@/sanity/lib/write-client'
 import {client} from '@/sanity/lib/client'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -14,7 +15,9 @@ const RetrySchema = z.object({
  * POST /api/gelato/retry
  * Re-submit a failed Gelato order using stored order data
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   try {
     const body = await req.json()
     const parsed = RetrySchema.safeParse(body)

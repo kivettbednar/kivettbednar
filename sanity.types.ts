@@ -1371,7 +1371,7 @@ export type AllSanitySchemaTypes = MusicEmbed | VideoEmbed | CtaBanner | Feature
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]{  _id,  title,  description,  ogImage{    asset->,    alt,    metadataBase  },  contactEmail,  bookingUrl,  socialLinks[]{    platform,    url  }}
+// Query: *[_type == "settings"][0]{  _id,  title,  description,  ogImage{    asset->,    alt,    metadataBase  },  contactEmail,  bookingUrl,  socialLinks[]{    platform,    url  },  showShowsPage,  showLessonsPage,  showSetlistPage,  showMerchPage,  showContactPage}
 export type SettingsQueryResult = {
   _id: string;
   title: string | null;
@@ -1439,7 +1439,15 @@ export type SettingsQueryResult = {
     platform: "bandcamp" | "facebook" | "instagram" | "soundcloud" | "spotify" | "twitter" | "youtube" | null;
     url: string | null;
   }> | null;
+  showShowsPage: null;
+  showLessonsPage: null;
+  showSetlistPage: null;
+  showMerchPage: null;
+  showContactPage: null;
 } | null;
+// Variable: storeSettingsQuery
+// Query: *[_type == "storeSettings"][0]{  storeEnabled,  storeName,  siteUrl,  currency,  adminEmail,  emailFromName,  emailFromAddress,  orderConfirmationSubject,  shippingUpdateSubject,  shippingCountries,  processingTime,  returnPolicyDays,  returnPolicyNotes}
+export type StoreSettingsQueryResult = null;
 // Variable: uiTextQuery
 // Query: *[_type == "uiText"][0]{  _id,  siteName,  siteTagline,  navShows,  navLessons,  navSetlist,  navMerch,  navContact,  footerNavigationHeading,  footerConnectHeading,  footerCopyrightText,  formLabelName,  formLabelEmail,  formLabelSubject,  formLabelMessage,  formButtonSubmit,  formButtonSending,  formSuccessMessage,  buttonViewSetlist,  buttonScheduleLesson,  buttonBookLesson,  buttonEmailMe,  buttonGetInTouch,  linkSeeAllShows,  linkUpcomingShows,  linkGuitarLessons,  linkBluesSetlist,  showsCountSingular,  showsCountPlural,  upcomingPrefix,  setlistSubtitleSuffix,  socialFacebook,  socialInstagram}
 export type UiTextQueryResult = {
@@ -2890,7 +2898,8 @@ export type SitemapQueryResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt,\n    metadataBase\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  }\n}": SettingsQueryResult;
+    "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt,\n    metadataBase\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showMerchPage,\n  showContactPage\n}": SettingsQueryResult;
+    "*[_type == \"storeSettings\"][0]{\n  storeEnabled,\n  storeName,\n  siteUrl,\n  currency,\n  adminEmail,\n  emailFromName,\n  emailFromAddress,\n  orderConfirmationSubject,\n  shippingUpdateSubject,\n  shippingCountries,\n  processingTime,\n  returnPolicyDays,\n  returnPolicyNotes\n}": StoreSettingsQueryResult;
     "*[_type == \"uiText\"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navMerch,\n  navContact,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessMessage,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}": UiTextQueryResult;
     "*[_type == \"navigation\"][0]{\n  _id,\n  main[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  },\n  footer[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  }\n}": NavigationQueryResult;
     "*[_type == \"homePage\"][0]{\n  _id,\n  heroSlides[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    mobileImage{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    alt,\n    desktopPosition,\n    mobilePosition\n  },\n  heroHeading,\n  heroHeadingDesktopSize,\n  heroHeadingMobileSize,\n  heroHeadingTracking,\n  heroHeadingLineHeight,\n  heroSubheadingTracking,\n  heroSubheadingLineHeight,\n  heroSubheading,\n  heroTagline,\n  heroButtonText,\n  marqueeTopItems[]{text, style},\n  marqueeBottomItems[]{text, style},\n  aboutHeading,\n  aboutText,\n  aboutVerticalLabel,\n  aboutImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumTitle,\n  albumYear,\n  albumFormat,\n  albumDescription,\n  albumImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumFeatures,\n  ctaLessonsHeading,\n  ctaLessonsText,\n  parallaxHeading,\n  parallaxSubheading,\n  parallaxImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    position,\n    offset\n  },\n  performanceSectionHeading,\n  performanceImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  gallerySectionHeading,\n  gallerySectionSubheading,\n  galleryImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    width,\n    height\n  },\n  upcomingShowsHeading,\n  seeAllShowsLinkText,\n  aboutButtonText,\n  ctaLessonsButtonText,\n  featuredVideoHeading,\n  featuredVideoSubheading,\n  featuredVideoUrl,\n  featuredVideoTitle,\n  bookingSectionHeading,\n  bookingSectionIntro,\n  bookingInquiriesHeading,\n  bookingInquiriesText,\n  bookingInquiryListHeading,\n  bookingInquiryItems,\n  bookingPerfectForHeading,\n  bookingEventTypes,\n  bookingTestimonialQuote,\n  bookingTestimonialAttribution,\n  studioSectionHeading,\n  studioSectionSubheading,\n  studioVideo1Url,\n  studioVideo2Url,\n  studioVideo1Title,\n  studioVideo2Title,\n  newsletterHeading,\n  newsletterText,\n  showAboutSection,\n  showAlbumSection,\n  showUpcomingShows,\n  showLessonsSection,\n  showBookingSection,\n  showGallerySection,\n  showStudioVideos,\n  showNewsletterSection,\n  seoTitle,\n  seoDescription\n}": HomePageQueryResult;

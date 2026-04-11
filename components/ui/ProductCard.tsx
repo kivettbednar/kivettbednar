@@ -10,7 +10,7 @@ import {motion} from 'framer-motion'
 import {ShoppingCart} from 'lucide-react'
 import {useCart} from './CartContext'
 import {useToast} from './Toast'
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
 type Product = {
   _id: string
@@ -68,10 +68,13 @@ export function ProductCard({product}: {product: Product}) {
     setTimeout(() => setIsAddingToCart(false), 500)
   }, [product, hasOptions, addItem, showToast])
 
-  const price = formatPrice(product.priceCents)
-  const compareAtPrice = product.compareAtPriceCents
-    ? formatPrice(product.compareAtPriceCents)
+  const formattedPrice = formatCurrency(product.priceCents, product.currency)
+  const compareAtPriceCents = typeof product.compareAtPriceCents === 'number' ? product.compareAtPriceCents : null
+  const formattedCompareAtPrice = compareAtPriceCents
+    ? formatCurrency(compareAtPriceCents, product.currency)
     : null
+  const savingsCents = compareAtPriceCents ? compareAtPriceCents - product.priceCents : 0
+  const formattedSavings = savingsCents > 0 ? formatCurrency(savingsCents, product.currency) : null
 
   // Calculate stock status
   const isLowStock =
@@ -237,17 +240,19 @@ export function ProductCard({product}: {product: Product}) {
                     {product.currency}
                   </span>
                   <span className="text-3xl font-bold text-accent-primary">
-                    ${price}
+                    {formattedPrice}
                   </span>
                 </div>
-                {compareAtPrice && product.onSale && (
+                {formattedCompareAtPrice && product.onSale && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-text-muted line-through">
-                      ${compareAtPrice}
+                      {formattedCompareAtPrice}
                     </span>
-                    <span className="text-xs text-accent-red font-bold uppercase">
-                      Save ${(parseFloat(compareAtPrice) - parseFloat(price)).toFixed(2)}
-                    </span>
+                    {formattedSavings && (
+                      <span className="text-xs text-accent-red font-bold uppercase">
+                        Save {formattedSavings}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>

@@ -4,6 +4,8 @@ import {CloseIcon} from '@sanity/icons'
 
 const TERMINAL_STATUSES = ['canceled', 'delivered', 'shipped']
 
+const studioToken = process.env.NEXT_PUBLIC_STUDIO_API_TOKEN
+
 export const cancelGelatoOrderAction: DocumentActionComponent = (props) => {
   const {id, draft, published} = props
   const doc = draft || published
@@ -31,9 +33,15 @@ export const cancelGelatoOrderAction: DocumentActionComponent = (props) => {
           onConfirm: async () => {
             setIsRunning(true)
             try {
+              if (!studioToken) {
+                throw new Error('NEXT_PUBLIC_STUDIO_API_TOKEN is not configured.')
+              }
               const res = await fetch('/api/gelato/cancel', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-studio-token': studioToken,
+                },
                 body: JSON.stringify({orderId: id}),
               })
               const data = await res.json()

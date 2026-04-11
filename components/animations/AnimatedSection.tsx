@@ -1,8 +1,7 @@
 'use client'
 
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {ReactNode} from 'react'
+import {ReactNode, useRef, useEffect, useState} from 'react'
+import {cn} from '@/lib/utils'
 
 interface AnimatedSectionProps {
   children: ReactNode
@@ -12,27 +11,12 @@ interface AnimatedSectionProps {
   duration?: number
 }
 
-const animations = {
-  fadeUp: {
-    hidden: {opacity: 0, y: 40},
-    visible: {opacity: 1, y: 0},
-  },
-  fadeIn: {
-    hidden: {opacity: 0},
-    visible: {opacity: 1},
-  },
-  slideLeft: {
-    hidden: {opacity: 0, x: -60},
-    visible: {opacity: 1, x: 0},
-  },
-  slideRight: {
-    hidden: {opacity: 0, x: 60},
-    visible: {opacity: 1, x: 0},
-  },
-  scaleIn: {
-    hidden: {opacity: 0, scale: 0.8},
-    visible: {opacity: 1, scale: 1},
-  },
+const animationClasses: Record<string, string> = {
+  fadeUp: 'translate-y-10 opacity-0',
+  fadeIn: 'opacity-0',
+  slideLeft: '-translate-x-14 opacity-0',
+  slideRight: 'translate-x-14 opacity-0',
+  scaleIn: 'scale-[0.8] opacity-0',
 }
 
 export function AnimatedSection({
@@ -40,27 +24,37 @@ export function AnimatedSection({
   className = '',
   animation = 'fadeUp',
   delay = 0,
-  duration = 0.6,
 }: AnimatedSectionProps) {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      {threshold: 0.05, rootMargin: '50px'},
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={animations[animation]}
-      transition={{
-        duration,
-        delay,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      className={className}
+      className={cn(
+        'transition-all duration-700 ease-out',
+        isVisible ? 'translate-y-0 translate-x-0 scale-100 opacity-100' : animationClasses[animation],
+        className,
+      )}
+      style={{transitionDelay: `${delay * 1000}ms`}}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

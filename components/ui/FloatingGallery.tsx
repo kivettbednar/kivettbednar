@@ -116,26 +116,32 @@ export function FloatingGallery({images}: FloatingGalleryProps) {
 
   return (
     <div ref={containerRef} className="relative py-32 overflow-hidden">
-      {/* Floating background elements */}
+      {/* Floating background elements — deterministic positions to avoid hydration mismatch */}
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({length: 8}).map((_, i) => (
+        {[
+          {left: 12, top: 8, xDrift: 10, dur: 9, delay: 0.2},
+          {left: 35, top: 65, xDrift: -12, dur: 10, delay: 0.8},
+          {left: 58, top: 22, xDrift: 8, dur: 11, delay: 0.4},
+          {left: 80, top: 75, xDrift: -14, dur: 8.5, delay: 1.2},
+          {left: 20, top: 45, xDrift: 6, dur: 10.5, delay: 0.6},
+          {left: 68, top: 90, xDrift: -8, dur: 9.5, delay: 1.6},
+          {left: 45, top: 55, xDrift: 12, dur: 11.5, delay: 0.1},
+          {left: 90, top: 35, xDrift: -10, dur: 8, delay: 1.0},
+        ].map((orb, i) => (
           <motion.div
             key={i}
             className="absolute w-32 h-32 rounded-full bg-surface-elevated/50"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
+            style={{left: `${orb.left}%`, top: `${orb.top}%`}}
             animate={{
               y: [0, -50, 0],
-              x: [0, Math.random() * 30 - 15, 0],
+              x: [0, orb.xDrift, 0],
               scale: [1, 1.1, 1],
               opacity: [0.3, 0.5, 0.3],
             }}
             transition={{
-              duration: 8 + Math.random() * 4,
+              duration: orb.dur,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: orb.delay,
             }}
           />
         ))}

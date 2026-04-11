@@ -6,7 +6,7 @@ import Image from 'next/image'
 import {useRouter} from 'next/navigation'
 import {motion, AnimatePresence} from 'framer-motion'
 import {Search, X, Loader2, Command} from 'lucide-react'
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
 type SearchResult = {
   _id: string
@@ -267,7 +267,7 @@ export function SearchModal({open, onClose}: SearchModalProps) {
                                 {product.title}
                               </h3>
                               <span className="text-sm font-bold text-accent-primary">
-                                ${formatPrice(product.priceCents)}
+                                {formatCurrency(product.priceCents, product.currency)}
                               </span>
                             </div>
 

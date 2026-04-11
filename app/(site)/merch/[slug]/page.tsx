@@ -2,10 +2,11 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery} from '@/sanity/lib/queries'
+import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {ProductPageContent} from './ProductPageContent'
 import {urlFor} from '@/sanity/lib/image'
-import {formatPrice} from '@/lib/format'
+import {formatPrice, formatCurrency} from '@/lib/format'
 
 type Props = {
   params: Promise<{slug: string}>
@@ -19,11 +20,14 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   let product = null
 
   try {
-    product = await client.fetch(
-      productBySlugQuery,
-      {slug},
-      {next: {revalidate: 60}}
-    )
+    const [productData, siteSettings] = await Promise.all([
+      client.fetch(productBySlugQuery, {slug}, {next: {revalidate: 60}}),
+      client.fetch(`*[_type == "settings"][0]{showMerchPage}`, {}, {next: {revalidate: 60}}),
+    ])
+    product = productData
+    if (siteSettings?.showMerchPage === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
   } catch (error) {
     console.warn(`Failed to fetch product metadata for slug: ${slug}`, error)
   }
@@ -60,8 +64,15 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 export default async function ProductPage({params}: Props) {
   const {slug} = await params
 
-  // Fetch product once, then resolve related products
-  const product = await sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data)
+  // Fetch product and settings
+  const [product, settings] = await Promise.all([
+    sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data),
+    sanityFetch({query: settingsQuery}).then((r) => r.data).catch(() => null),
+  ])
+
+  if ((settings?.showMerchPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Merch" />
+  }
 
   if (!product) {
     notFound()
@@ -79,7 +90,8 @@ export default async function ProductPage({params}: Props) {
     }
   } catch { /* related products are non-critical */ }
 
-  const price = product.priceCents ? formatPrice(product.priceCents) : '0.00'
+  const priceValue = typeof product.priceCents === 'number' ? formatPrice(product.priceCents) : '0.00'
+  const priceFormatted = formatCurrency(product.priceCents || 0, product.currency || 'USD')
 
   const productSlug: string = (product.slug as any)?.current || product.slug || '';
 
@@ -112,7 +124,7 @@ export default async function ProductPage({params}: Props) {
     description: product.seo?.description || product.title,
     offers: {
       '@type': 'Offer',
-      price: price,
+      price: priceValue,
       priceCurrency: product.currency || 'USD',
       availability: 'https://schema.org/InStock',
     },
@@ -138,7 +150,7 @@ export default async function ProductPage({params}: Props) {
       />
       <ProductPageContent
         product={product as any}
-        price={price}
+        priceFormatted={priceFormatted}
         productSlug={productSlug}
         mainImageUrl={mainImageUrl}
         thumbnailImages={thumbnailImages}

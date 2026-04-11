@@ -13,19 +13,26 @@ export const settings = defineType({
   title: 'Settings',
   type: 'document',
   icon: CogIcon,
+  groups: [
+    {name: 'general', title: 'General', default: true},
+    {name: 'pageVisibility', title: 'Page Visibility'},
+  ],
   fields: [
     defineField({
       name: 'title',
       description: 'This field is the title of your blog.',
       title: 'Title',
       type: 'string',
-      initialValue: demo.title,    }),
+      initialValue: demo.title,
+      group: 'general',
+    }),
     defineField({
       name: 'description',
       description: 'Used on the Homepage',
       title: 'Description',
       type: 'array',
       initialValue: demo.description,
+      group: 'general',
       of: [
         // Define a minified block content field for the description. https://www.sanity.io/docs/block-content
         defineArrayMember({
@@ -113,6 +120,7 @@ export const settings = defineType({
       name: 'ogImage',
       title: 'Open Graph Image',
       type: 'image',
+      group: 'general',
       description: 'Displayed on social cards and search engine results.',
       options: {
         hotspot: true,
@@ -154,6 +162,7 @@ export const settings = defineType({
       title: 'Contact Email',
       type: 'string',
       description: 'Primary contact email address',
+      group: 'general',
       validation: (Rule) => Rule.email(),
     }),
     defineField({
@@ -161,12 +170,14 @@ export const settings = defineType({
       title: 'Booking/Scheduling URL',
       type: 'url',
       description: 'Optional URL for lesson booking or scheduling',
+      group: 'general',
     }),
     defineField({
       name: 'socialLinks',
       title: 'Social Media Links',
       type: 'array',
       description: 'Add social media links for the site',
+      group: 'general',
       of: [
         defineArrayMember({
           type: 'object',
@@ -209,6 +220,47 @@ export const settings = defineType({
           },
         }),
       ],
+    }),
+    // === PAGE VISIBILITY ===
+    defineField({
+      name: 'showShowsPage',
+      title: 'Show "Shows" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Shows page and its navigation link',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
+      name: 'showLessonsPage',
+      title: 'Show "Lessons" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Lessons page and its navigation link',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
+      name: 'showSetlistPage',
+      title: 'Show "Setlist" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Setlist page and its navigation link',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
+      name: 'showMerchPage',
+      title: 'Show "Merch" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Merch page and its navigation link. This is separate from Store Enabled in Store Settings, which controls checkout only.',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
+      name: 'showContactPage',
+      title: 'Show "Contact" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Contact page and its navigation link',
+      initialValue: true,
+      group: 'pageVisibility',
     }),
   ],
   preview: {

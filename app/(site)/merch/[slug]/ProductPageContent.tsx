@@ -13,7 +13,7 @@ import type {Product, ProductListItem} from '@/types/product'
 
 type ProductPageContentProps = {
   product: Product
-  price: string
+  priceFormatted: string
   productSlug: string
   mainImageUrl?: string
   thumbnailImages?: Array<{url: string; alt: string}>
@@ -22,7 +22,7 @@ type ProductPageContentProps = {
   trustBadges?: Array<{title: string; description: string; icon: string}>
 }
 
-export function ProductPageContent({product, price, productSlug, mainImageUrl, thumbnailImages, allImages, relatedProducts = [], trustBadges}: ProductPageContentProps) {
+export function ProductPageContent({product, priceFormatted, productSlug, mainImageUrl, thumbnailImages, allImages, relatedProducts = [], trustBadges}: ProductPageContentProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
@@ -54,7 +54,7 @@ export function ProductPageContent({product, price, productSlug, mainImageUrl, t
             <AnimatedSection animation="fadeUp" delay={0.3}>
               <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                 <div className="flex items-baseline gap-2 sm:gap-3">
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-primary">${price}</span>
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-primary">{priceFormatted}</span>
                   <span className="text-text-muted uppercase tracking-wide text-sm sm:text-base">{product.currency}</span>
                 </div>
                 {product.stockStatus !== 'out_of_stock' && (

@@ -52,35 +52,41 @@ function TickerRow({items, direction}: {items: MarqueeItem[]; direction: 'left' 
   const rowRef = useRef<HTMLDivElement>(null)
   const posRef = useRef(0)
   const rafRef = useRef<number>(0)
+  const lastTimeRef = useRef(0)
   const visibleRef = useRef(true)
-  const speed = direction === 'left' ? -0.5 : 0.5
+  // pixels per second — consistent across all refresh rates (60Hz, 120Hz, etc.)
+  const speed = direction === 'left' ? -30 : 30
 
   useEffect(() => {
     const el = rowRef.current
     if (!el) return
 
-    // Pause animation when off-screen for battery savings
     const observer = new IntersectionObserver(
-      ([entry]) => { visibleRef.current = entry.isIntersecting },
-      {threshold: 0}
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting
+      },
+      {threshold: 0},
     )
     observer.observe(el)
 
-    const animate = () => {
-      if (visibleRef.current) {
-        posRef.current += speed
+    const animate = (timestamp: number) => {
+      if (lastTimeRef.current === 0) lastTimeRef.current = timestamp
+      const delta = (timestamp - lastTimeRef.current) / 1000
+      lastTimeRef.current = timestamp
+
+      if (visibleRef.current && delta < 0.1) {
+        posRef.current += speed * delta
         const halfWidth = el.scrollWidth / 2
         if (direction === 'left' && posRef.current <= -halfWidth) {
           posRef.current += halfWidth
         } else if (direction === 'right' && posRef.current >= 0) {
           posRef.current -= halfWidth
         }
-        el.style.transform = `translateX(${posRef.current}px)`
+        el.style.transform = `translate3d(${posRef.current}px, 0, 0)`
       }
       rafRef.current = requestAnimationFrame(animate)
     }
 
-    // Initialize position after fonts are loaded to avoid layout jump
     document.fonts.ready.then(() => {
       if (direction === 'right') {
         posRef.current = -(el.scrollWidth / 2)

@@ -1,6 +1,7 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
-import {upcomingEventsQuery, pastEventsQuery, showsPageQuery} from '@/sanity/lib/queries'
+import {upcomingEventsQuery, pastEventsQuery, showsPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {EventCard} from '@/components/ui/EventCard'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
@@ -11,7 +12,13 @@ import {Calendar, MapPin, Music} from 'lucide-react'
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const {data: showsPage} = await sanityFetch({query: showsPageQuery})
+    const [{data: showsPage}, {data: siteSettings}] = await Promise.all([
+      sanityFetch({query: showsPageQuery}),
+      sanityFetch({query: settingsQuery}),
+    ])
+    if ((siteSettings?.showShowsPage as boolean | null) === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
     return {
       title: showsPage?.seoTitle || 'Shows | Kivett Bednar',
       description: showsPage?.seoDescription || 'Upcoming concerts and performances by Kivett Bednar - authentic blues in the Pacific Northwest',
@@ -32,9 +39,10 @@ export default async function ShowsPage() {
   let showsPage = null
   let events = null
   let pastEvents = null
+  let settings = null
 
   try {
-    ;[showsPage, events, pastEvents] = await Promise.all([
+    ;[showsPage, events, pastEvents, settings] = await Promise.all([
       sanityFetch({query: showsPageQuery}).then((r) => r.data),
       sanityFetch({
         query: upcomingEventsQuery,
@@ -44,9 +52,14 @@ export default async function ShowsPage() {
         query: pastEventsQuery,
         params: {now: new Date().toISOString(), offset: 0, limit: 12},
       }).then((r) => r.data),
+      sanityFetch({query: settingsQuery}).then((r) => r.data),
     ])
   } catch (error) {
     console.warn('Failed to fetch shows page data, using fallback content:', error)
+  }
+
+  if ((settings?.showShowsPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Shows" />
   }
 
   // Generate JSON-LD structured data for events

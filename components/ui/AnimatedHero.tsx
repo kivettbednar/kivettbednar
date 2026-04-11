@@ -44,31 +44,37 @@ export function AnimatedHero({title, subtitle, variant = 'shows', backgroundImag
       ref={sectionRef}
       className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-background"
       style={{
-        contentVisibility: 'auto',
         containIntrinsicSize: '70vh',
       }}
     >
       {/* Parallax Background Image (if provided) */}
       {backgroundImage && (
         <motion.div
-          style={{y: backgroundY}}
-          className="absolute inset-0"
+          style={{y: backgroundY, willChange: 'transform'}}
+          className="absolute inset-0 transform-gpu"
         >
-          <div className="absolute inset-0 animate-ken-burns-hero">
-            <Image
-              src={typeof imageWithPosition === 'string' ? imageWithPosition : (imageWithPosition?.asset?.url || '')}
-              alt={backgroundAlt || title}
-              fill
-              className="object-cover object-center"
-              priority
-              quality={95}
-              sizes="100vw"
-              style={{
-                objectPosition: typeof imageWithPosition === 'string'
-                  ? 'center 40%'
-                  : (imageWithPosition ? getObjectPosition(imageWithPosition, isMobile) : 'center center')
-              }}
-            />
+          <div className="absolute inset-0 animate-ken-burns-hero transform-gpu">
+            {(() => {
+              const imgSrc = typeof imageWithPosition === 'string' ? imageWithPosition : (imageWithPosition?.asset?.url || '')
+              const desktopPos = typeof imageWithPosition === 'string'
+                ? 'center 40%'
+                : (imageWithPosition ? getObjectPosition(imageWithPosition, false) : 'center center')
+              const mobilePos = typeof imageWithPosition === 'string'
+                ? 'center 40%'
+                : (imageWithPosition ? getObjectPosition(imageWithPosition, true) : 'center center')
+              return (
+                <Image
+                  src={imgSrc}
+                  alt={backgroundAlt || title}
+                  fill
+                  className="object-cover responsive-object-position"
+                  priority
+                  quality={95}
+                  sizes="100vw"
+                  style={{'--obj-pos-desktop': desktopPos, '--obj-pos-mobile': mobilePos} as React.CSSProperties}
+                />
+              )
+            })()}
           </div>
         </motion.div>
       )}
@@ -80,8 +86,7 @@ export function AnimatedHero({title, subtitle, variant = 'shows', backgroundImag
       <div className="relative z-20 container mx-auto px-4 text-center">
         <motion.h1
           initial={{opacity: 0, y: 50, scale: 0.95}}
-          whileInView={{opacity: 1, y: 0, scale: 1}}
-          viewport={{once: true, amount: 0.3}}
+          animate={{opacity: 1, y: 0, scale: 1}}
           transition={{duration: 0.8, ease: [0.22, 1, 0.36, 1]}}
           className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white"
           style={{
@@ -94,8 +99,7 @@ export function AnimatedHero({title, subtitle, variant = 'shows', backgroundImag
         {subtitle && (
           <motion.p
             initial={{opacity: 0, y: 30}}
-            whileInView={{opacity: 1, y: 0}}
-            viewport={{once: true, amount: 0.3}}
+            animate={{opacity: 1, y: 0}}
             transition={{duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1]}}
             className="text-xl md:text-2xl lg:text-3xl max-w-3xl mx-auto leading-relaxed text-white/95 font-light"
           >

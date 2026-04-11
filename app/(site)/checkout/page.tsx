@@ -8,7 +8,7 @@ import {motion} from 'framer-motion'
 import {ShieldCheck, Lock, Truck, CreditCard, CheckCircle, ChevronRight, Loader2} from 'lucide-react'
 import {clientBrowser} from '@/sanity/lib/client-browser'
 import {checkoutSettingsQuery} from '@/sanity/lib/queries'
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
 export default function CheckoutPage() {
   const {items, totalCents, promoCode, finalTotalCents} = useCart()
@@ -19,6 +19,7 @@ export default function CheckoutPage() {
     deliveryEstimateText?: string
     [key: string]: unknown
   } | null>(null)
+  const currency = items[0]?.currency || 'USD'
 
   useEffect(() => {
     clientBrowser.fetch(checkoutSettingsQuery).then(setCheckoutSettings).catch(() => {})
@@ -303,7 +304,7 @@ export default function CheckoutPage() {
                               <div className="text-xs text-text-muted">{optKey}</div>
                             )}
                             <div className="text-sm font-bold text-accent-primary mt-1">
-                              ${formatPrice(it.priceCents * it.quantity)}
+                              {formatCurrency(it.priceCents * it.quantity, it.currency)}
                             </div>
                           </div>
                         </div>
@@ -316,13 +317,15 @@ export default function CheckoutPage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-text-secondary">Subtotal</span>
                       <span className="font-bold text-text-primary">
-                        ${formatPrice(totalCents)}
+                        {formatCurrency(totalCents, currency)}
                       </span>
                     </div>
                     {promoCode && promoCode.discountCents > 0 && (
                       <div className="flex justify-between text-sm text-accent-primary">
                         <span>Discount</span>
-                        <span className="font-bold">-${formatPrice(promoCode.discountCents)}</span>
+                        <span className="font-bold">
+                          -{formatCurrency(promoCode.discountCents, currency)}
+                        </span>
                       </div>
                     )}
                     <div className="flex justify-between text-sm">
@@ -340,7 +343,7 @@ export default function CheckoutPage() {
                       Estimated Total
                     </span>
                     <span className="text-3xl font-bold text-accent-primary">
-                      ${formatPrice(finalTotalCents)}
+                      {formatCurrency(finalTotalCents, currency)}
                     </span>
                   </div>
 

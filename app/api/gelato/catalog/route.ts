@@ -1,5 +1,6 @@
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {getGelatoCatalog, getGelatoProduct} from '@/lib/gelato'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -9,7 +10,9 @@ export const runtime = 'nodejs'
  * Query params:
  *   - productUid: (optional) Get specific product details
  */
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   try {
     const {searchParams} = new URL(req.url)
     const productUid = searchParams.get('productUid')

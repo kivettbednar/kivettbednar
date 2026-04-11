@@ -1,7 +1,8 @@
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {z} from 'zod'
 import {cancelGelatoOrder} from '@/lib/gelato'
 import {writeClient} from '@/sanity/lib/write-client'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -13,7 +14,9 @@ const CancelSchema = z.object({
  * POST /api/gelato/cancel
  * Cancel a Gelato order and update status in Sanity
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   try {
     const body = await req.json()
     const parsed = CancelSchema.safeParse(body)

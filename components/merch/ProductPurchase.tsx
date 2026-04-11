@@ -5,6 +5,7 @@ import {useCart} from '@/components/ui/CartContext'
 import {useToast} from '@/components/ui/Toast'
 
 import {variantOptionValuesToRecord} from '@/types/product'
+import {formatCurrency} from '@/lib/format'
 
 type ProductOption = {name: string; values: string[]}
 type ProductVariant = {optionValues?: Array<{key?: string; value?: string; _key: string}>; priceCents?: number; sku?: string}
@@ -41,8 +42,9 @@ export function PurchaseSection({
     return matchingVariant?.priceCents || product.priceCents
   })()
 
-  const unitPrice = effectivePriceCents ? (effectivePriceCents / 100).toFixed(2) : '0.00'
-  const totalPrice = effectivePriceCents ? ((effectivePriceCents * quantity) / 100).toFixed(2) : '0.00'
+  const normalizedUnitPrice = effectivePriceCents || 0
+  const unitPriceDisplay = formatCurrency(normalizedUnitPrice, product.currency)
+  const totalPriceDisplay = formatCurrency(normalizedUnitPrice * quantity, product.currency)
 
   const handleAddToCart = () => {
     addItem({
@@ -117,7 +119,7 @@ export function PurchaseSection({
         {/* Show unit price if quantity > 1 */}
         {quantity > 1 && (
           <p className="text-text-muted text-sm mt-2">
-            {product.currency} ${unitPrice} each × {quantity}
+            {unitPriceDisplay} each × {quantity}
           </p>
         )}
       </div>
@@ -147,11 +149,11 @@ export function PurchaseSection({
             />
           </svg>
           <span className="flex flex-col items-center">
-            <span className="flex items-center gap-2">
-              Add to Cart
-              <span className="inline-block w-px h-4 bg-black/30" />
-              {product.currency} ${totalPrice}
-            </span>
+              <span className="flex items-center gap-2">
+                Add to Cart
+                <span className="inline-block w-px h-4 bg-black/30" />
+                {totalPriceDisplay}
+              </span>
             {quantity > 1 && (
               <span className="text-xs font-normal opacity-75 mt-0.5">
                 {quantity} items

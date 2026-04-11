@@ -19,7 +19,12 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   socialLinks[]{
     platform,
     url
-  }
+  },
+  showShowsPage,
+  showLessonsPage,
+  showSetlistPage,
+  showMerchPage,
+  showContactPage
 }`)
 
 // Store Settings (admin-controlled operational config)

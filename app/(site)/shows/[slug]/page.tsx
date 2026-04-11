@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {eventBySlugQuery, eventsSlugs, showsPageQuery} from '@/sanity/lib/queries'
+import {eventBySlugQuery, eventsSlugs, showsPageQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {urlFor} from '@/sanity/lib/image'
 import {PortableText} from '@portabletext/react'
 import {formatInTimeZone} from 'date-fns-tz'
@@ -44,11 +45,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
-  const event = await client.fetch(
-    eventBySlugQuery,
-    {slug},
-    {next: {revalidate: 60}}
-  )
+  const [event, siteSettings] = await Promise.all([
+    client.fetch(eventBySlugQuery, {slug}, {next: {revalidate: 60}}),
+    client.fetch(`*[_type == "settings"][0]{showShowsPage}`, {}, {next: {revalidate: 60}}),
+  ])
+
+  if (siteSettings?.showShowsPage === false) {
+    return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+  }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   const canonicalUrl = `${baseUrl}/shows/${slug}`
@@ -84,8 +88,15 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function EventPage({params}: Props) {
   const {slug} = await params
-  const event = await sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data)
-  const showsPage = await sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null)
+  const [event, showsPage, settings] = await Promise.all([
+    sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data),
+    sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null),
+    sanityFetch({query: settingsQuery}).then((r) => r.data).catch(() => null),
+  ])
+
+  if ((settings?.showShowsPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Shows" />
+  }
 
   if (!event) {
     notFound()

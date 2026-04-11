@@ -1,5 +1,6 @@
-import {NextResponse} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {getGelatoStatus, isGelatoEnabled} from '@/lib/gelato'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -8,7 +9,9 @@ export const runtime = 'nodejs'
  * Check Gelato API configuration and connectivity
  * Useful for debugging integration issues
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   try {
     const status = await getGelatoStatus()
 

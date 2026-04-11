@@ -1,13 +1,20 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
-import {merchPageQuery, allProductsQuery, allCollectionsQuery} from '@/sanity/lib/queries'
+import {merchPageQuery, allProductsQuery, allCollectionsQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {MerchPageContent} from './MerchPageContent'
 import type {ProductListItem} from '@/types/product'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const {data: merchPage} = await sanityFetch({query: merchPageQuery})
+    const [{data: merchPage}, {data: siteSettings}] = await Promise.all([
+      sanityFetch({query: merchPageQuery}),
+      sanityFetch({query: settingsQuery}),
+    ])
+    if ((siteSettings?.showMerchPage as boolean | null) === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
     return {
       title: merchPage?.seoTitle || 'Merch | Kivett Bednar',
       description: merchPage?.seoDescription || 'Official Kivett Bednar merchandise and music',
@@ -36,12 +43,19 @@ export default async function MerchPage() {
   let merchPage = null
   let products: ProductListItem[] = []
   let collections: CollectionData[] = []
+  let settings = null
 
   try {
-    // Fetch merch page content from Sanity
-    merchPage = await sanityFetch({query: merchPageQuery}).then((r) => r.data)
+    ;[merchPage, settings] = await Promise.all([
+      sanityFetch({query: merchPageQuery}).then((r) => r.data),
+      sanityFetch({query: settingsQuery}).then((r) => r.data),
+    ])
   } catch (error) {
     console.warn('Failed to fetch merch page data, using fallback content:', error)
+  }
+
+  if ((settings?.showMerchPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Merch" />
   }
 
   try {

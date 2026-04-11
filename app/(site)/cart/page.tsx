@@ -8,13 +8,14 @@ import {PromoCodeInput} from '@/components/ui/PromoCodeInput'
 import {motion} from 'framer-motion'
 import {ShoppingCart, Trash2, ChevronRight, Package, ShieldCheck} from 'lucide-react'
 import {useState, useEffect} from 'react'
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
 export default function CartPage() {
   const {items, totalCents, updateQty, removeItem, clear, promoCode, applyPromoCode, removePromoCode, finalTotalCents} = useCart()
   const router = useRouter()
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const currency = items[0]?.currency || 'USD'
 
   const handleApplyPromo = (discountCents: number, code: string, description?: string) => {
     applyPromoCode(code, discountCents, description)
@@ -194,10 +195,10 @@ export default function CartPage() {
                             {/* Price - Mobile only */}
                             <div className="sm:hidden mt-2">
                               <div className="text-xl font-bold text-accent-primary">
-                                ${formatPrice(it.priceCents * it.quantity)}
+                                {formatCurrency(it.priceCents * it.quantity, it.currency)}
                               </div>
                               <div className="text-xs text-text-muted mt-0.5">
-                                {it.currency} ${formatPrice(it.priceCents)} each
+                                {formatCurrency(it.priceCents, it.currency)} each
                               </div>
                             </div>
                           </div>
@@ -241,10 +242,10 @@ export default function CartPage() {
                         {/* Price - Desktop only */}
                         <div className="hidden sm:block text-right flex-shrink-0">
                           <div className="text-xl md:text-2xl font-bold text-accent-primary group-hover:scale-105 transition-transform origin-right">
-                            ${formatPrice(it.priceCents * it.quantity)}
+                            {formatCurrency(it.priceCents * it.quantity, it.currency)}
                           </div>
                           <div className="text-xs md:text-sm text-text-muted mt-1">
-                            {it.currency} ${formatPrice(it.priceCents)} each
+                            {formatCurrency(it.priceCents, it.currency)} each
                           </div>
                         </div>
                       </motion.div>
@@ -275,7 +276,7 @@ export default function CartPage() {
                       <div className="flex justify-between">
                         <span className="text-text-secondary">Subtotal</span>
                         <span className="font-bold text-text-primary">
-                          ${formatPrice(totalCents)}
+                          {formatCurrency(totalCents, currency)}
                         </span>
                       </div>
                       {promoCode && promoCode.discountCents > 0 && (
@@ -289,7 +290,7 @@ export default function CartPage() {
                             )}
                           </span>
                           <span className="font-bold">
-                            -${formatPrice(promoCode.discountCents)}
+                            -{formatCurrency(promoCode.discountCents, currency)}
                           </span>
                         </div>
                       )}
@@ -318,7 +319,7 @@ export default function CartPage() {
                         Total
                       </span>
                       <span className="text-3xl font-bold text-accent-primary">
-                        ${formatPrice(finalTotalCents)}
+                        {formatCurrency(finalTotalCents, currency)}
                       </span>
                     </div>
 
@@ -378,4 +379,3 @@ export default function CartPage() {
     </div>
   )
 }
-

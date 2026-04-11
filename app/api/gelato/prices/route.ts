@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {getGelatoProductPrices} from '@/lib/gelato'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -8,6 +9,8 @@ export const runtime = 'nodejs'
  * Get Gelato production costs for a product (for margin tracking)
  */
 export async function GET(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   const productUid = req.nextUrl.searchParams.get('productUid')
   if (!productUid) {
     return NextResponse.json({error: 'productUid parameter required'}, {status: 400})

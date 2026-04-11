@@ -23,13 +23,21 @@ export default async function SiteLayout({
     console.warn('Failed to fetch layout data, using fallback content:', error)
   }
 
+  const pageVisibility: Record<string, boolean> = {
+    '/shows': (settings?.showShowsPage as boolean | null) !== false,
+    '/lessons': (settings?.showLessonsPage as boolean | null) !== false,
+    '/setlist': (settings?.showSetlistPage as boolean | null) !== false,
+    '/merch': (settings?.showMerchPage as boolean | null) !== false,
+    '/contact': (settings?.showContactPage as boolean | null) !== false,
+  }
+
   const navigation = [
     {title: uiText?.navShows || 'Shows', href: '/shows'},
     {title: uiText?.navLessons || 'Lessons', href: '/lessons'},
     {title: uiText?.navSetlist || 'Setlist', href: '/setlist'},
     {title: uiText?.navMerch || 'Merch', href: '/merch'},
     {title: uiText?.navContact || 'Contact', href: '/contact'},
-  ]
+  ].filter(item => pageVisibility[item.href] ?? true)
 
   return (
     <ToastProvider>

@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {getGelatoShippingMethods} from '@/lib/gelato'
+import {ensureAdminRequest} from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
@@ -8,6 +9,8 @@ export const runtime = 'nodejs'
  * List available Gelato shipping methods for a country
  */
 export async function GET(req: NextRequest) {
+  const authResponse = ensureAdminRequest(req)
+  if (authResponse) return authResponse
   const country = req.nextUrl.searchParams.get('country')
   if (!country || country.length < 2) {
     return NextResponse.json({error: 'country parameter required (ISO 2-letter code)'}, {status: 400})

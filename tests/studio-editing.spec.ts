@@ -457,6 +457,25 @@ test.describe('Site Settings Fields', () => {
       'Social Media', 'Open Graph',
     );
   });
+
+  test('page visibility toggle fields', async ({ page }) => {
+    await openStructure(page);
+    await nav(page, 'Settings');
+    await page.getByText('Site Settings').first().click({ force: true });
+    await page.waitForTimeout(5000);
+
+    // Click on the Page Visibility tab/group
+    await page.getByText('Page Visibility').first().click({ force: true });
+    await page.waitForTimeout(2000);
+
+    await expectFields(page,
+      'Show "Shows" Page',
+      'Show "Lessons" Page',
+      'Show "Setlist" Page',
+      'Show "Merch" Page',
+      'Show "Contact" Page',
+    );
+  });
 });
 
 // ============================================================

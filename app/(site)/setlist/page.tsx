@@ -1,7 +1,8 @@
 import {Metadata} from 'next'
 import Link from 'next/link'
 import {sanityFetch} from '@/sanity/lib/live'
-import {setlistPageQuery, allSongsQuery} from '@/sanity/lib/queries'
+import {setlistPageQuery, allSongsQuery, settingsQuery} from '@/sanity/lib/queries'
+import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {ImageRevealScroll} from '@/components/ui/ImageRevealScroll'
@@ -11,7 +12,13 @@ import {Music, Disc3, Guitar, ChevronRight} from 'lucide-react'
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const {data: setlistPage} = await sanityFetch({query: setlistPageQuery})
+    const [{data: setlistPage}, {data: siteSettings}] = await Promise.all([
+      sanityFetch({query: setlistPageQuery}),
+      sanityFetch({query: settingsQuery}),
+    ])
+    if ((siteSettings?.showSetlistPage as boolean | null) === false) {
+      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    }
     return {
       title: setlistPage?.seoTitle || 'Blues Set List | Kivett Bednar',
       description: setlistPage?.seoDescription || 'A collection of classic blues songs performed by Kivett Bednar',
@@ -33,14 +40,20 @@ type Song = {_id: string; title: string | null; key: string | null; artist?: str
 export default async function SetlistPage() {
   let setlistPage = null
   let songs = null
+  let settings = null
 
   try {
-    ;[setlistPage, songs] = await Promise.all([
+    ;[setlistPage, songs, settings] = await Promise.all([
       sanityFetch({query: setlistPageQuery}).then((r) => r.data),
       sanityFetch({query: allSongsQuery}).then((r) => r.data),
+      sanityFetch({query: settingsQuery}).then((r) => r.data),
     ])
   } catch (error) {
     console.warn('Failed to fetch setlist data, using fallback content:', error)
+  }
+
+  if ((settings?.showSetlistPage as boolean | null) === false) {
+    return <PageUnavailable pageName="Setlist" />
   }
 
   // Group songs by first letter for a more organized display

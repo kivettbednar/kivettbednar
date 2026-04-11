@@ -9,12 +9,13 @@ import {motion} from 'framer-motion'
 import {CheckCircle, Package, Truck, ChevronRight} from 'lucide-react'
 import {clientBrowser} from '@/sanity/lib/client-browser'
 import {orderConfirmationPageQuery} from '@/sanity/lib/queries'
-import {formatPrice} from '@/lib/format'
+import {formatCurrency} from '@/lib/format'
 
 type OrderData = {
   orderId: string
   email?: string | null
   name?: string | null
+  currency?: string | null
   items: Array<{
     productTitle: string
     quantity: number
@@ -71,6 +72,7 @@ function OrderConfirmationContent() {
                 orderId: order.stripeSessionId || order._id,
                 email: order.email,
                 name: order.name,
+                currency: order.currency,
                 items: (order.items || []).map((it: {productId?: string; productTitle?: string; productSlug?: string; imageUrl?: string; priceCents?: number; quantity?: number; options?: string | Record<string, string>}) => {
                   let options = it.options
                   if (typeof options === 'string') {
@@ -112,7 +114,7 @@ function OrderConfirmationContent() {
       const storedOrder = sessionStorage.getItem('lastOrder')
       if (storedOrder) {
         const data = JSON.parse(storedOrder)
-        setOrderData(data)
+        setOrderData({...data, currency: data.currency || 'USD'})
         clear()
         sessionStorage.removeItem('lastOrder')
         setLoading(false)
@@ -175,6 +177,7 @@ function OrderConfirmationContent() {
 
   const email = orderData.email || orderData.shippingInfo?.email || ''
   const displayName = orderData.name || (orderData.shippingInfo ? `${orderData.shippingInfo.firstName} ${orderData.shippingInfo.lastName}` : '')
+  const currency = orderData.currency || 'USD'
   const orderDate = new Date(orderData.orderDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -306,7 +309,7 @@ function OrderConfirmationContent() {
                       Order Total
                     </div>
                     <div className="text-2xl font-bold text-accent-primary">
-                      ${formatPrice(orderData.totalCents)}
+                      {formatCurrency(orderData.totalCents, currency)}
                     </div>
                   </div>
                   <div>
@@ -413,10 +416,10 @@ function OrderConfirmationContent() {
                       </div>
                       <div className="text-right">
                         <div className="text-xl font-bold text-accent-primary">
-                          ${formatPrice(it.priceCents * it.quantity)}
+                          {formatCurrency(it.priceCents * it.quantity, currency)}
                         </div>
                         <div className="text-sm text-text-muted">
-                          ${formatPrice(it.priceCents)} each
+                          {formatCurrency(it.priceCents, currency)} each
                         </div>
                       </div>
                     </motion.div>
@@ -430,7 +433,7 @@ function OrderConfirmationContent() {
                     Total
                   </span>
                   <span className="text-4xl font-bold text-accent-primary">
-                    ${formatPrice(orderData.totalCents)}
+                    {formatCurrency(orderData.totalCents, currency)}
                   </span>
                 </div>
               </div>

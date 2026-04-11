@@ -137,3 +137,19 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ======================
+   RESPONSIVE OBJECT POSITION
+   Uses CSS custom properties so the correct position is applied
+   from first paint — no JS hydration flash.
+   ====================== */
+
+.responsive-object-position {
+  object-position: var(--obj-pos-desktop, 50% 50%);
+}
+
+@media (max-width: 767px) {
+  .responsive-object-position {
+    object-position: var(--obj-pos-mobile, 50% 50%);
+  }
+}
