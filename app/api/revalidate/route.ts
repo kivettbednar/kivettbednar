@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
       case 'event':
         revalidatePath('/shows')
         revalidatePath('/')
+        if (body.slug?.current) {
+          revalidatePath(`/shows/${body.slug.current}`)
+        }
         break
       case 'post':
         revalidatePath('/posts')
