@@ -16,6 +16,10 @@ interface FooterProps {
   socialInstagramLabel?: string
   copyrightText?: string
   bookingText?: string
+  bioLabel?: string
+  epkLabel?: string
+  showBio?: boolean
+  showEpk?: boolean
 }
 
 // Social media icons
@@ -69,6 +73,10 @@ export function Footer({
   socialInstagramLabel,
   copyrightText,
   bookingText,
+  bioLabel,
+  epkLabel,
+  showBio = true,
+  showEpk = true,
 }: FooterProps) {
   const currentYear = new Date().getFullYear()
   const [showScrollTop, setShowScrollTop] = useState(false)
@@ -204,7 +212,23 @@ export function Footer({
                 : `© ${currentYear} Kivett Bednar. All rights reserved.`}
             </p>
 
-            <div className="flex items-center gap-4 text-xs text-text-muted">
+            <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-xs text-text-muted">
+              {showBio && (
+                <>
+                  <Link href="/bio" className="hover:text-text-secondary transition-colors">
+                    {bioLabel || 'Bio'}
+                  </Link>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                </>
+              )}
+              {showEpk && (
+                <>
+                  <Link href="/epk" className="hover:text-text-secondary transition-colors">
+                    {epkLabel || 'Press Kit'}
+                  </Link>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                </>
+              )}
               <Link href="/privacy-policy" className="hover:text-text-secondary transition-colors">
                 Privacy Policy
               </Link>

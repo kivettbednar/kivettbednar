@@ -42,6 +42,8 @@ const SINGLETON_TYPES = [
   'termsOfService',
   'returnsPolicy',
   'ampsPage',
+  'bio',
+  'epkPage',
   'assist.instruction.context',
 ]
 
@@ -98,6 +100,18 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('ampsPage')
                 .child(S.document().schemaType('ampsPage').documentId('ampsPage'))
                 .icon(ComponentIcon),
+
+              S.listItem()
+                .title('Bio')
+                .id('bio')
+                .child(S.document().schemaType('bio').documentId('bio'))
+                .icon(UserIcon),
+
+              S.listItem()
+                .title('EPK (Press Kit)')
+                .id('epkPage')
+                .child(S.document().schemaType('epkPage').documentId('epkPage'))
+                .icon(DocumentIcon),
 
               S.listItem()
                 .title('Order Confirmation Page')

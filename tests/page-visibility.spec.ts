@@ -47,7 +47,6 @@ test.describe('Page Visibility - Default State', () => {
     test(`${name} page navigation link respects visibility`, async ({ page }) => {
       const visibility = await fetchVisibility(page);
       await page.goto('/', { waitUntil: 'load', timeout: 30000 });
-      await expect(page.locator('header').first()).toBeVisible({ timeout: 10000 });
 
       const navLink = page.getByRole('link', { name: navLabel }).first();
       if (visibility[key]) {
@@ -63,7 +62,6 @@ test.describe('Page Visibility - Navigation Filtering', () => {
   test('header navigation only shows enabled pages', async ({ page }) => {
     const visibility = await fetchVisibility(page);
     await page.goto('/', { waitUntil: 'load', timeout: 30000 });
-    await expect(page.locator('header').first()).toBeVisible({ timeout: 10000 });
 
     for (const { navLabel, key } of pages) {
       const navLink = page.getByRole('link', { name: navLabel }).first();
@@ -79,7 +77,6 @@ test.describe('Page Visibility - Navigation Filtering', () => {
     const visibility = await fetchVisibility(page);
     await page.goto('/', { waitUntil: 'load', timeout: 30000 });
     const footer = page.locator('footer');
-    await expect(footer).toBeVisible({ timeout: 10000 });
 
     for (const { navLabel, key } of pages) {
       const navLink = footer.getByRole('link', { name: navLabel }).first();

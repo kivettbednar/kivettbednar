@@ -150,6 +150,8 @@ function PagesTab() {
             ['Setlist Page', 'Setlist display settings'],
             ['Merch Page', 'Store header and layout'],
             ['Order Confirmation Page', 'Post-checkout thank-you page'],
+            ['Bio', 'Long-form artist biography — linked from the home About section and footer'],
+            ['EPK (Press Kit)', 'Electronic Press Kit for bookers/venues/press — booking contact, photos, videos, quotes, tech docs, full press kit PDF'],
             ['Privacy Policy', 'Your privacy policy — editable with the rich text editor'],
             ['Terms of Service', 'Terms and conditions for your site and store'],
             ['Returns & Refunds', 'Your return and refund policy'],
@@ -176,6 +178,24 @@ function PagesTab() {
           </Text>
           <Text size={2}>
             Pages you can toggle: Shows, Lessons, Setlist, Merch, Contact.
+          </Text>
+        </Stack>
+      </Card>
+
+      <Card border padding={4} radius={2}>
+        <Stack space={3}>
+          <SubHeading>Bio &amp; EPK (Press Kit)</SubHeading>
+          <Text size={2}>
+            <strong>Bio</strong> — Long-form artist biography. Use the rich text
+            editor with H2 headings for sections (Origins, Career, Influences, etc.).
+            Linked from the home page About section and the footer.
+          </Text>
+          <Text size={2}>
+            <strong>EPK (Press Kit)</strong> — Industry-standard press kit organized
+            into tabs: Bio (short + long), Photos (auto-download buttons), Videos
+            (YouTube/Vimeo embeds), Press Quotes, Notable Shows, Tech (PDF uploads
+            for stage plot &amp; tech rider), Booking Contact, Downloads (full kit PDF +
+            one-sheet). Booking contact appears prominently at the top.
           </Text>
         </Stack>
       </Card>

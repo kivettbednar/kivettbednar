@@ -13,6 +13,8 @@ const PAGE_FLAG_FIELDS = {
   amps: 'showAmpsPage',
   merch: 'showMerchPage',
   contact: 'showContactPage',
+  bio: 'showBioPage',
+  epk: 'showEpkPage',
 } as const
 
 export type PageVisibilityKey = keyof typeof PAGE_FLAG_FIELDS

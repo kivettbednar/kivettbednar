@@ -70,6 +70,16 @@ export const uiText = defineType({
       type: 'string',
       initialValue: 'Connect',    }),
     defineField({
+      name: 'footerBioLabel',
+      title: 'Footer: Bio Link Label',
+      type: 'string',
+      initialValue: 'Bio',    }),
+    defineField({
+      name: 'footerEpkLabel',
+      title: 'Footer: Press Kit Link Label',
+      type: 'string',
+      initialValue: 'Press Kit',    }),
+    defineField({
       name: 'footerCopyrightText',
       title: 'Footer: Copyright Text',
       type: 'string',

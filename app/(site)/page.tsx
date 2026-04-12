@@ -203,10 +203,10 @@ export default async function HomePage() {
         <AnimatedSection animation="fadeUp" delay={0.3}>
           <div className="flex gap-4">
             <Link
-              href="/setlist"
+              href="/bio"
               className="btn-primary"
             >
-              {homePage.aboutButtonText || 'View Setlist'}
+              {homePage.aboutButtonText || 'Read Full Bio'}
               <span>→</span>
             </Link>
           </div>

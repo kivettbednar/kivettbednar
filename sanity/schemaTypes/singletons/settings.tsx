@@ -263,6 +263,22 @@ export const settings = defineType({
       group: 'pageVisibility',
     }),
     defineField({
+      name: 'showBioPage',
+      title: 'Show "Bio" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the Bio page (footer link + page access)',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
+      name: 'showEpkPage',
+      title: 'Show "EPK (Press Kit)" Page',
+      type: 'boolean',
+      description: 'Toggle to show/hide the EPK page (footer link + page access)',
+      initialValue: true,
+      group: 'pageVisibility',
+    }),
+    defineField({
       name: 'showContactPage',
       title: 'Show "Contact" Page',
       type: 'boolean',

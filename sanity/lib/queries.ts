@@ -25,6 +25,8 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   showSetlistPage,
   showAmpsPage,
   showMerchPage,
+  showBioPage,
+  showEpkPage,
   showContactPage
 }`)
 
@@ -60,6 +62,8 @@ export const uiTextQuery = defineQuery(`*[_type == "uiText"][0]{
   navAmps,
   navMerch,
   navContact,
+  footerBioLabel,
+  footerEpkLabel,
   footerNavigationHeading,
   footerConnectHeading,
   footerCopyrightText,
@@ -547,6 +551,65 @@ export const returnsPolicyQuery = defineQuery(`*[_type == "returnsPolicy"][0]{
   lastUpdated,
   seoDescription,
   content
+}`)
+
+// Bio Page
+export const bioQuery = defineQuery(`*[_type == "bio"][0]{
+  _id,
+  pageTitle,
+  tagline,
+  lastUpdated,
+  seoDescription,
+  heroImage{asset->, alt},
+  content
+}`)
+
+// EPK (Electronic Press Kit) Page
+export const epkPageQuery = defineQuery(`*[_type == "epkPage"][0]{
+  _id,
+  heroImage{asset->, alt},
+  pageIntro,
+  genres,
+  influencedBy,
+  shortBio,
+  longBio,
+  bookingContactName,
+  bookingContactEmail,
+  bookingContactPhone,
+  bookingNotes,
+  pressPhotos[]{
+    _key,
+    asset->,
+    alt,
+    caption,
+    credit
+  },
+  videos[]{
+    _key,
+    title,
+    url,
+    description
+  },
+  pressQuotes[]{
+    _key,
+    quote,
+    source,
+    sourceUrl,
+    logo{asset->, alt}
+  },
+  notableShows[]{
+    _key,
+    venue,
+    city,
+    date,
+    event
+  },
+  stagePlotPdf{asset->{url, originalFilename}},
+  techRiderPdf{asset->{url, originalFilename}},
+  fullPressKitPdf{asset->{url, originalFilename}},
+  onesheet{asset->{url, originalFilename}},
+  seoTitle,
+  seoDescription
 }`)
 
 // Checkout Settings

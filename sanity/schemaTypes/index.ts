@@ -24,6 +24,8 @@ import {checkoutSettings} from './singletons/checkoutSettings'
 import {storeSettings} from './singletons/storeSettings'
 import {orderConfirmationPage} from './singletons/orderConfirmationPage'
 import {ampsPage} from './singletons/ampsPage'
+import {bio} from './singletons/bio'
+import {epkPage} from './singletons/epkPage'
 import {privacyPolicy} from './singletons/privacyPolicy'
 import {termsOfService} from './singletons/termsOfService'
 import {returnsPolicy} from './singletons/returnsPolicy'
@@ -63,6 +65,8 @@ export const schemaTypes = [
   termsOfService,
   returnsPolicy,
   ampsPage,
+  bio,
+  epkPage,
   // Documents
   page,
   post,

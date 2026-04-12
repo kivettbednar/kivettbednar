@@ -55,6 +55,10 @@ export default async function SiteLayout({
           socialInstagramLabel={uiText?.socialInstagram || undefined}
           copyrightText={uiText?.footerCopyrightText || undefined}
           bookingText={uiText?.footerBookingText || undefined}
+          bioLabel={uiText?.footerBioLabel || undefined}
+          epkLabel={uiText?.footerEpkLabel || undefined}
+          showBio={isPageEnabled(siteSettings, 'bio')}
+          showEpk={isPageEnabled(siteSettings, 'epk')}
         />
       </CartProvider>
     </ToastProvider>
