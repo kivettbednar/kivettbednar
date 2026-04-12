@@ -80,9 +80,12 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function EventPage({params}: Props) {
   const {slug} = await params
+  // Use client.fetch directly with cache: no-store so CMS edits always show.
+  // sanityFetch (next-sanity/live) has its own caching that can stick across
+  // deploys; this bypass ensures artist edits propagate within one request.
   const [event, showsPage, siteSettings] = await Promise.all([
-    sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data),
-    sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null),
+    client.fetch(eventBySlugQuery, {slug}, {cache: 'no-store'}),
+    client.fetch(showsPageQuery, {}, {cache: 'no-store'}).catch(() => null),
     getSiteSettings(),
   ])
 
