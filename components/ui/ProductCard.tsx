@@ -137,7 +137,7 @@ export function ProductCard({product, priority = false}: {product: Product; prio
 
       {/* Content */}
       <div className="p-5 border-t border-border">
-        <h3 className="font-bebas text-xl uppercase tracking-wide text-text-primary group-hover:text-accent-primary transition-colors duration-200 mb-2 line-clamp-1">
+        <h3 className="font-bebas text-lg md:text-xl uppercase tracking-wide text-text-primary group-hover:text-accent-primary transition-colors duration-200 mb-2 line-clamp-2 leading-tight">
           {product.title}
         </h3>
 

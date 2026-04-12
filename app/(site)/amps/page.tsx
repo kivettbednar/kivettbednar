@@ -82,38 +82,55 @@ export default async function AmpsPage() {
     console.warn('Failed to fetch amp products:', error)
   }
 
+  // Page content with hardcoded fallbacks so an empty CMS doc still looks good.
+  // All values are editable in Sanity Studio > Site Pages > Amps Page.
+  const heroHeading = ampsPage?.heroHeading || 'Custom Amps'
+  const heroSubheading = ampsPage?.heroSubheading || 'Handcrafted artisan guitar amplifiers built with precision and soul.'
+  const showcaseHeading = ampsPage?.showcaseHeading || 'The Craft'
+  const showcaseText =
+    ampsPage?.showcaseText ||
+    'Every amp starts with a vision — a conversation about the sound you chase. From vintage tweed warmth to modern high-headroom cleans, each build is hand-wired from premium components selected for tone, reliability, and a century of service ahead.'
+  const craftsmanshipHeading = ampsPage?.craftsmanshipHeading || 'Built by Hand, Built to Last'
+  const craftsmanshipText =
+    ampsPage?.craftsmanshipText ||
+    'Point-to-point wiring. NOS-spec capacitors and resistors where it matters. Custom-wound transformers. Solid pine or baltic birch cabinets finished with real tweed, tolex, or leather. Each amp is signed, serial-numbered, and voiced on a Strat and a Tele before it leaves the bench.'
+  const shopHeading = ampsPage?.shopHeading || 'Available Amps'
+  const shopSubheading =
+    ampsPage?.shopSubheading ||
+    'Limited-run builds and one-of-a-kind commissions. Each amp includes a custom dovetail road case, a two-year warranty, and lifetime servicing.'
+  const emptyStateHeading = ampsPage?.emptyStateHeading || 'Next Batch in Progress'
+  const emptyStateText =
+    ampsPage?.emptyStateText ||
+    'All current builds are spoken for. New amps drop in small batches — reach out to get on the list or to commission a custom build tailored to your tone.'
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
       <AnimatedHero
-        title={ampsPage?.heroHeading || 'Custom Amps'}
-        subtitle={ampsPage?.heroSubheading || undefined}
+        title={heroHeading}
+        subtitle={heroSubheading}
         backgroundImage={ampsPage?.heroImage?.asset?.url || undefined}
         backgroundAlt={ampsPage?.heroImage?.alt || 'Custom guitar amplifier'}
       />
 
       {/* Showcase Section */}
-      {ampsPage?.showcaseHeading && (
-        <section className="bg-gradient-to-b from-surface to-background py-24">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <AnimatedSection animation="fadeIn">
-                <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-6">
-                  {ampsPage.showcaseHeading}
-                </h2>
-                {ampsPage.showcaseText && (
-                  <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto">
-                    {ampsPage.showcaseText}
-                  </p>
-                )}
-              </AnimatedSection>
-            </div>
+      <section className="bg-gradient-to-b from-surface to-background py-20 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <AnimatedSection animation="fadeIn">
+              <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-6">
+                {showcaseHeading}
+              </h2>
+              <p className="text-lg md:text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto">
+                {showcaseText}
+              </p>
+            </AnimatedSection>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Craftsmanship Section — with image uses split-screen, without image uses centered layout */}
-      {ampsPage?.craftsmanshipHeading && ampsPage?.craftsmanshipImage?.asset?.url ? (
+      {ampsPage?.craftsmanshipImage?.asset?.url ? (
         <SplitScreenImage
           imageSrc={ampsPage.craftsmanshipImage.asset.url}
           imageAlt={ampsPage.craftsmanshipImage.alt || 'Amp building process'}
@@ -121,50 +138,38 @@ export default async function AmpsPage() {
         >
           <AnimatedSection animation="fadeUp">
             <h2 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-6">
-              {ampsPage.craftsmanshipHeading}
+              {craftsmanshipHeading}
             </h2>
-            {ampsPage.craftsmanshipText && (
-              <p className="text-lg text-text-secondary leading-relaxed">
-                {ampsPage.craftsmanshipText}
-              </p>
-            )}
+            <p className="text-lg text-text-secondary leading-relaxed">{craftsmanshipText}</p>
           </AnimatedSection>
         </SplitScreenImage>
-      ) : ampsPage?.craftsmanshipHeading || ampsPage?.craftsmanshipText ? (
-        <section className="bg-surface py-20">
+      ) : (
+        <section className="bg-surface py-16 md:py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <AnimatedSection animation="fadeUp">
-                {ampsPage?.craftsmanshipHeading && (
-                  <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-6">
-                    {ampsPage.craftsmanshipHeading}
-                  </h2>
-                )}
-                {ampsPage?.craftsmanshipText && (
-                  <p className="text-lg text-text-secondary leading-relaxed">
-                    {ampsPage.craftsmanshipText}
-                  </p>
-                )}
+                <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-6">
+                  {craftsmanshipHeading}
+                </h2>
+                <p className="text-lg text-text-secondary leading-relaxed">{craftsmanshipText}</p>
               </AnimatedSection>
             </div>
           </div>
         </section>
-      ) : null}
+      )}
 
       {/* Products Section */}
-      <section className="bg-background py-24">
+      <section className="bg-background py-20 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <AnimatedSection animation="fadeIn">
-              <div className="text-center mb-16">
+              <div className="text-center mb-12 md:mb-16">
                 <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-4">
-                  {ampsPage?.shopHeading || 'Available Amps'}
+                  {shopHeading}
                 </h2>
-                {ampsPage?.shopSubheading && (
-                  <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-                    {ampsPage.shopSubheading}
-                  </p>
-                )}
+                <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto">
+                  {shopSubheading}
+                </p>
               </div>
             </AnimatedSection>
 
@@ -176,18 +181,18 @@ export default async function AmpsPage() {
               </div>
             ) : (
               <AnimatedSection animation="fadeIn">
-                <div className="text-center py-16 bg-surface-elevated border border-border">
+                <div className="text-center py-16 px-6 bg-surface-elevated border border-border max-w-2xl mx-auto">
                   <h3 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-4">
-                    {ampsPage?.emptyStateHeading || 'New Builds Coming Soon'}
+                    {emptyStateHeading}
                   </h3>
-                  <p className="text-text-secondary mb-8 max-w-md mx-auto">
-                    {ampsPage?.emptyStateText || 'Custom amps are built to order. Get in touch to discuss your dream amp.'}
+                  <p className="text-text-secondary mb-8 max-w-md mx-auto leading-relaxed">
+                    {emptyStateText}
                   </p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center justify-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-lg uppercase tracking-wider px-8 py-4 transition-all duration-300"
                   >
-                    Get in Touch
+                    Commission a Build
                   </Link>
                 </div>
               </AnimatedSection>
