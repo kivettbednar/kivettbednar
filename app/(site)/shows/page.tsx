@@ -192,10 +192,13 @@ export default async function ShowsPage() {
                     </p>
                   </div>
                 </AnimatedSection>
-                <div className="grid gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   {events.map((event, index: number) => (
-                    <AnimatedSection key={event._id} animation="fadeUp" delay={0.1 * index}>
-                      <EventCard event={event as unknown as import('@/types/event').Event} />
+                    <AnimatedSection key={event._id} animation="fadeUp" delay={0.05 * index}>
+                      <EventCard
+                        event={event as unknown as import('@/types/event').Event}
+                        fallbackImage={(showsPage?.defaultEventImage as any)?.asset?.url || undefined}
+                      />
                     </AnimatedSection>
                   ))}
                 </div>

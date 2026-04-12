@@ -27,9 +27,12 @@ type Event = {
   isSoldOut?: boolean
 }
 
-export function EventCard({event, index = 0}: {event: Event; index?: number}) {
+export function EventCard({event, index = 0, fallbackImage}: {event: Event; index?: number; fallbackImage?: string}) {
   const isMobile = useIsMobile()
   const [imageError, setImageError] = useState(false)
+
+  const hasCoverImage = !!event.coverImage?.asset
+  const fallbackImageUrl = fallbackImage && !hasCoverImage ? fallbackImage : null
 
   const eventDate = formatInTimeZone(
     new Date(event.startDateTime),
@@ -91,8 +94,34 @@ export function EventCard({event, index = 0}: {event: Event; index?: number}) {
             </div>
           )}
         </div>
+      ) : fallbackImageUrl ? (
+        /* Fallback to default event image from showsPage settings */
+        <div className="relative aspect-video overflow-hidden">
+          <Image
+            src={fallbackImageUrl}
+            alt={event.title}
+            fill
+            className="object-cover transition-all duration-700 group-hover:scale-105"
+            sizes="(min-width: 1024px) 800px, (min-width: 768px) 700px, 100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20 group-hover:from-black/90 transition-all duration-500" />
+          {event.isCanceled && (
+            <div className="absolute inset-0 bg-black/85 flex items-center justify-center z-20 backdrop-blur-sm">
+              <span className="text-white text-3xl font-bebas tracking-[0.2em] uppercase border-2 border-white/30 px-6 py-2">
+                CANCELED
+              </span>
+            </div>
+          )}
+          {event.isSoldOut && !event.isCanceled && (
+            <div className="absolute top-4 right-4 z-20">
+              <div className="bg-accent-primary text-black px-4 py-2 text-xs font-bold tracking-[0.15em] uppercase shadow-lg shadow-accent-primary/30">
+                SOLD OUT
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
-        /* Fallback placeholder when no image or image fails to load */
+        /* Last-resort placeholder when no image and no fallback */
         <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-surface-elevated via-surface to-background">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-8">
@@ -100,7 +129,6 @@ export function EventCard({event, index = 0}: {event: Event; index?: number}) {
               <p className="text-text-muted/40 text-xs uppercase tracking-widest font-bold">Event Image</p>
             </div>
           </div>
-          {/* Premium gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60" />
         </div>
       )}

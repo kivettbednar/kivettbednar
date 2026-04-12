@@ -42,3 +42,4 @@ test-results/
 playwright-report/
 tests/.auth/
 .env*.local
+scripts-*.mjs
