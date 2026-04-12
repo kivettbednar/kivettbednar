@@ -37,6 +37,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.tstest-results/
+next-env.d.ts
+test-results/
 playwright-report/
 tests/.auth/
