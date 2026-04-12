@@ -33,12 +33,12 @@ const defaultBottomItems: MarqueeItem[] = [
 function TickerItem({text, style}: MarqueeItem) {
   const isAnton = style === 'anton'
   return (
-    <span className="flex items-center gap-4 sm:gap-6 md:gap-8 flex-shrink-0">
+    <span className="flex items-center gap-4 sm:gap-6 md:gap-8 flex-shrink-0 leading-[1.4]">
       <span
         className={
           isAnton
-            ? 'font-bebas text-lg sm:text-2xl md:text-4xl tracking-wider sm:tracking-widest whitespace-nowrap uppercase text-accent-primary'
-            : 'font-display italic text-base sm:text-xl md:text-3xl tracking-wide whitespace-nowrap text-gradient-gold'
+            ? 'font-bebas text-lg sm:text-2xl md:text-4xl tracking-wider sm:tracking-widest whitespace-nowrap uppercase text-accent-primary leading-[1.3]'
+            : 'font-display italic text-base sm:text-xl md:text-3xl tracking-wide whitespace-nowrap text-gradient-gold leading-[1.5] pb-1'
         }
       >
         {text}
@@ -119,10 +119,10 @@ export function MarqueeTicker({topItems, bottomItems}: MarqueeTickerProps) {
 
   return (
     <div
-      className="relative overflow-hidden py-4 sm:py-5 bg-background/80 backdrop-blur-sm border-y border-accent-primary/10 marquee-mask"
+      className="relative overflow-hidden py-6 sm:py-5 bg-background/80 backdrop-blur-sm border-y border-accent-primary/10 marquee-mask"
       aria-hidden="true"
     >
-      <div className="space-y-3">
+      <div className="space-y-4 sm:space-y-3">
         <TickerRow items={top} direction="left" />
         <TickerRow items={bottom} direction="right" />
       </div>
