@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
-import {eventBySlugQuery, eventsSlugs, showsPageQuery} from '@/sanity/lib/queries'
+import {eventBySlugQuery, showsPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {urlFor} from '@/sanity/lib/image'
 import {PortableText} from '@portabletext/react'
@@ -29,20 +29,11 @@ type Props = {
   params: Promise<{slug: string}>
 }
 
-export async function generateStaticParams() {
-  try {
-    const slugs = await client.fetch(eventsSlugs)
-    // Query now returns slug if available, or _id as fallback
-    return slugs.map((item: {slug: string}) => ({
-      slug: item.slug,
-    }))
-  } catch (error) {
-    console.warn('Failed to fetch event slugs for static generation:', error)
-    // Return empty array to allow build to continue
-    // Events will be generated on-demand instead
-    return []
-  }
-}
+// Event detail pages render on-demand with ISR (revalidate=60 below).
+// Removed generateStaticParams — Vercel was caching the statically-built
+// HTML across deploys, so CMS edits to events weren't propagating until
+// a full rebuild. On-demand ISR means each URL is rendered fresh on first
+// request after a CMS edit (via /api/revalidate webhook) or after 60s.
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
