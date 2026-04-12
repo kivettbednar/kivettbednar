@@ -1,6 +1,10 @@
 export type SanityImageAsset = {
   _id: string
   url: string
+  metadata?: {
+    lqip?: string
+    dimensions?: {width: number; height: number; aspectRatio: number}
+  }
 } | null
 
 export type SanityImage = {
@@ -62,12 +66,14 @@ export type Product = {
   shippingNotes?: string
 }
 
+// ProductListItem — shape returned by allProductsQuery / ampsProductsQuery.
+// Uses a single `image` (first image only with LQIP) instead of `images[]` to keep the grid payload slim.
+// hasOptions is precomputed server-side to avoid fetching full options/variants arrays.
 export type ProductListItem = Pick<
   Product,
   | '_id'
   | 'title'
   | 'slug'
-  | 'images'
   | 'priceCents'
   | 'compareAtPriceCents'
   | 'onSale'
@@ -80,4 +86,7 @@ export type ProductListItem = Pick<
   | 'inventoryQuantity'
   | 'trackInventory'
   | 'lowStockThreshold'
->
+> & {
+  image: SanityImage | null
+  hasOptions?: boolean
+}

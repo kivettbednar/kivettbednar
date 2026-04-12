@@ -112,8 +112,8 @@ export default async function AmpsPage() {
         </section>
       )}
 
-      {/* Craftsmanship Section */}
-      {ampsPage?.craftsmanshipHeading && ampsPage?.craftsmanshipImage?.asset?.url && (
+      {/* Craftsmanship Section — with image uses split-screen, without image uses centered layout */}
+      {ampsPage?.craftsmanshipHeading && ampsPage?.craftsmanshipImage?.asset?.url ? (
         <SplitScreenImage
           imageSrc={ampsPage.craftsmanshipImage.asset.url}
           imageAlt={ampsPage.craftsmanshipImage.alt || 'Amp building process'}
@@ -130,7 +130,26 @@ export default async function AmpsPage() {
             )}
           </AnimatedSection>
         </SplitScreenImage>
-      )}
+      ) : ampsPage?.craftsmanshipHeading || ampsPage?.craftsmanshipText ? (
+        <section className="bg-surface py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <AnimatedSection animation="fadeUp">
+                {ampsPage?.craftsmanshipHeading && (
+                  <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-6">
+                    {ampsPage.craftsmanshipHeading}
+                  </h2>
+                )}
+                {ampsPage?.craftsmanshipText && (
+                  <p className="text-lg text-text-secondary leading-relaxed">
+                    {ampsPage.craftsmanshipText}
+                  </p>
+                )}
+              </AnimatedSection>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* Products Section */}
       <section className="bg-background py-24">
@@ -150,11 +169,9 @@ export default async function AmpsPage() {
             </AnimatedSection>
 
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {products.map((product, index) => (
-                  <AnimatedSection key={product._id} animation="fadeUp" delay={0.05 * Math.min(index, 8)}>
-                    <ProductCard product={product} />
-                  </AnimatedSection>
+                  <ProductCard key={product._id} product={product} priority={index < 3} />
                 ))}
               </div>
             ) : (

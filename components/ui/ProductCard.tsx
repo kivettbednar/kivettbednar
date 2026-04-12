@@ -3,22 +3,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {urlFor} from '@/lib/image-positioning'
-import {useState, useCallback} from 'react'
+import {useState} from 'react'
 import {useIsMobile} from '@/lib/hooks/useIsMobile'
 import {getObjectPosition, type SanityImageWithPositioning} from '@/lib/image-positioning'
-import {motion} from 'framer-motion'
-import {ShoppingCart} from 'lucide-react'
-import {useCart} from './CartContext'
-import {useToast} from './Toast'
 import {formatCurrency} from '@/lib/format'
 
 type Product = {
   _id: string
   title: string
   slug: string
-  images: Array<SanityImageWithPositioning & {
-    alt?: string
-  }>
+  image: (SanityImageWithPositioning & {alt?: string}) | null
   priceCents: number
   compareAtPriceCents?: number
   onSale?: boolean
@@ -28,53 +22,18 @@ type Product = {
   inventoryQuantity?: number
   trackInventory?: boolean
   lowStockThreshold?: number
-  options?: Array<{name: string; values: string[]}>
+  hasOptions?: boolean
 }
 
-export function ProductCard({product}: {product: Product}) {
+export function ProductCard({product, priority = false}: {product: Product; priority?: boolean}) {
   const isMobile = useIsMobile()
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const {addItem} = useCart()
-  const {showToast} = useToast()
-
-  // Check if product has options that require selection
-  const hasOptions = product.options && product.options.length > 0
-
-  // Quick add to cart for products without options
-  const handleQuickAdd = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (hasOptions) return
-
-    setIsAddingToCart(true)
-
-    addItem({
-      productId: product._id,
-      title: product.title,
-      slug: product.slug,
-      priceCents: product.priceCents,
-      currency: product.currency,
-      imageUrl: product.images?.[0]?.asset
-        ? urlFor(product.images[0].asset).width(200).height(200).url()
-        : undefined,
-      quantity: 1,
-      options: {},
-    })
-
-    showToast(`${product.title} added to cart`, 'success')
-
-    setTimeout(() => setIsAddingToCart(false), 500)
-  }, [product, hasOptions, addItem, showToast])
 
   const formattedPrice = formatCurrency(product.priceCents, product.currency)
   const compareAtPriceCents = typeof product.compareAtPriceCents === 'number' ? product.compareAtPriceCents : null
   const formattedCompareAtPrice = compareAtPriceCents
     ? formatCurrency(compareAtPriceCents, product.currency)
     : null
-  const savingsCents = compareAtPriceCents ? compareAtPriceCents - product.priceCents : 0
-  const formattedSavings = savingsCents > 0 ? formatCurrency(savingsCents, product.currency) : null
 
   // Calculate stock status
   const isLowStock =
@@ -88,96 +47,67 @@ export function ProductCard({product}: {product: Product}) {
     product.inventoryQuantity !== undefined &&
     product.inventoryQuantity === 0
 
-  // Determine discount percentage
   const discountPercentage =
     product.onSale && product.compareAtPriceCents
       ? Math.round(((product.compareAtPriceCents - product.priceCents) / product.compareAtPriceCents) * 100)
       : null
 
+  const imageAsset = product.image?.asset
+  const imageUrl = imageAsset ? urlFor(imageAsset).width(500).height(500).url() : null
+  const blurDataURL = imageAsset?.metadata?.lqip || undefined
+
   return (
-    <motion.div
-      initial={{opacity: 0, y: 20}}
-      whileInView={{opacity: 1, y: 0}}
-      viewport={{once: true, margin: '-50px'}}
-      transition={{duration: 0.5, ease: [0.22, 1, 0.36, 1]}}
+    <Link
+      href={`/merch/${product.slug}`}
+      className="group block bg-surface border border-border hover:border-accent-primary transition-colors duration-300 overflow-hidden"
     >
-      <Link
-        href={`/merch/${product.slug}`}
-        className="group block relative bg-surface border border-border overflow-hidden transition-all duration-500 hover:border-accent-primary card-elevate border-glow"
-      >
-        {/* Premium hover effect wrapper */}
-        <motion.div
-          whileHover={{
-            y: -6,
-            transition: {duration: 0.3, ease: [0.22, 1, 0.36, 1]}
-          }}
-          className="relative"
-        >
-          {/* Ambient glow on hover */}
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-30"
+      {/* Image Container */}
+      <div className="relative aspect-square bg-background overflow-hidden">
+        {imageUrl && !imageError ? (
+          <Image
+            src={imageUrl}
+            alt={product.image?.alt || product.title}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            placeholder={blurDataURL ? 'blur' : 'empty'}
+            blurDataURL={blurDataURL}
+            priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
+            onError={() => setImageError(true)}
             style={{
-              background: 'radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 60%)'
+              objectPosition: product.image ? getObjectPosition(product.image, isMobile) : 'center',
             }}
           />
-
-          {/* Image Container */}
-          <div className="relative aspect-square bg-background overflow-hidden">
-            {product.images?.[0]?.asset && !imageError ? (
-              <>
-                {/* Dark overlay that lightens on hover */}
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all duration-500 z-10" />
-
-                <Image
-                  src={urlFor(product.images[0].asset).width(600).height(600).url()}
-                  alt={product.images[0].alt || product.title}
-                  fill
-                  className="object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:brightness-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  loading="lazy"
-                  onError={() => setImageError(true)}
-                  style={{
-                    objectPosition: getObjectPosition(product.images[0], isMobile),
-                    filter: 'saturate(0.95)',
-                  }}
-                />
-
-                {/* Bottom gradient with gold tint on hover */}
-                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 via-black/30 to-transparent group-hover:from-black/40 transition-all duration-500 z-10 pointer-events-none" />
-              </>
-            ) : (
-          /* Professional fallback placeholder */
-          <div className="absolute inset-0 bg-gradient-to-br from-surface-elevated via-surface to-background flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-            <div className="text-center px-8">
-              <svg
-                className="w-20 h-20 mx-auto text-text-muted/20 mb-3 group-hover:text-accent-primary/30 transition-colors duration-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                />
-              </svg>
-              <p className="text-text-muted/40 text-xs uppercase tracking-widest font-bold">Image Coming Soon</p>
-            </div>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-surface-elevated via-surface to-background flex items-center justify-center">
+            <svg
+              className="w-16 h-16 text-text-muted/20"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+              />
+            </svg>
           </div>
         )}
 
         {/* Badges */}
-        <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
           {product.onSale && discountPercentage && (
-            <div className="bg-accent-red text-white text-xs font-bold px-3 py-1.5 uppercase tracking-wider shadow-lg">
+            <span className="bg-accent-red text-white text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider">
               {discountPercentage}% Off
-            </div>
+            </span>
           )}
           {product.badges?.map((badge) => (
-            <div
+            <span
               key={badge}
-              className="bg-accent-primary text-black text-xs font-bold px-3 py-1.5 uppercase tracking-wider shadow-lg"
+              className="bg-accent-primary text-black text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider"
             >
               {badge === 'bestseller'
                 ? 'Best Seller'
@@ -190,93 +120,35 @@ export function ProductCard({product}: {product: Product}) {
                 : badge === 'new'
                 ? 'New'
                 : badge}
-            </div>
+            </span>
           ))}
           {isOutOfStock && (
-            <div className="bg-text-muted text-black text-xs font-bold px-3 py-1.5 uppercase tracking-wider shadow-lg">
+            <span className="bg-text-muted text-black text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider">
               Out of Stock
-            </div>
+            </span>
           )}
           {isLowStock && !isOutOfStock && (
-            <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1.5 uppercase tracking-wider shadow-lg">
+            <span className="bg-orange-600 text-white text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider">
               Only {product.inventoryQuantity} Left
-            </div>
+            </span>
           )}
         </div>
+      </div>
 
-            {/* Quick Add / View Button */}
-            <div className="absolute top-4 right-4 z-20 hover-reveal">
-              {!isOutOfStock && !hasOptions ? (
-                <motion.button
-                  onClick={handleQuickAdd}
-                  disabled={isAddingToCart}
-                  whileHover={{scale: 1.05}}
-                  whileTap={{scale: 0.95}}
-                  className="flex items-center gap-2 bg-accent-primary text-black text-xs font-bold px-3 py-2 uppercase tracking-wider shadow-lg hover:bg-white transition-colors duration-200 disabled:opacity-70"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  {isAddingToCart ? 'Added!' : 'Quick Add'}
-                </motion.button>
-              ) : (
-                <div className="bg-accent-primary text-black text-xs font-bold px-3 py-2 uppercase tracking-wider shadow-lg">
-                  {hasOptions ? 'Select Options' : 'View'}
-                </div>
-              )}
-            </div>
-          </div>
+      {/* Content */}
+      <div className="p-5 border-t border-border">
+        <h3 className="font-bebas text-xl uppercase tracking-wide text-text-primary group-hover:text-accent-primary transition-colors duration-200 mb-2 line-clamp-1">
+          {product.title}
+        </h3>
 
-          {/* Content */}
-          <div className="relative p-6 bg-surface-elevated border-t border-border">
-            {/* Title */}
-            <h3 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-3 group-hover:text-accent-primary transition-colors duration-300">
-              {product.title}
-            </h3>
-
-            {/* Price Bar */}
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm text-text-muted uppercase tracking-wide">
-                    {product.currency}
-                  </span>
-                  <span className="text-3xl font-bold text-accent-primary">
-                    {formattedPrice}
-                  </span>
-                </div>
-                {formattedCompareAtPrice && product.onSale && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-text-muted line-through">
-                      {formattedCompareAtPrice}
-                    </span>
-                    {formattedSavings && (
-                      <span className="text-xs text-accent-red font-bold uppercase">
-                        Save {formattedSavings}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* CTA Arrow */}
-              <div className="w-10 h-10 flex items-center justify-center border border-accent-primary text-accent-primary group-hover:bg-accent-primary group-hover:text-black transition-all duration-300 flex-shrink-0">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom accent line */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </motion.div>
-      </Link>
-    </motion.div>
+        {/* Price */}
+        <div className="flex items-baseline gap-2">
+          <span className="text-lg font-bold text-accent-primary">{formattedPrice}</span>
+          {formattedCompareAtPrice && product.onSale && (
+            <span className="text-sm text-text-muted line-through">{formattedCompareAtPrice}</span>
+          )}
+        </div>
+      </div>
+    </Link>
   )
 }

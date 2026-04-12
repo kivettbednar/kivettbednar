@@ -118,42 +118,21 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Cinematic Hero Section with Image and Ken Burns Effect */}
+      {/* Hero */}
       <div className="relative bg-background border-b border-border overflow-hidden">
-        {/* Background Image with Ken Burns */}
-        {merchPage?.heroImage?.asset?.url ? (
+        {merchPage?.heroImage?.asset?.url && (
           <div className="absolute inset-0">
-            <div className="absolute inset-0 animate-ken-burns-hero">
-              <Image
-                src={merchPage.heroImage.asset.url}
-                alt={merchPage.heroImage.alt || 'Kivett Bednar performing'}
-                fill
-                className="object-cover"
-                style={{objectPosition: '50% 30%'}}
-                priority
-              />
-            </div>
-            {/* Dark overlay for text readability */}
+            <Image
+              src={merchPage.heroImage.asset.url}
+              alt={merchPage.heroImage.alt || 'Kivett Bednar performing'}
+              fill
+              sizes="100vw"
+              className="object-cover"
+              style={{objectPosition: '50% 30%'}}
+              priority
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/90" />
           </div>
-        ) : (
-          // Fallback: Use a placeholder blues musician image
-          <>
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 animate-ken-burns-hero">
-                <Image
-                  src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1920&h=800&fit=crop&q=80"
-                  alt="Blues guitarist performing"
-                  fill
-                  className="object-cover"
-                  style={{objectPosition: '50% 30%'}}
-                  priority
-                />
-              </div>
-              {/* Dark overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/90" />
-            </div>
-          </>
         )}
 
         <div className="container mx-auto px-4 py-24 md:py-40 relative z-10">
@@ -212,7 +191,7 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Search by name, category, or tags..."
-                          className="w-full bg-surface-elevated border-2 border-border px-5 py-3 pl-12 text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none transition-all uppercase tracking-wider text-sm font-bold"
+                          className="w-full bg-surface-elevated border-2 border-border px-5 py-3 pl-12 text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none transition-colors text-base"
                         />
                         <svg
                           className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted"
@@ -336,11 +315,9 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                 {/* Products Grid - Enhanced Layout */}
                 {filteredAndSortedProducts.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                      {displayedProducts.map((product) => (
-                        <div key={product._id} className="h-full">
-                          <ProductCard product={product} />
-                        </div>
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {displayedProducts.map((product, index) => (
+                        <ProductCard key={product._id} product={product} priority={index < 4} />
                       ))}
                     </div>
                     {hasMore && (
@@ -422,10 +399,9 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                   <div className="bg-surface/50 backdrop-blur-sm border border-border/50 p-20 max-w-3xl mx-auto shadow-2xl">
                   {/* Coming soon icon */}
                   <div className="mb-10 flex justify-center">
-                    <div className="w-32 h-32 border-4 border-accent-primary/20 rounded-full flex items-center justify-center relative">
-                      <div className="absolute inset-0 border-4 border-transparent border-t-accent-primary rounded-full animate-spin" />
+                    <div className="w-24 h-24 border border-accent-primary/40 rounded-full flex items-center justify-center">
                       <svg
-                        className="w-16 h-16 text-accent-primary"
+                        className="w-12 h-12 text-accent-primary"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"

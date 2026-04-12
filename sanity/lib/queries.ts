@@ -453,13 +453,24 @@ export const ampsPageQuery = defineQuery(`*[_type == "ampsPage"][0]{
   seoDescription
 }`)
 
-// Amps products (category filter)
+// Amps products (category filter) — same slim shape as allProductsQuery
 export const ampsProductsQuery = defineQuery(`*[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {
   _id,
   title,
   "slug": slug.current,
-  images[]{
-    asset->,
+  "image": images[0]{
+    "asset": asset->{
+      _id,
+      url,
+      metadata {
+        lqip,
+        dimensions
+      }
+    },
+    hotspot,
+    crop,
+    desktopPosition,
+    mobilePosition,
     alt
   },
   priceCents,
@@ -473,7 +484,8 @@ export const ampsProductsQuery = defineQuery(`*[_type == "product" && category =
   tags,
   inventoryQuantity,
   trackInventory,
-  lowStockThreshold
+  lowStockThreshold,
+  "hasOptions": count(options) > 0
 }`)
 
 // Lesson Packages
@@ -850,11 +862,27 @@ export const eventsSlugs = defineQuery(`*[_type == "event"]{
 }`)
 
 // Products
-export const allProductsQuery = defineQuery(`*[_type == "product"] | order(_createdAt desc){
+// Slim query for product grid cards — only fetches the first image with LQIP blur data
+// and a precomputed hasOptions flag. Full images[] + variants fetched via productBySlugQuery on detail pages.
+export const allProductsQuery = defineQuery(`*[_type == "product"] | order(featured desc, _createdAt desc){
   _id,
   title,
   "slug": slug.current,
-  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},
+  "image": images[0]{
+    "asset": asset->{
+      _id,
+      url,
+      metadata {
+        lqip,
+        dimensions
+      }
+    },
+    hotspot,
+    crop,
+    desktopPosition,
+    mobilePosition,
+    alt
+  },
   priceCents,
   compareAtPriceCents,
   onSale,
@@ -866,7 +894,8 @@ export const allProductsQuery = defineQuery(`*[_type == "product"] | order(_crea
   tags,
   inventoryQuantity,
   trackInventory,
-  lowStockThreshold
+  lowStockThreshold,
+  "hasOptions": count(options) > 0
 }`)
 
 export const productBySlugQuery = defineQuery(`*[_type == "product" && slug.current == $slug][0]{
@@ -919,7 +948,10 @@ export const relatedProductsByCategoryQuery = defineQuery(`*[_type == "product" 
   _id,
   title,
   "slug": slug.current,
-  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},
+  "image": images[0]{
+    "asset": asset->{_id, url, metadata{lqip, dimensions}},
+    hotspot, crop, desktopPosition, mobilePosition, alt
+  },
   priceCents,
   compareAtPriceCents,
   onSale,
@@ -928,14 +960,18 @@ export const relatedProductsByCategoryQuery = defineQuery(`*[_type == "product" 
   badges,
   inventoryQuantity,
   trackInventory,
-  lowStockThreshold
+  lowStockThreshold,
+  "hasOptions": count(options) > 0
 }`)
 
 export const featuredProductsQuery = defineQuery(`*[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{
   _id,
   title,
   "slug": slug.current,
-  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},
+  "image": images[0]{
+    "asset": asset->{_id, url, metadata{lqip, dimensions}},
+    hotspot, crop, desktopPosition, mobilePosition, alt
+  },
   priceCents,
   compareAtPriceCents,
   onSale,
@@ -947,7 +983,8 @@ export const featuredProductsQuery = defineQuery(`*[_type == "product" && featur
   tags,
   inventoryQuantity,
   trackInventory,
-  lowStockThreshold
+  lowStockThreshold,
+  "hasOptions": count(options) > 0
 }`)
 
 // Product search

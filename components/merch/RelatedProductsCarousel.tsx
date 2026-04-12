@@ -8,7 +8,7 @@ type Product = {
   _id: string
   title: string
   slug: string
-  images: Array<any>
+  image: any
   priceCents: number
   compareAtPriceCents?: number
   onSale?: boolean
@@ -18,6 +18,7 @@ type Product = {
   inventoryQuantity?: number
   trackInventory?: boolean
   lowStockThreshold?: number
+  hasOptions?: boolean
 }
 
 type RelatedProductsCarouselProps = {

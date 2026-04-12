@@ -1,7 +1,3 @@
-'use client'
-
-import {motion} from 'framer-motion'
-import {staggerContainer} from '@/lib/animations'
 import {ProductCard} from './ProductCard'
 import type {SanityImageWithPositioning} from '@/lib/image-positioning'
 
@@ -9,22 +5,18 @@ type Product = {
   _id: string
   title: string
   slug: string
-  images: Array<SanityImageWithPositioning & {alt: string}>
+  image: (SanityImageWithPositioning & {alt?: string}) | null
   priceCents: number
   currency: string
+  hasOptions?: boolean
 }
 
 export function ProductGrid({products}: {products: Product[]}) {
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-    >
-      {products.map((product) => (
-        <ProductCard key={product._id} product={product} />
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {products.map((product, index) => (
+        <ProductCard key={product._id} product={product} priority={index < 3} />
       ))}
-    </motion.div>
+    </div>
   )
 }

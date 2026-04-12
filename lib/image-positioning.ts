@@ -63,6 +63,10 @@ export interface SanityImageWithPositioning {
   asset?: {
     url?: string | null
     _id?: string
+    metadata?: {
+      lqip?: string | null
+      dimensions?: {width?: number; height?: number; aspectRatio?: number} | null
+    } | null
   } | null
   hotspot?: SanityHotspot | null
   crop?: SanityCrop | null

@@ -33,12 +33,12 @@ const defaultBottomItems: MarqueeItem[] = [
 function TickerItem({text, style}: MarqueeItem) {
   const isAnton = style === 'anton'
   return (
-    <span className="flex items-center gap-6 sm:gap-8 flex-shrink-0">
+    <span className="flex items-center gap-4 sm:gap-6 md:gap-8 flex-shrink-0">
       <span
         className={
           isAnton
-            ? 'font-bebas text-2xl sm:text-3xl md:text-4xl tracking-widest whitespace-nowrap uppercase text-accent-primary'
-            : 'font-display italic text-xl sm:text-2xl md:text-3xl tracking-wide whitespace-nowrap text-gradient-gold'
+            ? 'font-bebas text-lg sm:text-2xl md:text-4xl tracking-wider sm:tracking-widest whitespace-nowrap uppercase text-accent-primary'
+            : 'font-display italic text-base sm:text-xl md:text-3xl tracking-wide whitespace-nowrap text-gradient-gold'
         }
       >
         {text}
