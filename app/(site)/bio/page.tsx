@@ -1,7 +1,7 @@
 import {Metadata} from 'next'
 import Image from 'next/image'
 import type {PortableTextBlock} from 'next-sanity'
-import {sanityFetch} from '@/sanity/lib/live'
+import {client} from '@/sanity/lib/client'
 import {bioQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {LegalPortableText} from '@/components/ui/LegalPortableText'
@@ -20,8 +20,8 @@ type BioPageData = {
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
-    const [{data: rawData}, siteSettings] = await Promise.all([
-      sanityFetch({query: bioQuery}),
+    const [rawData, siteSettings] = await Promise.all([
+      client.fetch(bioQuery, {}, {cache: 'no-store'}),
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'bio')) {
@@ -44,8 +44,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 60
 
 export default async function BioPage() {
-  const [{data: rawData}, siteSettings] = await Promise.all([
-    sanityFetch({query: bioQuery}),
+  const [rawData, siteSettings] = await Promise.all([
+    client.fetch(bioQuery, {}, {cache: 'no-store'}),
     getSiteSettings(),
   ])
 
