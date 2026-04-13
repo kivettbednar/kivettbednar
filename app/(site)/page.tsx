@@ -197,17 +197,30 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Live Videos Slider — merges former Featured Video + Studio videos */}
+      {/* Live Videos Slider — prefers homePage.liveVideos; falls back to legacy single-video fields */}
       {(() => {
-        const rawVideos = [
-          {url: homePage.featuredVideoUrl || '', title: homePage.featuredVideoTitle || undefined, subtitle: homePage.featuredVideoSubheading || undefined},
-          {url: homePage.studioVideo1Url || '', title: homePage.studioVideo1Title || undefined},
-          {url: homePage.studioVideo2Url || '', title: homePage.studioVideo2Title || undefined},
+        const liveVideos = (homePage as any).liveVideos as
+          | Array<{url?: string | null; title?: string | null; subtitle?: string | null}>
+          | null
+          | undefined
+        const fromNew = (liveVideos || [])
+          .filter((v) => v?.url && v.url.trim() !== '')
+          .map((v) => ({
+            url: v!.url as string,
+            title: v?.title || undefined,
+            subtitle: v?.subtitle || undefined,
+          }))
+        const h = homePage as any
+        const fromLegacy = [
+          {url: h.legacyFeaturedVideoUrl || '', title: h.legacyFeaturedVideoTitle || undefined, subtitle: homePage.featuredVideoSubheading || undefined},
+          {url: h.legacyStudioVideo1Url || '', title: h.legacyStudioVideo1Title || undefined},
+          {url: h.legacyStudioVideo2Url || '', title: h.legacyStudioVideo2Title || undefined},
         ].filter((v) => v.url && v.url.trim() !== '')
-        if (rawVideos.length === 0) return null
+        const videos = fromNew.length > 0 ? fromNew : fromLegacy
+        if (videos.length === 0) return null
         return (
           <LiveVideoSlider
-            videos={rawVideos}
+            videos={videos}
             heading={homePage.featuredVideoHeading || 'Live Performance'}
             subheading={homePage.featuredVideoSubheading || undefined}
           />
