@@ -66,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
     const [rawData, siteSettings] = await Promise.all([
-      client.fetch(epkPageQuery, {}, {cache: 'no-store'}),
+      client.fetch(epkPageQuery, {}, {next: {revalidate: 60}}),
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'epk')) {
@@ -121,7 +121,7 @@ function downloadFilename(url: string, filename?: string): string {
 
 export default async function EpkPage() {
   const [rawData, siteSettings] = await Promise.all([
-    client.fetch(epkPageQuery, {}, {cache: 'no-store'}),
+    client.fetch(epkPageQuery, {}, {next: {revalidate: 60}}),
     getSiteSettings(),
   ])
 

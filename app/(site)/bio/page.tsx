@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
     const [rawData, siteSettings] = await Promise.all([
-      client.fetch(bioQuery, {}, {cache: 'no-store'}),
+      client.fetch(bioQuery, {}, {next: {revalidate: 60}}),
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'bio')) {
@@ -50,7 +50,7 @@ export const revalidate = 60
 
 export default async function BioPage() {
   const [rawData, siteSettings] = await Promise.all([
-    client.fetch(bioQuery, {}, {cache: 'no-store'}),
+    client.fetch(bioQuery, {}, {next: {revalidate: 60}}),
     getSiteSettings(),
   ])
 

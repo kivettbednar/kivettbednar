@@ -29,11 +29,12 @@ type Props = {
   params: Promise<{slug: string}>
 }
 
-// Event detail pages render on-demand with ISR (revalidate=60 below).
-// Removed generateStaticParams — Vercel was caching the statically-built
-// HTML across deploys, so CMS edits to events weren't propagating until
-// a full rebuild. On-demand ISR means each URL is rendered fresh on first
-// request after a CMS edit (via /api/revalidate webhook) or after 60s.
+// Event detail pages render on-demand with ISR.
+// `/api/revalidate` invalidates `/shows/[slug]` instantly when an event
+// is edited in Sanity, so 60s acts only as a safety net. We deliberately
+// avoid `cache: 'no-store'` here — that round-trips Sanity on every
+// request and was the reason these pages felt slow.
+export const revalidate = 60
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
@@ -80,12 +81,11 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function EventPage({params}: Props) {
   const {slug} = await params
-  // Use client.fetch directly with cache: no-store so CMS edits always show.
-  // sanityFetch (next-sanity/live) has its own caching that can stick across
-  // deploys; this bypass ensures artist edits propagate within one request.
+  // ISR via `revalidate: 60`. Webhook (/api/revalidate) busts the cache
+  // immediately on Sanity edits, so 60s is just the fallback.
   const [event, showsPage, siteSettings] = await Promise.all([
-    client.fetch(eventBySlugQuery, {slug}, {cache: 'no-store'}),
-    client.fetch(showsPageQuery, {}, {cache: 'no-store'}).catch(() => null),
+    client.fetch(eventBySlugQuery, {slug}, {next: {revalidate: 60, tags: [`event:${slug}`]}}),
+    client.fetch(showsPageQuery, {}, {next: {revalidate: 60}}).catch(() => null),
     getSiteSettings(),
   ])
 
