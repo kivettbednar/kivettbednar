@@ -138,17 +138,27 @@ export default async function HomePage() {
         <section className="bg-background py-16 md:py-20 border-b border-border">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <AnimatedSection animation="fadeIn">
-                <div className="text-center mb-8">
+              <div className="text-center mb-8">
+                <AnimatedSection animation="fadeUp">
+                  <span className="inline-flex items-center gap-3 mb-4">
+                    <span className="h-px w-10 bg-accent-primary" />
+                    <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+                      On Record
+                    </span>
+                  </span>
+                </AnimatedSection>
+                <AnimatedSection animation="fadeUp" delay={0.1}>
                   <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary">
                     {homePage.musicSectionHeading || 'Listen'}
                   </h2>
-                  {homePage.musicSectionSubheading && (
+                </AnimatedSection>
+                {homePage.musicSectionSubheading && (
+                  <AnimatedSection animation="fadeUp" delay={0.2}>
                     <p className="text-text-secondary mt-2">{homePage.musicSectionSubheading}</p>
-                  )}
-                </div>
-              </AnimatedSection>
-              <AnimatedSection animation="fadeUp" delay={0.1}>
+                  </AnimatedSection>
+                )}
+              </div>
+              <AnimatedSection animation="fadeUp" delay={0.35}>
                 <div className="rounded-lg overflow-hidden shadow-2xl">
                   <iframe
                     title="Spotify player"
@@ -162,7 +172,7 @@ export default async function HomePage() {
                 </div>
               </AnimatedSection>
               {(homePage.appleMusicUrl || homePage.bandcampUrl) && (
-                <AnimatedSection animation="fadeIn" delay={0.2}>
+                <AnimatedSection animation="fadeIn" delay={0.5}>
                   <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm uppercase tracking-[0.2em] text-text-muted">
                     {homePage.appleMusicUrl && (
                       <a href={homePage.appleMusicUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent-primary transition-colors">

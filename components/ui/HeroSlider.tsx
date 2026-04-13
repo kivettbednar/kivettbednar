@@ -68,6 +68,7 @@ export function HeroSlider({
   nextShow = null,
 }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [mounted, setMounted] = useState(false)
   const isMobile = useIsMobile()
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -78,10 +79,15 @@ export function HeroSlider({
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, 400])
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
     if (slides.length > 1) {
+      // Hold on the first slide briefly so it settles visually before rotating
       const timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % slides.length)
-      }, 6000)
+      }, 7000)
       return () => clearInterval(timer)
     }
   }, [slides.length])
@@ -112,7 +118,7 @@ export function HeroSlider({
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen flex overflow-hidden bg-background"
+      className="relative h-[100svh] min-h-[560px] flex overflow-hidden bg-background"
       style={{
         containIntrinsicSize: '100vh',
       }}
@@ -134,7 +140,9 @@ export function HeroSlider({
           >
             <div className="absolute inset-0 animate-ken-burns transform-gpu">
               {(() => {
-                const activeImage = isMobile && slide.mobileImage?.asset?.url ? slide.mobileImage : slide.image
+                // Before mount, always use desktop image to match SSR HTML (prevents image-swap flicker on mobile first paint).
+                const useMobileImage = mounted && isMobile && slide.mobileImage?.asset?.url
+                const activeImage = useMobileImage ? slide.mobileImage : slide.image
                 const imageUrl = activeImage?.asset?.url
                 const imageWithPosition = {
                   ...activeImage,
@@ -190,9 +198,9 @@ export function HeroSlider({
         {/* Next show micro-card (top-right, desktop) */}
         {nextShowFormatted && nextShow && (
           <motion.div
-            initial={{opacity: 0, y: -10}}
+            initial={{opacity: 0, y: -8}}
             animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1]}}
+            transition={{duration: 1.1, delay: 1.1, ease: [0.22, 1, 0.36, 1]}}
             className="hidden md:block absolute top-24 lg:top-28 right-10 lg:right-14"
           >
             <Link
@@ -255,14 +263,14 @@ export function HeroSlider({
         )}
 
         {/* Bottom-left lockup */}
-        <div className="absolute left-6 md:left-10 lg:left-14 bottom-20 md:bottom-24 max-w-3xl">
+        <div className="absolute left-6 md:left-10 lg:left-14 bottom-10 md:bottom-24 right-6 md:right-auto max-w-3xl">
           {/* Mobile slide counter (inline, above lockup) */}
           {slideCount > 1 && (
             <motion.div
               initial={{opacity: 0}}
               animate={{opacity: 1}}
               transition={{duration: 0.6, delay: 0.15}}
-              className="md:hidden flex items-center gap-2 mb-5 text-[10px] tabular-nums tracking-[0.3em] text-white/60"
+              className="md:hidden flex items-center gap-2 mb-3 text-[10px] tabular-nums tracking-[0.3em] text-white/60"
             >
               <span className="text-accent-primary">{pad2(currentSlide + 1)}</span>
               <span className="h-px w-6 bg-white/25" />
@@ -270,17 +278,17 @@ export function HeroSlider({
             </motion.div>
           )}
 
-          {/* Accent line above heading (left-aligned variant, per user pref) */}
+          {/* Accent line above heading */}
           <motion.div
             initial={{opacity: 0, scaleX: 0}}
             animate={{opacity: 1, scaleX: 1}}
             transition={{duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1]}}
-            className="flex items-center gap-4 mb-5 md:mb-6 origin-left"
+            className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6 origin-left"
           >
             <span className="text-accent-primary text-[10px] md:text-xs uppercase tracking-[0.35em] font-medium">
               Blues Guitarist
             </span>
-            <span className="h-px w-12 md:w-20 bg-gradient-to-r from-accent-primary to-transparent" />
+            <span className="h-px w-10 md:w-20 bg-gradient-to-r from-accent-primary to-transparent" />
           </motion.div>
 
           {/* Heading */}
@@ -305,7 +313,7 @@ export function HeroSlider({
             initial={{opacity: 0, scaleX: 0}}
             animate={{opacity: 1, scaleX: 1}}
             transition={{duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1]}}
-            className="h-px w-16 md:w-20 bg-accent-primary mt-5 md:mt-6 mb-5 md:mb-7 origin-left"
+            className="h-px w-16 md:w-20 bg-accent-primary mt-3 md:mt-6 mb-4 md:mb-7 origin-left"
           />
 
           {/* Tagline (Playfair italic) */}
@@ -315,7 +323,7 @@ export function HeroSlider({
               animate={{opacity: 1, y: 0}}
               transition={{duration: 0.8, delay: 0.55, ease: [0.22, 1, 0.36, 1]}}
               className={cn(
-                'font-display italic text-lg md:text-2xl lg:text-3xl max-w-xl leading-snug text-white/90 text-shadow-md mb-8 md:mb-10',
+                'font-display italic text-base md:text-2xl lg:text-3xl max-w-xl leading-snug text-white/90 text-shadow-md mb-5 md:mb-10',
                 trackingMap[subheadingTracking] || 'tracking-normal',
                 leadingMap[subheadingLineHeight] || 'leading-snug'
               )}
@@ -332,7 +340,7 @@ export function HeroSlider({
           >
             <Link
               href="/shows"
-              className="btn-primary inline-flex items-center gap-2 text-base md:text-lg px-7 md:px-9 py-4 group"
+              className="btn-primary inline-flex items-center gap-2 text-sm md:text-lg px-6 md:px-9 py-3.5 md:py-4 group"
             >
               <span>{buttonText}</span>
               <span className="arrow-slide">→</span>
@@ -340,14 +348,14 @@ export function HeroSlider({
           </motion.div>
         </div>
 
-        {/* Scroll hairline cue (bottom-center) */}
+        {/* Scroll hairline cue (desktop only — too cramped on mobile) */}
         <motion.div
           initial={{opacity: 0}}
           animate={{opacity: 1}}
-          transition={{delay: 1.2, duration: 0.6}}
-          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-none"
+          transition={{delay: 1.5, duration: 0.8}}
+          className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-3 pointer-events-none"
         >
-          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/50">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-white/50">
             Scroll
           </span>
           <span className="block h-10 w-px bg-accent-primary/80 animate-scroll-line" />

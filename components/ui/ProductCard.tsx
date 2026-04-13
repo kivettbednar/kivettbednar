@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import {motion} from 'framer-motion'
 import {urlFor} from '@/lib/image-positioning'
 import {useState} from 'react'
 import {useIsMobile} from '@/lib/hooks/useIsMobile'
@@ -25,7 +26,7 @@ type Product = {
   hasOptions?: boolean
 }
 
-export function ProductCard({product, priority = false}: {product: Product; priority?: boolean}) {
+export function ProductCard({product, priority = false, index = 0}: {product: Product; priority?: boolean; index?: number}) {
   const isMobile = useIsMobile()
   const [imageError, setImageError] = useState(false)
 
@@ -56,7 +57,16 @@ export function ProductCard({product, priority = false}: {product: Product; prio
   const imageUrl = imageAsset ? urlFor(imageAsset).width(500).height(500).url() : null
   const blurDataURL = imageAsset?.metadata?.lqip || undefined
 
+  // Cap stagger so large grids don't have dramatic late entries
+  const staggerDelay = Math.min(index, 7) * 0.06
+
   return (
+    <motion.div
+      initial={{opacity: 0, y: 20}}
+      whileInView={{opacity: 1, y: 0}}
+      viewport={{once: true, margin: '0px 0px -60px 0px'}}
+      transition={{duration: 0.6, delay: staggerDelay, ease: [0.22, 1, 0.36, 1]}}
+    >
     <Link
       href={`/merch/${product.slug}`}
       className="group block bg-surface border border-border hover:border-accent-primary transition-colors duration-300 overflow-hidden"
@@ -150,5 +160,6 @@ export function ProductCard({product, priority = false}: {product: Product; prio
         </div>
       </div>
     </Link>
+    </motion.div>
   )
 }

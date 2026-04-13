@@ -169,6 +169,7 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
             {products && products.length > 0 ? (
               <>
                 {/* Slim sticky filter bar */}
+                <AnimatedSection animation="fadeIn">
                 <div className="sticky top-16 md:top-20 z-sticky bg-background/85 backdrop-blur-md border-b border-white/5 -mx-4 px-4">
                   <div className="py-4 flex items-center gap-3 flex-wrap">
                     {/* Category pills — horizontal scroll on mobile */}
@@ -194,17 +195,21 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                       </div>
                     </div>
 
-                    {/* Sort (compact) */}
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="hidden md:block bg-transparent border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.2em] text-text-secondary hover:border-accent-primary/60 focus:border-accent-primary focus:outline-none cursor-pointer"
-                    >
-                      <option value="featured">Featured</option>
-                      <option value="name">Name A–Z</option>
-                      <option value="price-low">Price ↑</option>
-                      <option value="price-high">Price ↓</option>
-                    </select>
+                    {/* Sort (custom-styled, no native chrome) */}
+                    <div className="hidden md:block relative">
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        aria-label="Sort products"
+                        className="appearance-none bg-transparent border border-white/10 pl-3 pr-8 py-1.5 text-xs uppercase tracking-[0.2em] text-text-secondary hover:border-accent-primary/60 focus:border-accent-primary focus:outline-none cursor-pointer"
+                      >
+                        <option value="featured">Featured</option>
+                        <option value="name">Name A–Z</option>
+                        <option value="price-low">Price ↑</option>
+                        <option value="price-high">Price ↓</option>
+                      </select>
+                      <span aria-hidden className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-text-muted">▾</span>
+                    </div>
 
                     {/* Search + advanced toggle */}
                     <button
@@ -247,34 +252,43 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                       </div>
 
                       {collections && collections.length > 0 && (
-                        <select
-                          value={selectedCollection}
-                          onChange={(e) => setSelectedCollection(e.target.value)}
-                          className="bg-surface border border-white/10 px-3 py-2 text-sm text-text-primary focus:border-accent-primary focus:outline-none md:w-64"
-                        >
-                          <option value="all">All Collections</option>
-                          {collections.map((col) => (
-                            <option key={col._id} value={col.slug || col._id}>
-                              {col.title}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="relative md:w-64">
+                          <select
+                            value={selectedCollection}
+                            onChange={(e) => setSelectedCollection(e.target.value)}
+                            aria-label="Filter by collection"
+                            className="appearance-none bg-surface border border-white/10 pl-3 pr-8 py-2 text-sm text-text-primary focus:border-accent-primary focus:outline-none w-full"
+                          >
+                            <option value="all">All Collections</option>
+                            {collections.map((col) => (
+                              <option key={col._id} value={col.slug || col._id}>
+                                {col.title}
+                              </option>
+                            ))}
+                          </select>
+                          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-muted">▾</span>
+                        </div>
                       )}
 
-                      {/* Mobile sort */}
-                      <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="md:hidden bg-surface border border-white/10 px-3 py-2 text-sm text-text-primary focus:border-accent-primary focus:outline-none"
-                      >
-                        <option value="featured">Featured</option>
-                        <option value="name">Name A–Z</option>
-                        <option value="price-low">Price ↑</option>
-                        <option value="price-high">Price ↓</option>
-                      </select>
+                      {/* Mobile sort — custom-styled */}
+                      <div className="md:hidden relative">
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value)}
+                          aria-label="Sort products"
+                          className="appearance-none bg-surface border border-white/10 pl-3 pr-8 py-2 text-sm text-text-primary focus:border-accent-primary focus:outline-none w-full"
+                        >
+                          <option value="featured">Featured</option>
+                          <option value="name">Name A–Z</option>
+                          <option value="price-low">Price ↑</option>
+                          <option value="price-high">Price ↓</option>
+                        </select>
+                        <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-muted">▾</span>
+                      </div>
                     </div>
                   )}
                 </div>
+                </AnimatedSection>
 
                 {/* Results meta */}
                 <div className="flex items-center justify-between py-4 text-xs uppercase tracking-[0.2em] text-text-muted">
@@ -303,7 +317,7 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
                   <>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 pb-16">
                       {displayedProducts.map((product, index) => (
-                        <ProductCard key={product._id} product={product} priority={index < 4} />
+                        <ProductCard key={product._id} product={product} priority={index < 4} index={index} />
                       ))}
                     </div>
                     {hasMore && (

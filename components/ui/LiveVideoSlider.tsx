@@ -3,6 +3,7 @@
 import {useState, useCallback, useEffect} from 'react'
 import {motion, AnimatePresence} from 'framer-motion'
 import {cn} from '@/lib/utils'
+import {AnimatedSection} from '@/components/animations/AnimatedSection'
 
 export interface LiveVideo {
   url: string
@@ -69,24 +70,30 @@ export function LiveVideoSlider({videos, eyebrow = 'Live', heading = 'Live Perfo
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
             <div>
-              <span className="inline-flex items-center gap-3 mb-4">
-                <span className="h-px w-10 bg-accent-primary" />
-                <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
-                  {eyebrow}
+              <AnimatedSection animation="fadeUp">
+                <span className="inline-flex items-center gap-3 mb-4">
+                  <span className="h-px w-10 bg-accent-primary" />
+                  <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+                    {eyebrow}
+                  </span>
                 </span>
-              </span>
-              <h2 className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none text-text-primary">
-                {heading}
-              </h2>
+              </AnimatedSection>
+              <AnimatedSection animation="fadeUp" delay={0.1}>
+                <h2 className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none text-text-primary">
+                  {heading}
+                </h2>
+              </AnimatedSection>
               {subheading && (
-                <p className="font-display italic text-lg md:text-xl text-text-secondary mt-4 max-w-xl">
-                  {subheading}
-                </p>
+                <AnimatedSection animation="fadeUp" delay={0.2}>
+                  <p className="font-display italic text-lg md:text-xl text-text-secondary mt-4 max-w-xl">
+                    {subheading}
+                  </p>
+                </AnimatedSection>
               )}
             </div>
 
             {/* Counter + controls */}
-            <div className="flex items-center gap-6">
+            <AnimatedSection animation="fadeIn" delay={0.3} className="flex items-center gap-6">
               <div className="flex items-baseline gap-2 tabular-nums">
                 <span className="font-bebas text-3xl md:text-4xl text-accent-primary tracking-wide">
                   {pad2(index + 1)}
@@ -116,11 +123,11 @@ export function LiveVideoSlider({videos, eyebrow = 'Live', heading = 'Live Perfo
                   </button>
                 </div>
               )}
-            </div>
+            </AnimatedSection>
           </div>
 
           {/* Video stage */}
-          <div className="relative">
+          <AnimatedSection animation="fadeUp" delay={0.35} className="relative">
             {/* Gold accent frame */}
             <div className="absolute -inset-[1px] bg-gradient-to-br from-accent-primary/40 via-transparent to-accent-primary/20 pointer-events-none" />
             <AnimatePresence mode="wait">
@@ -147,10 +154,10 @@ export function LiveVideoSlider({videos, eyebrow = 'Live', heading = 'Live Perfo
                 )}
               </motion.div>
             </AnimatePresence>
-          </div>
+          </AnimatedSection>
 
           {/* Caption + dot navigation */}
-          <div className="mt-6 md:mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <AnimatedSection animation="fadeUp" delay={0.5} className="mt-6 md:mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`caption-${index}`}
@@ -187,7 +194,7 @@ export function LiveVideoSlider({videos, eyebrow = 'Live', heading = 'Live Perfo
                 ))}
               </div>
             )}
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>

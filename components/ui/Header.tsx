@@ -136,7 +136,10 @@ export function Header({siteName, navigation}: HeaderProps) {
         Skip to main content
       </a>
 
-      <header
+      <motion.header
+        initial={{opacity: 0, y: -12}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1]}}
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ease-out ${
           isScrolled ? 'shadow-lg shadow-black/50' : ''
         }`}
@@ -418,7 +421,7 @@ export function Header({siteName, navigation}: HeaderProps) {
         {/* Search Modal */}
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
-      </header>
+      </motion.header>
     </>
   )
 }
