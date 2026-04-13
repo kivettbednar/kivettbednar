@@ -40,6 +40,47 @@ async function openProduct(page: Page) {
   await page.waitForTimeout(5000);
 }
 
+/**
+ * Best-effort cleanup of the draft currently open in Studio.
+ * Tests that create documents via `/studio/intent/create/...` leave
+ * `drafts.*` documents behind unless we discard them. We try keyboard
+ * shortcuts and the document actions menu; failures are swallowed so
+ * the teardown never flakes the test.
+ *
+ * If drafts still accumulate, run: `node scripts/cleanup-test-drafts.mjs --write`
+ */
+async function discardCurrentDraft(page: Page): Promise<void> {
+  try {
+    // Try the Studio keyboard shortcut (Cmd/Ctrl+Alt+D in recent versions)
+    await page.keyboard.press('Control+Alt+D');
+    await page.waitForTimeout(500);
+    const confirm = page.getByRole('button', { name: /^discard/i });
+    if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) {
+      await confirm.click({ force: true });
+      await page.waitForTimeout(500);
+      return;
+    }
+  } catch { /* fall through */ }
+
+  try {
+    // Fallback: open the document actions menu and click Discard
+    const menu = page.getByRole('button', { name: /document actions|more|menu/i }).first();
+    if (await menu.isVisible({ timeout: 1500 }).catch(() => false)) {
+      await menu.click({ force: true });
+      await page.waitForTimeout(300);
+      const item = page.getByRole('menuitem', { name: /discard/i });
+      if (await item.isVisible({ timeout: 1500 }).catch(() => false)) {
+        await item.click({ force: true });
+        await page.waitForTimeout(300);
+        const confirm = page.getByRole('button', { name: /^discard/i });
+        if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) {
+          await confirm.click({ force: true });
+        }
+      }
+    }
+  } catch { /* best effort only — cleanup script picks up stragglers */ }
+}
+
 /** Check body text matches all patterns */
 async function expectFields(page: Page, ...patterns: (string | RegExp)[]) {
   const body = await page.textContent('body');
@@ -60,6 +101,18 @@ if (!hasAuth) {
     test.skip();
   });
 } else {
+
+// Best-effort draft cleanup after every Studio test. Tests that navigate
+// to `/studio/intent/create/...` create draft documents in Sanity;
+// without this teardown, each run leaves orphans (e.g.
+// "PLAYWRIGHT TEST PRODUCT") piling up in the dataset.
+test.afterEach(async ({ page }) => {
+  try {
+    const url = page.url();
+    if (!url.includes('/studio')) return;
+    await discardCurrentDraft(page);
+  } catch { /* best effort only */ }
+});
 
 // ============================================================
 // PRODUCT FIELDS

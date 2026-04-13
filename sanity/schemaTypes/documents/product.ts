@@ -5,6 +5,7 @@ import {formatPrice} from '@/lib/format'
 import {MarginDisplay} from '@/sanity/components/MarginDisplay'
 import {GelatoProductUidInput} from '@/sanity/components/GelatoProductUidInput'
 import {PriceInput} from '@/sanity/components/PriceInput'
+import {AutoSlugInput} from '@/sanity/components/AutoSlugInput'
 
 /**
  * Product schema for POD (Print on Demand) merch via Gelato
@@ -39,10 +40,12 @@ export const product = defineType({
       title: 'Slug',
       type: 'slug',
       group: 'basics',
+      description: 'Auto-fills from the product title. Clear this field to reset it.',
       options: {
         source: 'title',
         maxLength: 96,
       },
+      components: {input: AutoSlugInput},
       validation: (Rule) => Rule.required(),
     }),
     defineField({
