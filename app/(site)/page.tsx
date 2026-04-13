@@ -13,6 +13,7 @@ import {NewsletterForm} from '@/components/ui/NewsletterForm'
 import {MarqueeTicker} from '@/components/ui/MarqueeTicker'
 import {AmbientOrbs} from '@/components/ui/AmbientOrbs'
 import {ScrollProgress} from '@/components/ui/ScrollProgress'
+import {LiveVideoSlider} from '@/components/ui/LiveVideoSlider'
 
 // Helper function to extract YouTube video ID from URL or return ID as-is
 function getYouTubeId(urlOrId: string): string {
@@ -185,53 +186,22 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Featured Video Section - Cinematic Split Layout */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-surface relative z-10 section-overlap-up">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              {/* Heading column */}
-              <AnimatedSection animation="slideLeft">
-                <div className="hidden lg:block">
-                  {(() => {
-                    const words = (homePage.featuredVideoHeading || 'Live Performance').split(' ')
-                    const firstWord = words[0]
-                    const rest = words.slice(1).join(' ')
-                    return (
-                      <p className="text-outline-gold text-display-xl leading-[0.85] mb-6">
-                        {firstWord}<br />{rest}
-                      </p>
-                    )
-                  })()}
-                </div>
-                <div className="lg:hidden">
-                  <TextReveal
-                    text={homePage.featuredVideoHeading || 'Live Performance'}
-                    className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 text-center"
-                  />
-                </div>
-                <p className="text-xl text-text-secondary max-w-md text-center lg:text-left mx-auto lg:mx-0 mb-8 lg:mb-0">
-                  {homePage.featuredVideoSubheading || 'Experience the authentic blues sound'}
-                </p>
-              </AnimatedSection>
-              {/* Right: Video with cinematic treatment */}
-              <AnimatedSection animation="fadeUp" delay={0.2}>
-                <div className="relative border-l-2 md:border-l-4 border-accent-primary pl-0">
-                  <div className="aspect-video relative overflow-hidden rounded-lg shadow-2xl film-grain transition-transform duration-500 hover:rotate-0" style={{transform: 'rotate(0.5deg)'}}>
-                    <iframe
-                      src={`https://www.youtube.com/embed/${getYouTubeId(homePage.featuredVideoUrl || '')}`}
-                      title={homePage.featuredVideoTitle || 'Kivett Bednar Live Performance'}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="absolute inset-0 w-full h-full"
-                    />
-                  </div>
-                </div>
-              </AnimatedSection>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Live Videos Slider — merges former Featured Video + Studio videos */}
+      {(() => {
+        const rawVideos = [
+          {url: homePage.featuredVideoUrl || '', title: homePage.featuredVideoTitle || undefined, subtitle: homePage.featuredVideoSubheading || undefined},
+          {url: homePage.studioVideo1Url || '', title: homePage.studioVideo1Title || undefined},
+          {url: homePage.studioVideo2Url || '', title: homePage.studioVideo2Title || undefined},
+        ].filter((v) => v.url && v.url.trim() !== '')
+        if (rawVideos.length === 0) return null
+        return (
+          <LiveVideoSlider
+            videos={rawVideos}
+            heading={homePage.featuredVideoHeading || 'Live Performance'}
+            subheading={homePage.featuredVideoSubheading || undefined}
+          />
+        )
+      })()}
 
       {/* About Section - Split Screen with Image */}
       {homePage.showAboutSection !== false && homePage.aboutImage?.asset?.url && (
@@ -265,142 +235,163 @@ export default async function HomePage() {
         </SplitScreenImage>
       )}
 
-      {/* Upcoming Shows Section - Bento Grid + Horizontal Mobile Scroll */}
+      {/* Upcoming Shows Section — editorial grid */}
       {homePage.showUpcomingShows !== false && events && events.length > 0 && (
-        <section className="py-12 sm:py-16 md:py-24 bg-background section-overlap-diagonal">
+        <section className="py-16 sm:py-20 md:py-28 bg-background section-overlap-diagonal">
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
-              <div className="flex justify-between items-end mb-12">
-                <TextReveal
-                  text={homePage.upcomingShowsHeading || 'Upcoming Shows'}
-                  className="text-5xl font-bold text-text-primary"
-                />
+              {/* Header row */}
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-14">
+                <div>
+                  <AnimatedSection animation="fadeUp">
+                    <span className="flex items-center gap-3 mb-4">
+                      <span className="h-px w-10 bg-accent-primary" />
+                      <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+                        Live Dates
+                      </span>
+                    </span>
+                  </AnimatedSection>
+                  <TextReveal
+                    text={homePage.upcomingShowsHeading || 'Upcoming Shows'}
+                    className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none text-text-primary"
+                  />
+                </div>
                 <Link
                   href="/shows"
-                  className="text-accent-primary font-semibold hover:text-accent-primary/80 transition-colors hidden md:block"
+                  className="group inline-flex items-center gap-2 text-accent-primary text-sm uppercase tracking-[0.25em] font-semibold hover:gap-3 transition-all self-start md:self-auto"
                 >
-                  {homePage.seeAllShowsLinkText || 'See all shows →'}
+                  <span>{homePage.seeAllShowsLinkText || 'See all shows'}</span>
+                  <span className="arrow-slide">→</span>
                 </Link>
               </div>
 
-              {/* Desktop: Bento grid layout */}
-              <div className="hidden md:grid gap-6" style={{gridTemplateColumns: '2fr 1fr', gridTemplateRows: 'auto auto'}}>
-                {events.slice(0, 6).map((event, index: number) => (
+              {/* Desktop: clean 3-column grid, no row-span, no dashed ghost */}
+              <div className="hidden md:grid md:grid-cols-3 gap-6">
+                {events.slice(0, 3).map((event, index: number) => (
                   <AnimatedSection
                     key={event._id}
                     animation="fadeUp"
                     delay={0.1 * index}
-                    className={index === 0 ? 'row-span-2' : ''}
+                    className="h-full"
                   >
-                    <div className={index === 0 ? 'h-full' : ''}>
-                      <EventCard event={event as unknown as import('@/types/event').Event} />
-                    </div>
+                    <EventCard event={event as unknown as import('@/types/event').Event} />
                   </AnimatedSection>
                 ))}
-                {/* Ghost "See All" card */}
-                <AnimatedSection animation="fadeUp" delay={0.1 * Math.min(events.length, 6)}>
-                  <Link
-                    href="/shows"
-                    className="flex items-center justify-center h-full min-h-[200px] border-2 border-dashed border-accent-primary/30 rounded-lg hover:border-accent-primary/60 hover:bg-accent-primary/5 transition-all group"
-                  >
-                    <span className="text-accent-primary text-2xl font-bold group-hover:scale-105 transition-transform">
-                      {homePage.seeAllShowsLinkText || 'See all shows →'}
-                    </span>
-                  </Link>
-                </AnimatedSection>
               </div>
 
-              {/* Mobile: Horizontal scroll */}
+              {/* Mobile: horizontal scroll */}
               <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 pb-4 -mx-4 px-4">
                 {events.slice(0, 6).map((event) => (
                   <div key={event._id} className="min-w-[85vw] snap-center-child flex-shrink-0">
                     <EventCard event={event as unknown as import('@/types/event').Event} />
                   </div>
                 ))}
-                {/* Ghost "See All" card */}
-                <Link
-                  href="/shows"
-                  className="min-w-[85vw] snap-center-child flex-shrink-0 flex items-center justify-center border-2 border-dashed border-accent-primary/30 rounded-lg"
-                >
-                  <span className="text-accent-primary text-xl font-bold">
-                    {homePage.seeAllShowsLinkText || 'See all shows →'}
-                  </span>
-                </Link>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Booking Section - Editorial Layout */}
+      {/* Booking Section — Editorial Cinematic */}
       {homePage.showBookingSection !== false && (
-      <section className="py-12 sm:py-16 md:py-24 bg-surface relative film-grain">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            {/* Left-aligned heading with gold rule */}
-            <AnimatedSection animation="fadeUp">
-              <div className="mb-12">
-                <div className="w-16 h-1 bg-accent-primary mb-6" />
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-text-primary mb-4">
-                  {homePage.bookingSectionHeading || 'Book Kivett for Your Event'}
-                </h2>
-                <p className="text-xl text-text-secondary max-w-2xl">
+      <section className="relative py-20 sm:py-24 md:py-32 bg-background film-grain overflow-hidden">
+        {/* Ambient accent */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            background: 'radial-gradient(ellipse 55% 45% at 15% 20%, rgba(212,175,55,0.09), transparent 65%)',
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-6xl mx-auto">
+            {/* Header row */}
+            <div className="max-w-3xl mb-14 md:mb-20">
+              <AnimatedSection animation="fadeUp">
+                <span className="inline-flex items-center gap-3 mb-5">
+                  <span className="h-px w-10 bg-accent-primary" />
+                  <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+                    Booking
+                  </span>
+                </span>
+              </AnimatedSection>
+              <TextReveal
+                text={homePage.bookingSectionHeading || 'Book Kivett for Your Event'}
+                className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-[0.95] text-text-primary"
+              />
+              <AnimatedSection animation="fadeUp" delay={0.15}>
+                <p className="font-display italic text-xl md:text-2xl text-text-secondary mt-6 leading-snug">
                   {homePage.bookingSectionIntro || 'Available for festivals, private events, and venue bookings. Professional blues performance with authentic Texas style meets Pacific Northwest soul.'}
                 </p>
-              </div>
-            </AnimatedSection>
+              </AnimatedSection>
+            </div>
 
-            {/* Main booking card - full width horizontal layout */}
-            <AnimatedSection animation="fadeUp" delay={0.15}>
-              <div className="bg-gradient-to-br from-surface to-surface-elevated p-5 sm:p-6 md:p-8 lg:p-10 shadow-lg text-text-primary mb-8">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8">
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-4 text-accent-primary">
-                      {homePage.bookingInquiriesHeading || 'Booking Inquiries'}
-                    </h3>
-                    <p className="text-lg text-text-secondary mb-4">
-                      {homePage.bookingInquiriesText || 'For booking inquiries, please contact Kivett directly via email:'}
-                    </p>
-                    <div className="border-t border-border pt-4 mt-4">
-                      <h4 className="font-bold text-accent-primary mb-3 text-sm tracking-widest uppercase">
-                        {homePage.bookingInquiryListHeading || 'Include in Your Inquiry:'}
-                      </h4>
-                      <ul className="space-y-2 text-text-secondary">
-                        {(homePage.bookingInquiryItems || [
-                          'Event date and location',
-                          'Type of event (festival, private party, venue, etc.)',
-                          'Expected audience size',
-                          'Performance duration needed',
-                        ]).map((item: string, index: number) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="text-accent-primary mt-1">→</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="md:flex-shrink-0">
-                    <a
-                      href={`mailto:${siteSettings?.contactEmail || 'kivettbednar@gmail.com'}`}
-                      className="btn-primary w-full md:w-auto text-center text-base sm:text-lg"
-                      style={{overflowWrap: 'anywhere'}}
-                    >
-                      {siteSettings?.contactEmail || 'kivettbednar@gmail.com'}
-                    </a>
-                  </div>
+            {/* Two-column editorial: checklist + contact rail */}
+            <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+              {/* Left: what to include */}
+              <AnimatedSection animation="fadeUp" delay={0.2} className="md:col-span-7">
+                <div>
+                  <h3 className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium mb-5">
+                    {homePage.bookingInquiryListHeading || 'Include in Your Inquiry'}
+                  </h3>
+                  <ol className="divide-y divide-white/5 border-y border-white/5">
+                    {(homePage.bookingInquiryItems || [
+                      'Event date and location',
+                      'Type of event (festival, private party, venue, etc.)',
+                      'Expected audience size',
+                      'Performance duration needed',
+                    ]).map((item: string, idx: number) => (
+                      <li key={idx} className="flex items-baseline gap-5 py-4 md:py-5 group">
+                        <span className="font-bebas text-xl md:text-2xl text-accent-primary tabular-nums tracking-wide">
+                          {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <span className="flex-1 text-text-primary text-base md:text-lg leading-snug">
+                          {item}
+                        </span>
+                        <span className="text-accent-primary/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                          →
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-              </div>
-            </AnimatedSection>
+              </AnimatedSection>
 
-            {/* Testimonial — full-width, single moment */}
-            <AnimatedSection animation="fadeUp" delay={0.25}>
-              <figure className="max-w-3xl mx-auto text-center mt-4">
-                <blockquote className="font-display italic text-2xl md:text-3xl text-text-primary leading-snug">
-                  &ldquo;{homePage.bookingTestimonialQuote || 'Kivett brings authentic blues energy that connects with every audience. His performance at our festival was unforgettable.'}&rdquo;
+              {/* Right: contact rail */}
+              <AnimatedSection animation="fadeUp" delay={0.3} className="md:col-span-5 md:sticky md:top-24">
+                <div className="bg-surface/80 backdrop-blur-sm border border-white/10 p-6 md:p-8">
+                  <p className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium mb-2">
+                    {homePage.bookingInquiriesHeading || 'Direct Inquiries'}
+                  </p>
+                  <p className="font-display italic text-lg text-text-secondary mb-6 leading-snug">
+                    {homePage.bookingInquiriesText || 'Reach out directly — responses within 48 hours.'}
+                  </p>
+                  <a
+                    href={`mailto:${siteSettings?.contactEmail || 'kivettbednar@gmail.com'}`}
+                    className="group inline-flex items-center gap-3 font-bebas text-xl md:text-2xl tracking-wide text-accent-primary border-b border-accent-primary/40 hover:border-accent-primary pb-1 transition-colors"
+                    style={{overflowWrap: 'anywhere'}}
+                  >
+                    <span>{siteSettings?.contactEmail || 'kivettbednar@gmail.com'}</span>
+                    <span className="arrow-slide text-base">→</span>
+                  </a>
+                </div>
+              </AnimatedSection>
+            </div>
+
+            {/* Testimonial — elegant moment */}
+            <AnimatedSection animation="fadeUp" delay={0.4}>
+              <figure className="max-w-3xl mx-auto text-center mt-20 md:mt-28 relative">
+                <span className="absolute -top-8 md:-top-10 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-display italic text-accent-primary/25 leading-none select-none pointer-events-none" aria-hidden>
+                  &ldquo;
+                </span>
+                <blockquote className="font-display italic text-2xl md:text-3xl text-text-primary leading-snug relative">
+                  {homePage.bookingTestimonialQuote || 'Kivett brings authentic blues energy that connects with every audience. His performance at our festival was unforgettable.'}
                 </blockquote>
-                <figcaption className="mt-6 text-sm uppercase tracking-[0.2em] text-accent-primary font-bold">
-                  {homePage.bookingTestimonialAttribution || '— Festival Organizer'}
+                <figcaption className="mt-8 inline-flex items-center gap-3">
+                  <span className="h-px w-8 bg-accent-primary" />
+                  <span className="text-xs uppercase tracking-[0.3em] text-accent-primary font-semibold">
+                    {homePage.bookingTestimonialAttribution || '— Festival Organizer'}
+                  </span>
+                  <span className="h-px w-8 bg-accent-primary" />
                 </figcaption>
               </figure>
             </AnimatedSection>
@@ -437,52 +428,6 @@ export default async function HomePage() {
             }
           />
         )}
-      </section>
-
-      )}
-
-      {/* Studio Video Section - Stacked Cinematic Panels */}
-      {homePage.showStudioVideos !== false && (
-      <section className="py-12 sm:py-16 md:py-24 bg-surface section-overlap-diagonal">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <TextReveal
-              text={homePage.studioSectionHeading || 'In The Studio'}
-              className="text-5xl font-bold text-text-primary mb-4 text-center"
-            />
-            <AnimatedSection animation="fadeIn">
-              <p className="text-xl text-text-secondary text-center mb-12">
-                {homePage.studioSectionSubheading || 'Behind the scenes of creating authentic Texas blues'}
-              </p>
-            </AnimatedSection>
-
-            {/* Two videos, clean side-by-side */}
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-              <AnimatedSection animation="fadeUp" delay={0.2}>
-                <div className="aspect-video relative overflow-hidden shadow-xl film-grain">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${getYouTubeId(homePage.studioVideo1Url || '')}`}
-                    title={homePage.studioVideo1Title || 'Kivett Bednar Studio Session 1'}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-              </AnimatedSection>
-              <AnimatedSection animation="fadeUp" delay={0.35}>
-                <div className="aspect-video relative overflow-hidden shadow-xl film-grain">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${getYouTubeId(homePage.studioVideo2Url || '')}`}
-                    title={homePage.studioVideo2Title || 'Kivett Bednar Studio Session 2'}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-              </AnimatedSection>
-            </div>
-          </div>
-        </div>
       </section>
 
       )}

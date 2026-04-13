@@ -10,7 +10,11 @@ import {Mail, Phone, Download, ExternalLink, Calendar, MapPin, Quote} from 'luci
 
 type EpkData = {
   _id: string
-  heroImage: {asset?: {url?: string}; alt?: string} | null
+  heroImage: {
+    asset?: {url?: string}
+    hotspot?: {x?: number; y?: number}
+    alt?: string
+  } | null
   pageIntro: string | null
   genres: string[] | null
   influencedBy: string[] | null
@@ -124,6 +128,10 @@ export default async function EpkPage() {
 
   const data = rawData as EpkData
   const heroImageUrl = data?.heroImage?.asset?.url
+  const hs = data?.heroImage?.hotspot
+  const heroObjectPosition = hs?.x != null && hs?.y != null
+    ? `${(hs.x * 100).toFixed(2)}% ${(hs.y * 100).toFixed(2)}%`
+    : 'center 25%'
 
   return (
     <div className="min-h-screen bg-background">
@@ -137,6 +145,7 @@ export default async function EpkPage() {
               fill
               priority
               className="object-cover"
+              style={{objectPosition: heroObjectPosition}}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-background" />
             <div className="absolute inset-0 flex items-end pb-12">

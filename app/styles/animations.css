@@ -117,6 +117,32 @@
   }
 }
 
+/* Hero scroll hairline: top-down reveal on loop */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.animate-scroll-line {
+  animation: scroll-line 2.4s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+  transform-origin: top;
+  will-change: transform;
+}
+
 /* Fade up animation */
 @keyframes fade-up {
   0% {

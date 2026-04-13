@@ -13,7 +13,11 @@ type BioPageData = {
   tagline: string | null
   lastUpdated: string | null
   seoDescription: string | null
-  heroImage: {asset?: {url?: string}; alt?: string} | null
+  heroImage: {
+    asset?: {url?: string}
+    hotspot?: {x?: number; y?: number}
+    alt?: string
+  } | null
   content: PortableTextBlock[] | null
 } | null
 
@@ -57,6 +61,10 @@ export default async function BioPage() {
   const pageTitle = data?.pageTitle || 'Bio'
   const tagline = data?.tagline
   const heroImageUrl = data?.heroImage?.asset?.url
+  const hs = data?.heroImage?.hotspot
+  const heroObjectPosition = hs?.x != null && hs?.y != null
+    ? `${(hs.x * 100).toFixed(2)}% ${(hs.y * 100).toFixed(2)}%`
+    : 'center 25%'
   const lastUpdated = data?.lastUpdated
     ? new Date(data.lastUpdated).toLocaleDateString('en-US', {month: 'long', year: 'numeric'})
     : null
@@ -72,6 +80,7 @@ export default async function BioPage() {
             fill
             priority
             className="object-cover"
+            style={{objectPosition: heroObjectPosition}}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background" />
           <div className="absolute inset-0 flex items-end pb-16">

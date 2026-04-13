@@ -18,6 +18,13 @@ interface HeroSlide {
   mobilePosition?: string | null
 }
 
+interface NextShow {
+  startDateTime: string
+  venue: string
+  city?: string
+  timezone?: string
+}
+
 interface HeroSliderProps {
   slides?: HeroSlide[]
   heading?: string
@@ -30,6 +37,20 @@ interface HeroSliderProps {
   headingLineHeight?: string
   subheadingTracking?: string
   subheadingLineHeight?: string
+  nextShow?: NextShow | null
+}
+
+function formatShowDate(iso: string, timezone?: string): {weekday: string; day: string; time: string} {
+  try {
+    const d = new Date(iso)
+    const tz = timezone || undefined
+    const weekday = new Intl.DateTimeFormat('en-US', {weekday: 'short', timeZone: tz}).format(d).toUpperCase()
+    const day = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', timeZone: tz}).format(d).toUpperCase()
+    const time = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: '2-digit', timeZone: tz}).format(d)
+    return {weekday, day, time}
+  } catch {
+    return {weekday: '', day: '', time: ''}
+  }
 }
 
 export function HeroSlider({
@@ -44,13 +65,12 @@ export function HeroSlider({
   headingLineHeight = 'leading-none',
   subheadingTracking = 'tracking-normal',
   subheadingLineHeight = 'leading-normal',
+  nextShow = null,
 }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [isLoaded, setIsLoaded] = useState(false)
   const isMobile = useIsMobile()
   const sectionRef = useRef<HTMLElement>(null)
 
-  // Parallax effect: background moves at 50% speed
   const {scrollYProgress} = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -58,12 +78,10 @@ export function HeroSlider({
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, 400])
 
   useEffect(() => {
-    setIsLoaded(true)
-    if (slides.length > 0) {
+    if (slides.length > 1) {
       const timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % slides.length)
       }, 6000)
-
       return () => clearInterval(timer)
     }
   }, [slides.length])
@@ -85,10 +103,16 @@ export function HeroSlider({
     'leading-relaxed': 'leading-relaxed',
   }
 
+  const nextShowFormatted = nextShow?.startDateTime
+    ? formatShowDate(nextShow.startDateTime, nextShow.timezone)
+    : null
+  const slideCount = slides.length
+  const pad2 = (n: number) => String(n).padStart(2, '0')
+
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-background"
+      className="relative h-screen flex overflow-hidden bg-background"
       style={{
         containIntrinsicSize: '100vh',
       }}
@@ -135,112 +159,204 @@ export function HeroSlider({
               })()}
             </div>
           </motion.div>
-          {/* Optimal overlay for text readability while showing images */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/55 z-10" />
+          {/* Vertical gradient: top darker for nav, bottom dark for lockup legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80 z-10" />
+          {/* Bottom-left spotlight scrim for name + tagline legibility */}
+          <div
+            className="absolute inset-0 z-10"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 55% at 18% 82%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0) 70%)',
+            }}
+          />
         </div>
       ))}
 
-      {/* Animated Content */}
-      <div className="relative z-30 container mx-auto px-4 text-center">
-        {/* Decorative accent line */}
+      {/* Editorial grid overlay */}
+      <div className="relative z-30 w-full h-full container mx-auto px-6 md:px-10 lg:px-14">
+        {/* Top meta strip (top-left) */}
         <motion.div
-          initial={{opacity: 0, scaleX: 0}}
-          animate={{opacity: 1, scaleX: 1}}
-          transition={{
-            duration: 0.8,
-            delay: 0.1,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="flex items-center justify-center gap-4 mb-8"
+          initial={{opacity: 0, y: -10}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1]}}
+          className="absolute top-8 md:top-10 left-6 md:left-10 lg:left-14 flex items-center gap-3"
         >
-          <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-accent-primary" />
-          <span className="text-accent-primary text-xs md:text-sm uppercase tracking-[0.3em] font-medium">
-            Blues Guitarist
+          <span className="h-px w-6 md:w-10 bg-accent-primary" />
+          <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-white/75 font-medium">
+            {subheading}
           </span>
-          <div className="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-accent-primary" />
         </motion.div>
 
-        <motion.h1
-          initial={{opacity: 0, y: 50, scale: 0.95, filter: 'blur(10px)'}}
-          animate={{opacity: 1, y: 0, scale: 1, filter: 'blur(0px)'}}
-          transition={{
-            duration: 0.8,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className={cn(
-            'font-bebas text-white mb-6 text-shadow-lg',
-            textSizeMap[headingMobileSize] || 'text-5xl',
-            desktopSizeMap[headingDesktopSize] || 'md:text-8xl',
-            trackingMap[headingTracking] || 'tracking-tight',
-            leadingMap[headingLineHeight] || 'leading-none'
+        {/* Next show micro-card (top-right, desktop) */}
+        {nextShowFormatted && nextShow && (
+          <motion.div
+            initial={{opacity: 0, y: -10}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1]}}
+            className="hidden md:block absolute top-24 lg:top-28 right-10 lg:right-14"
+          >
+            <Link
+              href="/shows"
+              className="group block border border-white/15 hover:border-accent-primary/60 backdrop-blur-md bg-black/30 px-5 py-4 min-w-[220px] transition-colors"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent-primary pulse-gold" />
+                <span className="text-[10px] uppercase tracking-[0.3em] text-accent-primary font-medium">
+                  Next Show
+                </span>
+              </div>
+              <div className="flex items-baseline gap-2 text-white">
+                <span className="text-2xl font-bebas tracking-wide leading-none">
+                  {nextShowFormatted.day}
+                </span>
+                <span className="text-xs text-white/60 tracking-wider">
+                  {nextShowFormatted.weekday} · {nextShowFormatted.time}
+                </span>
+              </div>
+              <div className="mt-1 text-sm text-white/85 font-display italic truncate">
+                {nextShow.venue}
+                {nextShow.city ? <span className="text-white/50 not-italic"> · {nextShow.city}</span> : null}
+              </div>
+              <div className="mt-3 flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] text-white/60 group-hover:text-accent-primary transition-colors">
+                <span>All Shows</span>
+                <span className="arrow-slide">→</span>
+              </div>
+            </Link>
+          </motion.div>
+        )}
+
+        {/* Slide counter rail (right edge, desktop) */}
+        {slideCount > 1 && (
+          <div className="hidden md:flex absolute right-10 lg:right-14 bottom-24 flex-col items-end gap-3">
+            {slides.map((_, idx) => {
+              const active = idx === currentSlide
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentSlide(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className="group flex items-center gap-3 cursor-pointer"
+                >
+                  <span
+                    className={cn(
+                      'h-px transition-all duration-500',
+                      active ? 'w-10 bg-accent-primary' : 'w-4 bg-white/50 group-hover:w-6 group-hover:bg-white/80'
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      'text-xs tabular-nums tracking-widest transition-colors duration-300 drop-shadow',
+                      active ? 'text-accent-primary' : 'text-white/70 group-hover:text-white'
+                    )}
+                  >
+                    {pad2(idx + 1)}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Bottom-left lockup */}
+        <div className="absolute left-6 md:left-10 lg:left-14 bottom-20 md:bottom-24 max-w-3xl">
+          {/* Mobile slide counter (inline, above lockup) */}
+          {slideCount > 1 && (
+            <motion.div
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              transition={{duration: 0.6, delay: 0.15}}
+              className="md:hidden flex items-center gap-2 mb-5 text-[10px] tabular-nums tracking-[0.3em] text-white/60"
+            >
+              <span className="text-accent-primary">{pad2(currentSlide + 1)}</span>
+              <span className="h-px w-6 bg-white/25" />
+              <span>{pad2(slideCount)}</span>
+            </motion.div>
           )}
-        >
-          {heading}
-        </motion.h1>
-        <motion.p
-          initial={{opacity: 0, y: 30, filter: 'blur(5px)'}}
-          animate={{opacity: 1, y: 0, filter: 'blur(0px)'}}
-          transition={{
-            duration: 0.8,
-            delay: 0.15,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className={cn(
-            'text-2xl md:text-4xl lg:text-5xl mb-8 text-white text-elegant text-shadow-md',
-            trackingMap[subheadingTracking] || 'tracking-normal',
-            leadingMap[subheadingLineHeight] || 'leading-normal'
+
+          {/* Accent line above heading (left-aligned variant, per user pref) */}
+          <motion.div
+            initial={{opacity: 0, scaleX: 0}}
+            animate={{opacity: 1, scaleX: 1}}
+            transition={{duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1]}}
+            className="flex items-center gap-4 mb-5 md:mb-6 origin-left"
+          >
+            <span className="text-accent-primary text-[10px] md:text-xs uppercase tracking-[0.35em] font-medium">
+              Blues Guitarist
+            </span>
+            <span className="h-px w-12 md:w-20 bg-gradient-to-r from-accent-primary to-transparent" />
+          </motion.div>
+
+          {/* Heading */}
+          <motion.h1
+            initial={{opacity: 0, y: 40, filter: 'blur(8px)'}}
+            animate={{opacity: 1, y: 0, filter: 'blur(0px)'}}
+            transition={{duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1]}}
+            className={cn(
+              'font-bebas text-white text-shadow-lg text-left',
+              textSizeMap[headingMobileSize] || 'text-5xl',
+              desktopSizeMap[headingDesktopSize] || 'md:text-8xl',
+              trackingMap[headingTracking] || 'tracking-tight',
+              leadingMap[headingLineHeight] || 'leading-none'
+            )}
+            style={{textWrap: 'balance'} as React.CSSProperties}
+          >
+            {heading}
+          </motion.h1>
+
+          {/* Gold hairline under heading */}
+          <motion.div
+            initial={{opacity: 0, scaleX: 0}}
+            animate={{opacity: 1, scaleX: 1}}
+            transition={{duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1]}}
+            className="h-px w-16 md:w-20 bg-accent-primary mt-5 md:mt-6 mb-5 md:mb-7 origin-left"
+          />
+
+          {/* Tagline (Playfair italic) */}
+          {tagline && (
+            <motion.p
+              initial={{opacity: 0, y: 20}}
+              animate={{opacity: 1, y: 0}}
+              transition={{duration: 0.8, delay: 0.55, ease: [0.22, 1, 0.36, 1]}}
+              className={cn(
+                'font-display italic text-lg md:text-2xl lg:text-3xl max-w-xl leading-snug text-white/90 text-shadow-md mb-8 md:mb-10',
+                trackingMap[subheadingTracking] || 'tracking-normal',
+                leadingMap[subheadingLineHeight] || 'leading-snug'
+              )}
+            >
+              {tagline}
+            </motion.p>
           )}
-        >
-          {subheading}
-        </motion.p>
-        {tagline && (
-          <motion.p
+
+          {/* CTA */}
+          <motion.div
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
-            transition={{
-              duration: 0.6,
-              delay: 0.25,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed text-white/95 font-light"
+            transition={{duration: 0.7, delay: 0.7, ease: [0.22, 1, 0.36, 1]}}
           >
-            {tagline}
-          </motion.p>
-        )}
+            <Link
+              href="/shows"
+              className="btn-primary inline-flex items-center gap-2 text-base md:text-lg px-7 md:px-9 py-4 group"
+            >
+              <span>{buttonText}</span>
+              <span className="arrow-slide">→</span>
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Scroll hairline cue (bottom-center) */}
         <motion.div
-          initial={{opacity: 0, y: 20}}
-          animate={{opacity: 1, y: 0}}
-          transition={{
-            duration: 0.6,
-            delay: 0.35,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="flex justify-center"
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          transition={{delay: 1.2, duration: 0.6}}
+          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-none"
         >
-          <Link
-            href="/shows"
-            className="btn-primary text-xl px-10 py-5"
-          >
-            {buttonText}
-          </Link>
+          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/50">
+            Scroll
+          </span>
+          <span className="block h-10 w-px bg-accent-primary/80 animate-scroll-line" />
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        transition={{delay: 1.5, duration: 0.5}}
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-40 hidden md:block"
-      >
-        <motion.div
-          animate={{y: [0, 8, 0]}}
-          transition={{duration: 1.5, repeat: Infinity, ease: 'easeInOut'}}
-          className="w-6 h-10 rounded-full border-2 border-white/40 flex justify-center pt-2"
-        >
-          <motion.div className="w-1 h-2 bg-white/60 rounded-full" />
-        </motion.div>
-      </motion.div>
     </section>
   )
 }
