@@ -57,6 +57,16 @@ export const uiText = defineType({
       title: 'Navigation: Contact',
       type: 'string',
       initialValue: 'Contact',    }),
+    defineField({
+      name: 'navBio',
+      title: 'Navigation: Bio',
+      type: 'string',
+      initialValue: 'Bio',    }),
+    defineField({
+      name: 'navEpk',
+      title: 'Navigation: Press Kit',
+      type: 'string',
+      initialValue: 'Press Kit',    }),
 
     // Footer
     defineField({

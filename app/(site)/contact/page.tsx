@@ -75,14 +75,8 @@ export default async function ContactPage() {
       />
 
       {/* Contact Cards Section */}
-      <section className="relative bg-gradient-to-b from-surface via-surface-elevated to-surface py-24 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-96 h-96 rounded-full bg-accent-primary blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent-primary blur-3xl" />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="bg-gradient-to-b from-surface via-surface-elevated to-surface py-24">
+        <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             {/* Section header */}
             <AnimatedSection animation="fadeIn">
@@ -388,13 +382,7 @@ export default async function ContactPage() {
       })()}
 
       {/* Final CTA */}
-      <section className="relative bg-background py-24 overflow-hidden">
-        {/* Corner accents */}
-        <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-accent-primary/30" />
-        <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-accent-primary/30" />
-        <div className="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-accent-primary/30" />
-        <div className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-accent-primary/30" />
-
+      <section className="bg-background py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <AnimatedSection animation="fadeUp">

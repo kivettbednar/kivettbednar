@@ -137,17 +137,6 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
 
         <div className="container mx-auto px-4 py-24 md:py-40 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            {/* Accent Line */}
-            <AnimatedSection animation="fadeIn" delay={0.1}>
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="h-px bg-gradient-to-r from-transparent via-accent-primary to-accent-primary w-16" />
-                <span className="text-accent-primary text-sm uppercase tracking-[0.2em] font-bold drop-shadow-lg">
-                  Official Store
-                </span>
-                <div className="h-px bg-gradient-to-r from-accent-primary via-accent-primary to-transparent w-16" />
-              </div>
-            </AnimatedSection>
-
             {/* Main Heading - From Sanity */}
             <AnimatedSection animation="fadeUp" delay={0.2}>
               <h1 className="font-bebas text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl uppercase tracking-wider text-white mb-6 leading-none drop-shadow-2xl">

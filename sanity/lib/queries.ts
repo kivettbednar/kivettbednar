@@ -62,6 +62,8 @@ export const uiTextQuery = defineQuery(`*[_type == "uiText"][0]{
   navAmps,
   navMerch,
   navContact,
+  navBio,
+  navEpk,
   footerBioLabel,
   footerEpkLabel,
   footerNavigationHeading,

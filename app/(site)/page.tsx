@@ -135,9 +135,9 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              {/* Left: Dramatic outline text */}
-              <div className="hidden lg:flex flex-col justify-center">
-                <AnimatedSection animation="slideLeft">
+              {/* Heading column */}
+              <AnimatedSection animation="slideLeft">
+                <div className="hidden lg:block">
                   {(() => {
                     const words = (homePage.featuredVideoHeading || 'Live Performance').split(' ')
                     const firstWord = words[0]
@@ -148,21 +148,17 @@ export default async function HomePage() {
                       </p>
                     )
                   })()}
-                  <p className="text-xl text-text-secondary max-w-md">
-                    {homePage.featuredVideoSubheading || 'Experience the authentic blues sound'}
-                  </p>
-                </AnimatedSection>
-              </div>
-              {/* Mobile heading */}
-              <div className="lg:hidden">
-                <TextReveal
-                  text={homePage.featuredVideoHeading || 'Live Performance'}
-                  className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 text-center"
-                />
-                <p className="text-xl text-text-secondary text-center mb-8">
+                </div>
+                <div className="lg:hidden">
+                  <TextReveal
+                    text={homePage.featuredVideoHeading || 'Live Performance'}
+                    className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 text-center"
+                  />
+                </div>
+                <p className="text-xl text-text-secondary max-w-md text-center lg:text-left mx-auto lg:mx-0 mb-8 lg:mb-0">
                   {homePage.featuredVideoSubheading || 'Experience the authentic blues sound'}
                 </p>
-              </div>
+              </AnimatedSection>
               {/* Right: Video with cinematic treatment */}
               <AnimatedSection animation="fadeUp" delay={0.2}>
                 <div className="relative border-l-2 md:border-l-4 border-accent-primary pl-0">
@@ -384,7 +380,7 @@ export default async function HomePage() {
 
       {/* Floating Image Gallery with Parallax */}
       {homePage.showGallerySection !== false && (
-      <section className="bg-gradient-to-b from-background via-surface to-surface-elevated py-16 sm:py-24 md:py-32">
+      <section className="bg-gradient-to-b from-background via-surface to-surface-elevated py-16 sm:py-20 md:py-24">
         <div className="container mx-auto px-4 mb-16">
           <TextReveal
             text={homePage.gallerySectionHeading || 'Gallery'}
@@ -473,7 +469,7 @@ export default async function HomePage() {
 
       {/* Newsletter Signup - Full-Bleed Cinematic CTA */}
       {homePage.showNewsletterSection !== false && (
-      <section className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
+      <section className="relative py-16 sm:py-20 md:py-24 overflow-hidden">
         {/* Background image from hero */}
         {newsletterBgImage && (
           <Image

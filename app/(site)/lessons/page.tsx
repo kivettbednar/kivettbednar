@@ -7,7 +7,6 @@ import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {SplitScreenImage} from '@/components/ui/SplitScreenImage'
-import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
 import {Guitar, Music, Mic2, BookOpen, Users, Award, Sparkles, ChevronRight} from 'lucide-react'
 import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
@@ -95,47 +94,6 @@ export default async function LessonsPage() {
         mobilePosition={lessonsPage.heroImage?.mobilePosition || undefined}
       />
 
-      {/* Credentials Banner */}
-      <section className="relative bg-gradient-to-r from-surface via-surface-elevated to-surface py-8 border-y border-accent-primary/20 overflow-hidden">
-        {/* Animated gold line */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-primary/50 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-primary/50 to-transparent" />
-        </div>
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-center">
-            {((lessonsPage.stats as any) && (lessonsPage.stats as any).length > 0
-              ? (lessonsPage.stats as any)
-              : [
-                  {_key: 'default-1', label: 'Years Experience', value: '20', suffix: '+'},
-                  {_key: 'default-2', label: 'Students Taught', value: '500', suffix: '+'},
-                  {_key: 'default-3', label: 'Skill Levels', value: 'All', suffix: ''},
-                ]
-            ).map((stat: {_key?: string; label: string; value: string; suffix?: string}, index: number) => {
-              const numericValue = parseInt(stat.value, 10)
-              const isNumeric = !isNaN(numericValue)
-
-              return (
-                <AnimatedSection key={stat._key || index} animation="fadeIn" delay={0.1 * (index + 1)}>
-                  <div className="flex flex-col items-center group cursor-default">
-                    <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
-                      {isNumeric ? (
-                        <AnimatedCounter value={numericValue} suffix={stat.suffix || ''} />
-                      ) : (
-                        <span className="animate-count">{stat.value}{stat.suffix || ''}</span>
-                      )}
-                    </span>
-                    <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">
-                      {stat.label}
-                    </span>
-                  </div>
-                </AnimatedSection>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Teaching Philosophy - Split Screen */}
       <SplitScreenImage
         imageSrc={lessonsPage.philosophyImage?.asset?.url || '/images/portraits/guild-shirt.jpg'}
@@ -143,10 +101,6 @@ export default async function LessonsPage() {
         imagePosition="right"
         darkBg={false}
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-px bg-accent-primary w-12" />
-          <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">Teaching Philosophy</span>
-        </div>
         <h2 className="font-bebas text-5xl md:text-6xl uppercase tracking-wide mb-8 text-text-primary">
           {lessonsPage.philosophyHeading}
         </h2>
@@ -159,14 +113,8 @@ export default async function LessonsPage() {
 
       {/* What You'll Learn - Premium Cards */}
       {lessonsPage.learningItems && lessonsPage.learningItems.length > 0 && (
-        <section className="relative bg-background py-24 overflow-hidden">
-          {/* Background decoration */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 left-10 w-96 h-96 rounded-full bg-accent-primary blur-3xl" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent-primary blur-3xl" />
-          </div>
-
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="bg-background py-24">
+          <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <AnimatedSection animation="fadeIn">
                 <div className="text-center mb-16">
@@ -235,14 +183,7 @@ export default async function LessonsPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <AnimatedSection animation="fadeUp">
-              <div className="relative">
-                {/* Corner accents */}
-                <div className="absolute -top-4 -left-4 w-8 h-8 border-l-2 border-t-2 border-accent-primary" />
-                <div className="absolute -top-4 -right-4 w-8 h-8 border-r-2 border-t-2 border-accent-primary" />
-                <div className="absolute -bottom-4 -left-4 w-8 h-8 border-l-2 border-b-2 border-accent-primary" />
-                <div className="absolute -bottom-4 -right-4 w-8 h-8 border-r-2 border-b-2 border-accent-primary" />
-
-                <div className="bg-surface-elevated border border-border p-12 md:p-16 text-center">
+              <div className="bg-surface-elevated border border-border p-12 md:p-16 text-center">
                   <div className="flex items-center justify-center gap-3 mb-6">
                     <Guitar className="w-8 h-8 text-accent-primary" />
                   </div>
@@ -276,7 +217,6 @@ export default async function LessonsPage() {
                     )}
                   </div>
                 </div>
-              </div>
             </AnimatedSection>
           </div>
         </div>

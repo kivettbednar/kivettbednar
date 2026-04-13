@@ -6,8 +6,7 @@ import {EventCard} from '@/components/ui/EventCard'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
 import {StaggeredImageGrid} from '@/components/ui/StaggeredImageGrid'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
-import {AnimatedCounter} from '@/components/ui/AnimatedCounter'
-import {Calendar, MapPin, Music} from 'lucide-react'
+import {Calendar} from 'lucide-react'
 import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -114,34 +113,6 @@ export default async function ShowsPage() {
         backgroundAlt={showsPage?.heroImage?.alt || 'Kivett Bednar performing live blues'}
       />
 
-      {/* Stats Banner */}
-      <section className="relative bg-gradient-to-r from-surface via-surface-elevated to-surface py-8 border-y border-accent-primary/20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-center">
-            <AnimatedSection animation="fadeIn" delay={0.1}>
-              <div className="flex flex-col items-center group cursor-default">
-                <span className="text-4xl md:text-5xl font-bebas text-accent-primary">
-                  <AnimatedCounter value={events?.length || 0} />
-                </span>
-                <span className="text-xs uppercase tracking-widest text-text-muted mt-1 group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel1 || 'Upcoming Shows'}</span>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection animation="fadeIn" delay={0.2}>
-              <div className="flex items-center gap-3 group cursor-default">
-                <Music className="w-6 h-6 text-accent-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel2 || 'Live Blues'}</span>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection animation="fadeIn" delay={0.3}>
-              <div className="flex items-center gap-3 group cursor-default">
-                <MapPin className="w-6 h-6 text-accent-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm uppercase tracking-widest text-text-muted group-hover:text-accent-primary/70 transition-colors">{showsPage?.statsLabel3 || 'Pacific Northwest'}</span>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
-
       {/* Performance Photo Grid */}
       <section className="bg-gradient-to-b from-background to-surface py-24">
         <div className="container mx-auto px-4">
@@ -184,12 +155,9 @@ export default async function ShowsPage() {
                       <Calendar className="w-5 h-5 text-accent-primary" />
                       <div className="h-px bg-accent-primary w-12" />
                     </div>
-                    <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-4">
+                    <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary">
                       {showsPage?.upcomingShowsHeading || 'Upcoming Shows'}
                     </h2>
-                    <p className="text-text-secondary text-lg">
-                      <span className="text-accent-primary font-bold">{events.length}</span>{showsPage?.showCountPrefix || ' upcoming'} {events.length === 1 ? (showsPage?.showSingular || 'show') : (showsPage?.showPlural || 'shows')}
-                    </p>
                   </div>
                 </AnimatedSection>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

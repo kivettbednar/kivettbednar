@@ -30,6 +30,8 @@ export default async function SiteLayout({
     {key: 'setlist', title: uiText?.navSetlist || 'Setlist', href: '/setlist'},
     {key: 'amps', title: uiText?.navAmps || 'Amps', href: '/amps'},
     {key: 'merch', title: uiText?.navMerch || 'Merch', href: '/merch'},
+    {key: 'bio', title: uiText?.navBio || 'Bio', href: '/bio'},
+    {key: 'epk', title: uiText?.navEpk || 'Press Kit', href: '/epk'},
     {key: 'contact', title: uiText?.navContact || 'Contact', href: '/contact'},
   ]
 
