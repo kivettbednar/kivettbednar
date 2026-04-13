@@ -128,7 +128,7 @@ export function EventCard({event, index = 0, fallbackImage}: {event: Event; inde
       )}
 
       {/* Content Section */}
-      <div className="relative p-4 sm:p-6 bg-surface-elevated">
+      <div className="relative p-4 sm:p-6 bg-surface-elevated min-w-0">
         {/* Date/Time Row with icons - stacks on very small screens */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-medium text-accent-primary mb-4 tracking-wider uppercase">
           <span className="inline-flex items-center gap-1.5">
@@ -144,17 +144,17 @@ export function EventCard({event, index = 0, fallbackImage}: {event: Event; inde
         </div>
 
         {/* Event Title */}
-        <h3 className="text-2xl font-bebas uppercase tracking-wide mb-3 text-white group-hover:text-accent-primary transition-colors duration-300">
+        <h3 className="text-2xl font-bebas uppercase tracking-wide mb-3 text-white group-hover:text-accent-primary transition-colors duration-300 line-clamp-2 break-words">
           {event.title}
         </h3>
 
         {/* Venue Info with icon */}
         <div className="text-text-secondary mb-6">
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 min-w-0">
             <MapPin className="w-4 h-4 text-text-muted mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="font-medium text-text-primary">{event.venue}</p>
-              <p className="text-sm text-text-muted">{event.city}{event.state && `, ${event.state}`}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-text-primary truncate">{event.venue}</p>
+              <p className="text-sm text-text-muted truncate">{event.city}{event.state && `, ${event.state}`}</p>
             </div>
           </div>
         </div>

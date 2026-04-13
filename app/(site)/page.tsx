@@ -133,14 +133,14 @@ export default async function HomePage() {
         bottomItems={(homePage.marqueeBottomItems as any)?.length ? (homePage.marqueeBottomItems as any) : undefined}
       />
 
-      {/* Listen / Music Section */}
+      {/* Listen / Music Section — intentional listening moment, narrow & editorial */}
       {homePage.showMusicSection !== false && homePage.spotifyArtistId && (
-        <section className="bg-background py-16 md:py-20 border-b border-border">
+        <section className="bg-background py-20 md:py-28 border-b border-border">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-8">
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-10">
                 <AnimatedSection animation="fadeUp">
-                  <span className="inline-flex items-center gap-3 mb-4">
+                  <span className="inline-flex items-center gap-3 mb-5">
                     <span className="h-px w-10 bg-accent-primary" />
                     <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
                       On Record
@@ -154,12 +154,12 @@ export default async function HomePage() {
                 </AnimatedSection>
                 {homePage.musicSectionSubheading && (
                   <AnimatedSection animation="fadeUp" delay={0.2}>
-                    <p className="text-text-secondary mt-2">{homePage.musicSectionSubheading}</p>
+                    <p className="text-text-secondary mt-3">{homePage.musicSectionSubheading}</p>
                   </AnimatedSection>
                 )}
               </div>
               <AnimatedSection animation="fadeUp" delay={0.35}>
-                <div className="rounded-lg overflow-hidden shadow-2xl">
+                <div className="border border-accent-primary/20 overflow-hidden">
                   <iframe
                     title="Spotify player"
                     src={`https://open.spotify.com/embed/${homePage.spotifyEmbedType || 'artist'}/${homePage.spotifyPlaylistId || homePage.spotifyArtistId}?utm_source=generator&theme=0`}
@@ -168,22 +168,27 @@ export default async function HomePage() {
                     frameBorder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="lazy"
+                    className="block"
                   />
                 </div>
               </AnimatedSection>
               {(homePage.appleMusicUrl || homePage.bandcampUrl) && (
                 <AnimatedSection animation="fadeIn" delay={0.5}>
-                  <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm uppercase tracking-[0.2em] text-text-muted">
+                  <div className="mt-8 flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.3em] text-text-muted">
+                    <span className="h-px w-6 bg-text-muted/40" />
+                    <span>Also on</span>
                     {homePage.appleMusicUrl && (
                       <a href={homePage.appleMusicUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent-primary transition-colors">
                         Apple Music
                       </a>
                     )}
+                    {homePage.appleMusicUrl && homePage.bandcampUrl && <span aria-hidden className="text-text-muted/40">·</span>}
                     {homePage.bandcampUrl && (
                       <a href={homePage.bandcampUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent-primary transition-colors">
                         Bandcamp
                       </a>
                     )}
+                    <span className="h-px w-6 bg-text-muted/40" />
                   </div>
                 </AnimatedSection>
               )}
@@ -218,16 +223,24 @@ export default async function HomePage() {
           verticalLabel={homePage.aboutVerticalLabel || 'ABOUT THE ARTIST'}
         >
         <AnimatedSection animation="fadeUp">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-text-primary">
+          <span className="inline-flex items-center gap-3 mb-5">
+            <span className="h-px w-10 bg-accent-primary" />
+            <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+              About
+            </span>
+          </span>
+        </AnimatedSection>
+        <AnimatedSection animation="fadeUp" delay={0.1}>
+          <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide mb-6 text-text-primary">
             {homePage.aboutHeading}
           </h2>
         </AnimatedSection>
-        <AnimatedSection animation="fadeUp" delay={0.15}>
-          <p className="text-xl mb-6 leading-relaxed text-text-secondary">
+        <AnimatedSection animation="fadeUp" delay={0.2}>
+          <p className="text-lg md:text-xl mb-6 leading-relaxed text-text-secondary">
             {homePage.aboutText}
           </p>
         </AnimatedSection>
-        <AnimatedSection animation="fadeUp" delay={0.3}>
+        <AnimatedSection animation="fadeUp" delay={0.35}>
           <div className="flex gap-4">
             <Link
               href="/bio"
@@ -276,12 +289,17 @@ export default async function HomePage() {
                 ))}
               </div>
 
-              {/* Mobile: horizontal scroll */}
+              {/* Mobile: horizontal scroll with staggered entry */}
               <div className="md:hidden flex overflow-x-auto scroll-snap-x gap-4 pb-4 -mx-4 px-4">
-                {events.slice(0, 6).map((event) => (
-                  <div key={event._id} className="min-w-[85vw] snap-center-child flex-shrink-0">
+                {events.slice(0, 6).map((event, i) => (
+                  <AnimatedSection
+                    key={event._id}
+                    animation="fadeUp"
+                    delay={Math.min(i, 5) * 0.08}
+                    className="min-w-[80vw] max-w-[320px] snap-center-child flex-shrink-0"
+                  >
                     <EventCard event={event as unknown as import('@/types/event').Event} />
-                  </div>
+                  </AnimatedSection>
                 ))}
               </div>
 
@@ -415,12 +433,13 @@ export default async function HomePage() {
       {homePage.showGallerySection !== false && (
       <section className="bg-gradient-to-b from-background via-surface to-surface-elevated py-16 sm:py-20 md:py-24">
         <div className="container mx-auto px-4 mb-16">
-          <TextReveal
-            text={homePage.gallerySectionHeading || 'Gallery'}
-            className="text-5xl font-bold text-center text-text-primary mb-4"
-          />
-          <AnimatedSection animation="fadeIn">
-            <p className="text-xl text-center text-text-secondary">
+          <AnimatedSection animation="fadeUp">
+            <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-center text-text-primary mb-4">
+              {homePage.gallerySectionHeading || 'Gallery'}
+            </h2>
+          </AnimatedSection>
+          <AnimatedSection animation="fadeUp" delay={0.1}>
+            <p className="text-lg text-center text-text-secondary">
               {homePage.gallerySectionSubheading || 'Moments from the stage and studio'}
             </p>
           </AnimatedSection>
