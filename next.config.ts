@@ -2,9 +2,13 @@ import type {NextConfig} from 'next'
 
 const nextConfig: NextConfig = {
   async headers() {
+    // Base security headers. X-Frame-Options is SAMEORIGIN so that the Sanity
+    // Studio Presentation tool (hosted at /studio/presentation) can iframe the
+    // public site (hosted at /, same origin). DENY blocks ALL framing including
+    // this same-origin visual-editing use case.
     const securityHeaders = [
       {key: 'X-Content-Type-Options', value: 'nosniff'},
-      {key: 'X-Frame-Options', value: 'DENY'},
+      {key: 'X-Frame-Options', value: 'SAMEORIGIN'},
       {key: 'X-XSS-Protection', value: '1; mode=block'},
       {key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin'},
       {key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()'},
@@ -14,6 +18,13 @@ const nextConfig: NextConfig = {
       },
     ]
 
+    // frame-ancestors is the modern equivalent of X-Frame-Options. Allowing
+    // 'self' + *.vercel.app lets /studio/presentation iframe the public site
+    // even when the studio is accessed on a different Vercel alias than
+    // NEXT_PUBLIC_BASE_URL points to. Also permit Sanity-hosted studios
+    // (*.sanity.studio) in case the studio ever moves off-site.
+    const frameAncestors = "frame-ancestors 'self' https://*.vercel.app https://*.sanity.studio"
+
     return [
       {
         // Sanity Studio needs unsafe-eval for its JS runtime
@@ -22,7 +33,7 @@ const nextConfig: NextConfig = {
           ...securityHeaders,
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.sanity.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io; frame-src 'self'",
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.sanity.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io; frame-src 'self' https://kivett-bednar-lovat.vercel.app https://kivettbednar.com https://*.vercel.app; ${frameAncestors}`,
           },
         ],
       },
@@ -33,7 +44,7 @@ const nextConfig: NextConfig = {
           ...securityHeaders,
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.sanity.io https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://i.scdn.co; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://*.stripe.com; frame-src 'self' https://*.stripe.com https://checkout.stripe.com https://www.youtube.com https://open.spotify.com https://bandcamp.com https://*.bandcamp.com",
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline' cdn.sanity.io https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://i.scdn.co; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://*.stripe.com; frame-src 'self' https://*.stripe.com https://checkout.stripe.com https://www.youtube.com https://open.spotify.com https://bandcamp.com https://*.bandcamp.com; ${frameAncestors}`,
           },
         ],
       },
