@@ -121,15 +121,9 @@ export function EventCard({event, index = 0, fallbackImage}: {event: Event; inde
           )}
         </div>
       ) : (
-        /* Last-resort placeholder when no image and no fallback */
+        /* No-image state — solid surface, content below carries the card */
         <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-surface-elevated via-surface to-background">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center px-8">
-              <Calendar className="w-16 h-16 mx-auto text-accent-primary/30 mb-3" />
-              <p className="text-text-muted/40 text-xs uppercase tracking-widest font-bold">Event Image</p>
-            </div>
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
       )}
 

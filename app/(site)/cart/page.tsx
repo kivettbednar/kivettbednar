@@ -77,14 +77,6 @@ export default function CartPage() {
               initial={{opacity: 0, y: 20}}
               animate={{opacity: 1, y: 0}}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-px bg-accent-primary w-12" />
-                <ShoppingCart className="w-5 h-5 text-accent-primary" />
-                <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">
-                  Shopping Cart
-                </span>
-                <div className="h-px bg-accent-primary w-12" />
-              </div>
               <h1 className="font-bebas text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-wide text-text-primary text-center">
                 Your Cart
               </h1>

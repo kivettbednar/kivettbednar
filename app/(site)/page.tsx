@@ -122,6 +122,12 @@ export default async function HomePage() {
         headingMobileSize={homePage.heroHeadingMobileSize || undefined}
         subheadingTracking={homePage.heroSubheadingTracking ?? undefined}
         subheadingLineHeight={homePage.heroSubheadingLineHeight ?? undefined}
+        nextShow={events?.[0] ? {
+          startDateTime: (events[0] as any).startDateTime,
+          venue: (events[0] as any).venue,
+          city: (events[0] as any).city,
+          timezone: (events[0] as any).timezone,
+        } : null}
       />
 
       {/* Marquee Ticker Band */}
@@ -129,6 +135,55 @@ export default async function HomePage() {
         topItems={(homePage.marqueeTopItems as any)?.length ? (homePage.marqueeTopItems as any) : undefined}
         bottomItems={(homePage.marqueeBottomItems as any)?.length ? (homePage.marqueeBottomItems as any) : undefined}
       />
+
+      {/* Listen / Music Section */}
+      {homePage.showMusicSection !== false && homePage.spotifyArtistId && (
+        <section className="bg-background py-16 md:py-20 border-b border-border">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <AnimatedSection animation="fadeIn">
+                <div className="text-center mb-8">
+                  <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary">
+                    {homePage.musicSectionHeading || 'Listen'}
+                  </h2>
+                  {homePage.musicSectionSubheading && (
+                    <p className="text-text-secondary mt-2">{homePage.musicSectionSubheading}</p>
+                  )}
+                </div>
+              </AnimatedSection>
+              <AnimatedSection animation="fadeUp" delay={0.1}>
+                <div className="rounded-lg overflow-hidden shadow-2xl">
+                  <iframe
+                    title="Spotify player"
+                    src={`https://open.spotify.com/embed/${homePage.spotifyEmbedType || 'artist'}/${homePage.spotifyPlaylistId || homePage.spotifyArtistId}?utm_source=generator&theme=0`}
+                    width="100%"
+                    height="352"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                  />
+                </div>
+              </AnimatedSection>
+              {(homePage.appleMusicUrl || homePage.bandcampUrl) && (
+                <AnimatedSection animation="fadeIn" delay={0.2}>
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm uppercase tracking-[0.2em] text-text-muted">
+                    {homePage.appleMusicUrl && (
+                      <a href={homePage.appleMusicUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent-primary transition-colors">
+                        Apple Music
+                      </a>
+                    )}
+                    {homePage.bandcampUrl && (
+                      <a href={homePage.bandcampUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent-primary transition-colors">
+                        Bandcamp
+                      </a>
+                    )}
+                  </div>
+                </AnimatedSection>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured Video Section - Cinematic Split Layout */}
       <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-surface relative z-10 section-overlap-up">
@@ -338,40 +393,17 @@ export default async function HomePage() {
               </div>
             </AnimatedSection>
 
-            {/* Perfect For + Testimonial side by side */}
-            <div className="grid md:grid-cols-2 gap-8">
-              <AnimatedSection animation="fadeUp" delay={0.25}>
-                <div className="bg-surface-elevated p-5 sm:p-6 md:p-8 text-text-primary h-full">
-                  <h4 className="text-xl font-bold mb-4 text-accent-primary">
-                    {homePage.bookingPerfectForHeading || 'Perfect For'}
-                  </h4>
-                  <ul className="space-y-3">
-                    {(homePage.bookingEventTypes || [
-                      'Blues Festivals & Music Events',
-                      'Private Parties & Celebrations',
-                      'Corporate Events',
-                      'Venue Residencies',
-                    ]).map((eventType: string, index: number) => (
-                      <li key={index} className="flex items-center gap-3">
-                        <span className="text-accent-primary">→</span>
-                        <span>{eventType}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </AnimatedSection>
-              <AnimatedSection animation="fadeUp" delay={0.35}>
-                <div className="bg-surface p-5 sm:p-6 md:p-8 shadow-lg border-l-4 border-accent-primary h-full flex flex-col justify-center relative">
-                  <span className="absolute -top-2 left-4 text-7xl text-accent-primary/20 font-display italic leading-none pointer-events-none select-none">&ldquo;</span>
-                  <p className="text-lg italic text-text-secondary mb-4 pl-2 relative">
-                    {homePage.bookingTestimonialQuote || 'Kivett brings authentic blues energy that connects with every audience. His performance at our festival was unforgettable.'}
-                  </p>
-                  <p className="font-semibold text-text-primary pl-2 relative">
-                    {homePage.bookingTestimonialAttribution || '— Festival Organizer'}
-                  </p>
-                </div>
-              </AnimatedSection>
-            </div>
+            {/* Testimonial — full-width, single moment */}
+            <AnimatedSection animation="fadeUp" delay={0.25}>
+              <figure className="max-w-3xl mx-auto text-center mt-4">
+                <blockquote className="font-display italic text-2xl md:text-3xl text-text-primary leading-snug">
+                  &ldquo;{homePage.bookingTestimonialQuote || 'Kivett brings authentic blues energy that connects with every audience. His performance at our festival was unforgettable.'}&rdquo;
+                </blockquote>
+                <figcaption className="mt-6 text-sm uppercase tracking-[0.2em] text-accent-primary font-bold">
+                  {homePage.bookingTestimonialAttribution || '— Festival Organizer'}
+                </figcaption>
+              </figure>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -424,16 +456,8 @@ export default async function HomePage() {
               </p>
             </AnimatedSection>
 
-            {/* Stacked/overlapping layout */}
-            <div className="relative">
-              {/* Outline text behind */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden="true">
-                <span className="text-outline-gold text-[4rem] sm:text-[8rem] md:text-[16rem] lg:text-[20rem] leading-none opacity-[0.08] whitespace-nowrap">
-                  {(homePage.studioSectionHeading || 'In The Studio').toUpperCase()}
-                </span>
-              </div>
-
-              {/* First video - full width */}
+            {/* Two videos, clean side-by-side */}
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               <AnimatedSection animation="fadeUp" delay={0.2}>
                 <div className="aspect-video relative overflow-hidden shadow-xl film-grain">
                   <iframe
@@ -445,19 +469,15 @@ export default async function HomePage() {
                   />
                 </div>
               </AnimatedSection>
-
-              {/* Second video - overlapping, offset right, smaller */}
               <AnimatedSection animation="fadeUp" delay={0.35}>
-                <div className="relative md:-mt-20 md:ml-auto md:w-3/4 lg:w-2/3 mt-6">
-                  <div className="aspect-video relative overflow-hidden shadow-2xl film-grain border-2 border-accent-primary/20">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${getYouTubeId(homePage.studioVideo2Url || '')}`}
-                      title={homePage.studioVideo2Title || 'Kivett Bednar Studio Session 2'}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="absolute inset-0 w-full h-full"
-                    />
-                  </div>
+                <div className="aspect-video relative overflow-hidden shadow-xl film-grain">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${getYouTubeId(homePage.studioVideo2Url || '')}`}
+                    title={homePage.studioVideo2Title || 'Kivett Bednar Studio Session 2'}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
                 </div>
               </AnimatedSection>
             </div>

@@ -74,12 +74,6 @@ export function RelatedProductsCarousel({
           {/* Header */}
           <div className="flex items-center justify-between mb-12">
             <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-px bg-accent-primary w-12" />
-                <span className="text-accent-primary text-xs uppercase tracking-wider font-bold">
-                  Related Products
-                </span>
-              </div>
               <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary">
                 {title}
               </h2>

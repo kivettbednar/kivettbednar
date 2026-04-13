@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
           ...securityHeaders,
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.sanity.io https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://*.stripe.com; frame-src 'self' https://*.stripe.com https://checkout.stripe.com https://www.youtube.com",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.sanity.io https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://i.scdn.co; font-src 'self' data:; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://*.stripe.com; frame-src 'self' https://*.stripe.com https://checkout.stripe.com https://www.youtube.com https://open.spotify.com https://bandcamp.com https://*.bandcamp.com",
           },
         ],
       },

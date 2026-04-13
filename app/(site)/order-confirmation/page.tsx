@@ -230,12 +230,10 @@ function OrderConfirmationContent() {
               animate={{opacity: 1, y: 0}}
               transition={{delay: 0.4}}
             >
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="h-px bg-accent-primary w-12" />
+              <div className="text-center mb-4">
                 <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">
                   {pageContent?.orderConfirmedLabel || 'Order Confirmed'}
                 </span>
-                <div className="h-px bg-accent-primary w-12" />
               </div>
             </motion.div>
 

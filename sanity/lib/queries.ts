@@ -258,6 +258,14 @@ export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   showGallerySection,
   showStudioVideos,
   showNewsletterSection,
+  showMusicSection,
+  musicSectionHeading,
+  musicSectionSubheading,
+  spotifyArtistId,
+  spotifyPlaylistId,
+  spotifyEmbedType,
+  appleMusicUrl,
+  bandcampUrl,
   seoTitle,
   seoDescription
 }`)
@@ -574,14 +582,14 @@ export const bioQuery = defineQuery(`*[_type == "bio"][0]{
   tagline,
   lastUpdated,
   seoDescription,
-  heroImage{asset->, alt},
+  heroImage{asset->, hotspot, crop, alt},
   content
 }`)
 
 // EPK (Electronic Press Kit) Page
 export const epkPageQuery = defineQuery(`*[_type == "epkPage"][0]{
   _id,
-  heroImage{asset->, alt},
+  heroImage{asset->, hotspot, crop, alt},
   pageIntro,
   genres,
   influencedBy,

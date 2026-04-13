@@ -137,13 +137,11 @@ export default function CheckoutPage() {
               animate={{opacity: 1, y: 0}}
               transition={{delay: 0.1}}
             >
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="h-px bg-accent-primary w-12" />
+              <div className="flex items-center justify-center gap-2 mb-4">
                 <Lock className="w-4 h-4 text-accent-primary" />
                 <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">
                   {(checkoutSettings?.secureCheckoutHeading as string) || 'Secure Checkout'}
                 </span>
-                <div className="h-px bg-accent-primary w-12" />
               </div>
               <h1 className="font-bebas text-5xl md:text-6xl uppercase tracking-wide text-text-primary text-center">
                 {isRedirecting ? 'Redirecting to Payment...' : 'Checkout'}

@@ -12,8 +12,6 @@
  * ---------------------------------------------------------------------------------
  */
 
-export declare const internalGroqTypeReferenceTo: unique symbol;
-
 // Source: schema.json
 export type MusicEmbed = {
   _type: "musicEmbed";
@@ -119,20 +117,8 @@ export type RichText = {
 export type Hero = {
   _type: "hero";
   headline?: string;
-  headlineDesktopSize?:
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl"
-    | "text-8xl"
-    | "text-9xl";
-  headlineMobileSize?:
-    | "text-2xl"
-    | "text-3xl"
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl";
+  headlineDesktopSize?: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl";
+  headlineMobileSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl";
   subhead?: string;
   mediaType?: "image" | "video";
   image?: {
@@ -161,26 +147,8 @@ export type Hero = {
     alt?: string;
     _type: "image";
   };
-  desktopPosition?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "center-left"
-    | "center"
-    | "center-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
-  mobilePosition?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "center-left"
-    | "center"
-    | "center-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
+  desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+  mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
   video?: string;
   ctas?: Array<{
     label?: string;
@@ -418,26 +386,8 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?:
-      | "top left"
-      | "top center"
-      | "top right"
-      | "center left"
-      | "center center"
-      | "center right"
-      | "bottom left"
-      | "bottom center"
-      | "bottom right";
-    mobilePosition?:
-      | "top left"
-      | "top center"
-      | "top right"
-      | "center left"
-      | "center center"
-      | "center right"
-      | "bottom left"
-      | "bottom center"
-      | "bottom right";
+    desktopPosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
+    mobilePosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
     _type: "image";
   };
   heroImage?: {
@@ -451,16 +401,7 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?:
-      | "top left"
-      | "top center"
-      | "top right"
-      | "center left"
-      | "center center"
-      | "center right"
-      | "bottom left"
-      | "bottom center"
-      | "bottom right";
+    desktopPosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
     _type: "image";
   };
   heroImageMobile?: {
@@ -474,16 +415,7 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    mobilePosition?:
-      | "top left"
-      | "top center"
-      | "top right"
-      | "center left"
-      | "center center"
-      | "center right"
-      | "bottom left"
-      | "bottom center"
-      | "bottom right";
+    mobilePosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
     _type: "image";
   };
   description?: BlockContent;
@@ -517,26 +449,8 @@ export type MerchPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
-    mobilePosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   emptyStateHeading?: string;
@@ -687,26 +601,8 @@ export type LessonsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
-    mobilePosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   philosophyHeading?: string;
@@ -798,26 +694,8 @@ export type ShowsPage = {
     alt?: string;
     _type: "image";
   };
-  heroDesktopPosition?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "center-left"
-    | "center"
-    | "center-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
-  heroMobilePosition?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "center-left"
-    | "center"
-    | "center-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
+  heroDesktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+  heroMobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
   performanceGalleryHeading?: string;
   performanceGallerySubheading?: string;
   performanceImages?: Array<{
@@ -878,44 +756,14 @@ export type HomePage = {
       _type: "image";
     };
     alt?: string;
-    desktopPosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
-    mobilePosition?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "center-left"
-      | "center"
-      | "center-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "slide";
     _key: string;
   }>;
   heroHeading?: string;
-  heroHeadingDesktopSize?:
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl"
-    | "text-8xl"
-    | "text-9xl";
-  heroHeadingMobileSize?:
-    | "text-2xl"
-    | "text-3xl"
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl";
+  heroHeadingDesktopSize?: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl";
+  heroHeadingMobileSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl";
   heroSubheading?: string;
   heroTagline?: string;
   aboutHeading?: string;
@@ -1171,14 +1019,7 @@ export type Settings = {
   contactEmail?: string;
   bookingUrl?: string;
   socialLinks?: Array<{
-    platform?:
-      | "facebook"
-      | "instagram"
-      | "youtube"
-      | "twitter"
-      | "spotify"
-      | "soundcloud"
-      | "bandcamp";
+    platform?: "facebook" | "instagram" | "youtube" | "twitter" | "spotify" | "soundcloud" | "bandcamp";
     url?: string;
     _type: "socialLink";
     _key: string;
@@ -1195,35 +1036,25 @@ export type Page = {
   slug?: Slug;
   heading?: string;
   subheading?: string;
-  modules?: Array<
-    | ({
-        _key: string;
-      } & Hero)
-    | ({
-        _key: string;
-      } & RichText)
-    | ({
-        _key: string;
-      } & ImageGallery)
-    | ({
-        _key: string;
-      } & FeatureGrid)
-    | ({
-        _key: string;
-      } & CtaBanner)
-    | ({
-        _key: string;
-      } & VideoEmbed)
-    | ({
-        _key: string;
-      } & MusicEmbed)
-    | ({
-        _key: string;
-      } & CallToAction)
-    | ({
-        _key: string;
-      } & InfoSection)
-  >;
+  modules?: Array<{
+    _key: string;
+  } & Hero | {
+    _key: string;
+  } & RichText | {
+    _key: string;
+  } & ImageGallery | {
+    _key: string;
+  } & FeatureGrid | {
+    _key: string;
+  } & CtaBanner | {
+    _key: string;
+  } & VideoEmbed | {
+    _key: string;
+  } & MusicEmbed | {
+    _key: string;
+  } & CallToAction | {
+    _key: string;
+  } & InfoSection>;
   seo?: {
     title?: string;
     description?: string;
@@ -1308,21 +1139,17 @@ export type SanityAssistInstructionTask = {
 
 export type SanityAssistTaskStatus = {
   _type: "sanity.assist.task.status";
-  tasks?: Array<
-    {
-      _key: string;
-    } & SanityAssistInstructionTask
-  >;
+  tasks?: Array<{
+    _key: string;
+  } & SanityAssistInstructionTask>;
 };
 
 export type SanityAssistSchemaTypeAnnotations = {
   _type: "sanity.assist.schemaType.annotations";
   title?: string;
-  fields?: Array<
-    {
-      _key: string;
-    } & SanityAssistSchemaTypeField
-  >;
+  fields?: Array<{
+    _key: string;
+  } & SanityAssistSchemaTypeField>;
 };
 
 export type SanityAssistOutputType = {
@@ -1375,23 +1202,18 @@ export type SanityAssistInstructionUserInput = {
 };
 
 export type SanityAssistInstructionPrompt = Array<{
-  children?: Array<
-    | {
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }
-    | ({
-        _key: string;
-      } & SanityAssistInstructionFieldRef)
-    | ({
-        _key: string;
-      } & SanityAssistInstructionContext)
-    | ({
-        _key: string;
-      } & SanityAssistInstructionUserInput)
-  >;
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  } | {
+    _key: string;
+  } & SanityAssistInstructionFieldRef | {
+    _key: string;
+  } & SanityAssistInstructionContext | {
+    _key: string;
+  } & SanityAssistInstructionUserInput>;
   style?: "normal";
   listItem?: never;
   markDefs?: null;
@@ -1412,24 +1234,19 @@ export type SanityAssistInstruction = {
   title?: string;
   userId?: string;
   createdById?: string;
-  output?: Array<
-    | ({
-        _key: string;
-      } & SanityAssistOutputField)
-    | ({
-        _key: string;
-      } & SanityAssistOutputType)
-  >;
+  output?: Array<{
+    _key: string;
+  } & SanityAssistOutputField | {
+    _key: string;
+  } & SanityAssistOutputType>;
 };
 
 export type SanityAssistSchemaTypeField = {
   _type: "sanity.assist.schemaType.field";
   path?: string;
-  instructions?: Array<
-    {
-      _key: string;
-    } & SanityAssistInstruction
-  >;
+  instructions?: Array<{
+    _key: string;
+  } & SanityAssistInstruction>;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -1550,59 +1367,9 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes =
-  | MusicEmbed
-  | VideoEmbed
-  | CtaBanner
-  | FeatureGrid
-  | ImageGallery
-  | RichText
-  | Hero
-  | CallToAction
-  | Link
-  | InfoSection
-  | BlockContent
-  | NewsletterSubscriber
-  | Song
-  | Product
-  | Event
-  | MerchPage
-  | SetlistPage
-  | ContactPage
-  | LessonsPage
-  | ShowsPage
-  | HomePage
-  | UiText
-  | Navigation
-  | Settings
-  | Page
-  | Post
-  | Person
-  | SanityAssistInstructionTask
-  | SanityAssistTaskStatus
-  | SanityAssistSchemaTypeAnnotations
-  | SanityAssistOutputType
-  | SanityAssistOutputField
-  | SanityAssistInstructionContext
-  | AssistInstructionContext
-  | SanityAssistInstructionUserInput
-  | SanityAssistInstructionPrompt
-  | SanityAssistInstructionFieldRef
-  | SanityAssistInstruction
-  | SanityAssistSchemaTypeField
-  | SanityImagePaletteSwatch
-  | SanityImagePalette
-  | SanityImageDimensions
-  | SanityImageHotspot
-  | SanityImageCrop
-  | SanityFileAsset
-  | SanityImageAsset
-  | SanityImageMetadata
-  | Geopoint
-  | Slug
-  | SanityAssetSourceData;
-
-// Source: sanity/lib/queries.ts
+export type AllSanitySchemaTypes = MusicEmbed | VideoEmbed | CtaBanner | FeatureGrid | ImageGallery | RichText | Hero | CallToAction | Link | InfoSection | BlockContent | NewsletterSubscriber | Song | Product | Event | MerchPage | SetlistPage | ContactPage | LessonsPage | ShowsPage | HomePage | UiText | Navigation | Settings | Page | Post | Person | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]{  _id,  title,  description,  ogImage{    asset->,    alt,    metadataBase  },  contactEmail,  bookingUrl,  socialLinks[]{    platform,    url  },  showShowsPage,  showLessonsPage,  showSetlistPage,  showAmpsPage,  showMerchPage,  showBioPage,  showEpkPage,  showContactPage}
 export type SettingsQueryResult = {
@@ -1669,15 +1436,7 @@ export type SettingsQueryResult = {
   contactEmail: string | null;
   bookingUrl: string | null;
   socialLinks: Array<{
-    platform:
-      | "bandcamp"
-      | "facebook"
-      | "instagram"
-      | "soundcloud"
-      | "spotify"
-      | "twitter"
-      | "youtube"
-      | null;
+    platform: "bandcamp" | "facebook" | "instagram" | "soundcloud" | "spotify" | "twitter" | "youtube" | null;
     url: string | null;
   }> | null;
   showShowsPage: null;
@@ -1689,13 +1448,9 @@ export type SettingsQueryResult = {
   showEpkPage: null;
   showContactPage: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: storeSettingsQuery
 // Query: *[_type == "storeSettings"][0]{  storeEnabled,  storeName,  siteUrl,  currency,  adminEmail,  emailFromName,  emailFromAddress,  orderConfirmationSubject,  shippingUpdateSubject,  shippingCountries,  processingTime,  returnPolicyDays,  returnPolicyNotes,  contactFormSubject,  fulfillmentFailureSubject,  newOrderSubject,  emailSignature}
 export type StoreSettingsQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: uiTextQuery
 // Query: *[_type == "uiText"][0]{  _id,  siteName,  siteTagline,  navShows,  navLessons,  navSetlist,  navAmps,  navMerch,  navContact,  navBio,  navEpk,  footerBioLabel,  footerEpkLabel,  footerNavigationHeading,  footerConnectHeading,  footerCopyrightText,  formLabelName,  formLabelEmail,  formLabelSubject,  formLabelMessage,  formButtonSubmit,  formButtonSending,  formSuccessHeading,  formSuccessMessage,  formSendAnotherText,  formPlaceholderName,  formPlaceholderEmail,  formPlaceholderSubject,  formPlaceholderMessage,  newsletterButtonText,  newsletterSuccessText,  newsletterPlaceholder,  newsletterDisclaimer,  footerBookingText,  buttonViewSetlist,  buttonScheduleLesson,  buttonBookLesson,  buttonEmailMe,  buttonGetInTouch,  linkSeeAllShows,  linkUpcomingShows,  linkGuitarLessons,  linkBluesSetlist,  showsCountSingular,  showsCountPlural,  upcomingPrefix,  setlistSubtitleSuffix,  socialFacebook,  socialInstagram}
 export type UiTextQueryResult = {
@@ -1749,8 +1504,6 @@ export type UiTextQueryResult = {
   socialFacebook: string | null;
   socialInstagram: string | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: navigationQuery
 // Query: *[_type == "navigation"][0]{  _id,  main[]{    title,    href,    docRef->{      _type,      "slug": slug.current    }  },  footer[]{    title,    href,    docRef->{      _type,      "slug": slug.current    }  }}
 export type NavigationQueryResult = {
@@ -1772,10 +1525,8 @@ export type NavigationQueryResult = {
     } | null;
   }> | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == "homePage"][0]{  _id,  heroSlides[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      alt    },    mobileImage{      asset->{_id, url},      hotspot,      crop,      alt    },    alt,    desktopPosition,    mobilePosition  },  heroHeading,  heroHeadingDesktopSize,  heroHeadingMobileSize,  heroHeadingTracking,  heroHeadingLineHeight,  heroSubheadingTracking,  heroSubheadingLineHeight,  heroSubheading,  heroTagline,  heroButtonText,  marqueeTopItems[]{text, style},  marqueeBottomItems[]{text, style},  aboutHeading,  aboutText,  aboutVerticalLabel,  aboutImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  albumTitle,  albumYear,  albumFormat,  albumDescription,  albumImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  albumFeatures,  ctaLessonsHeading,  ctaLessonsText,  parallaxHeading,  parallaxSubheading,  parallaxImages[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      desktopPosition,      mobilePosition,      alt    },    alt,    position,    offset  },  performanceSectionHeading,  performanceImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  gallerySectionHeading,  gallerySectionSubheading,  galleryImages[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      desktopPosition,      mobilePosition,      alt    },    alt,    width,    height  },  upcomingShowsHeading,  seeAllShowsLinkText,  aboutButtonText,  ctaLessonsButtonText,  featuredVideoHeading,  featuredVideoSubheading,  featuredVideoUrl,  featuredVideoTitle,  bookingSectionHeading,  bookingSectionIntro,  bookingInquiriesHeading,  bookingInquiriesText,  bookingInquiryListHeading,  bookingInquiryItems,  bookingPerfectForHeading,  bookingEventTypes,  bookingTestimonialQuote,  bookingTestimonialAttribution,  studioSectionHeading,  studioSectionSubheading,  studioVideo1Url,  studioVideo2Url,  studioVideo1Title,  studioVideo2Title,  newsletterHeading,  newsletterText,  showAboutSection,  showAlbumSection,  showUpcomingShows,  showLessonsSection,  showBookingSection,  showGallerySection,  showStudioVideos,  showNewsletterSection,  seoTitle,  seoDescription}
+// Query: *[_type == "homePage"][0]{  _id,  heroSlides[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      alt    },    mobileImage{      asset->{_id, url},      hotspot,      crop,      alt    },    alt,    desktopPosition,    mobilePosition  },  heroHeading,  heroHeadingDesktopSize,  heroHeadingMobileSize,  heroHeadingTracking,  heroHeadingLineHeight,  heroSubheadingTracking,  heroSubheadingLineHeight,  heroSubheading,  heroTagline,  heroButtonText,  marqueeTopItems[]{text, style},  marqueeBottomItems[]{text, style},  aboutHeading,  aboutText,  aboutVerticalLabel,  aboutImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  albumTitle,  albumYear,  albumFormat,  albumDescription,  albumImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  albumFeatures,  ctaLessonsHeading,  ctaLessonsText,  parallaxHeading,  parallaxSubheading,  parallaxImages[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      desktopPosition,      mobilePosition,      alt    },    alt,    position,    offset  },  performanceSectionHeading,  performanceImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  gallerySectionHeading,  gallerySectionSubheading,  galleryImages[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      desktopPosition,      mobilePosition,      alt    },    alt,    width,    height  },  upcomingShowsHeading,  seeAllShowsLinkText,  aboutButtonText,  ctaLessonsButtonText,  featuredVideoHeading,  featuredVideoSubheading,  featuredVideoUrl,  featuredVideoTitle,  bookingSectionHeading,  bookingSectionIntro,  bookingInquiriesHeading,  bookingInquiriesText,  bookingInquiryListHeading,  bookingInquiryItems,  bookingPerfectForHeading,  bookingEventTypes,  bookingTestimonialQuote,  bookingTestimonialAttribution,  studioSectionHeading,  studioSectionSubheading,  studioVideo1Url,  studioVideo2Url,  studioVideo1Title,  studioVideo2Title,  newsletterHeading,  newsletterText,  showAboutSection,  showAlbumSection,  showUpcomingShows,  showLessonsSection,  showBookingSection,  showGallerySection,  showStudioVideos,  showNewsletterSection,  showMusicSection,  musicSectionHeading,  musicSectionSubheading,  spotifyArtistId,  spotifyPlaylistId,  spotifyEmbedType,  appleMusicUrl,  bandcampUrl,  seoTitle,  seoDescription}
 export type HomePageQueryResult = {
   _id: string;
   heroSlides: Array<{
@@ -1799,46 +1550,12 @@ export type HomePageQueryResult = {
       alt: null;
     } | null;
     alt: string | null;
-    desktopPosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
-    mobilePosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
   }> | null;
   heroHeading: string | null;
-  heroHeadingDesktopSize:
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl"
-    | "text-8xl"
-    | "text-9xl"
-    | null;
-  heroHeadingMobileSize:
-    | "text-2xl"
-    | "text-3xl"
-    | "text-4xl"
-    | "text-5xl"
-    | "text-6xl"
-    | "text-7xl"
-    | null;
+  heroHeadingDesktopSize: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl" | null;
+  heroHeadingMobileSize: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | null;
   heroHeadingTracking: null;
   heroHeadingLineHeight: null;
   heroSubheadingTracking: null;
@@ -1964,11 +1681,17 @@ export type HomePageQueryResult = {
   showGallerySection: boolean | null;
   showStudioVideos: boolean | null;
   showNewsletterSection: boolean | null;
+  showMusicSection: null;
+  musicSectionHeading: null;
+  musicSectionSubheading: null;
+  spotifyArtistId: null;
+  spotifyPlaylistId: null;
+  spotifyEmbedType: null;
+  appleMusicUrl: null;
+  bandcampUrl: null;
   seoTitle: null;
   seoDescription: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: lessonsPageQuery
 // Query: *[_type == "lessonsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  stats[]{    _key,    label,    value,    suffix  },  philosophyHeading,  philosophyText,  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  learningItemsHeading,  learningItems[]{    _key,    title,    description  },  ctaBoxHeading,  ctaBoxText,  credentials,  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  emailButtonText,  scheduleButtonText,  testimonialQuote,  testimonialAttribution,  packagesHeading,  packagesSubheading,  packagesCtaText,  seoTitle,  seoDescription}
 export type LessonsPageQueryResult = {
@@ -1982,28 +1705,8 @@ export type LessonsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
-    mobilePosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   stats: null;
@@ -2061,8 +1764,6 @@ export type LessonsPageQueryResult = {
   seoTitle: null;
   seoDescription: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: contactPageQuery
 // Query: *[_type == "contactPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitGallery[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}  },  formHeading,  directContactHeading,  directContactDescription,  socialHeading,  quickLinksHeading,  aboutHeading,  quickLinkShowsText,  quickLinkLessonsText,  quickLinkSetlistText,  ctaSectionHeading,  ctaSectionText,  ctaSectionButtonText,  locationMapQuery,  connectHeading,  bookingCardTitle,  bookingCardDescription,  bookingCardLinkText,  lessonsCardTitle,  lessonsCardDescription,  lessonsCardLinkText,  locationCardTitle,  locationCardRegion,  locationCardDescription,  locationCardLinkText,  socialSubheading,  seoTitle,  seoDescription}
 export type ContactPageQueryResult = {
@@ -2133,8 +1834,6 @@ export type ContactPageQueryResult = {
   seoTitle: null;
   seoDescription: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: setlistPageQuery
 // Query: *[_type == "setlistPage"][0]{  _id,  heroHeading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  introText,  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  ctaHeading,  ctaText,  ctaBookLessonButtonText,  ctaContactButtonText,  subtitleSuffix,  repertoireHeading,  songCountSummaryText,  requestHeading,  requestText,  requestButtonText,  statsLabel1,  statsLabel2,  statsLabel3,  statsValue3,  seoTitle,  seoDescription}
 export type SetlistPageQueryResult = {
@@ -2191,8 +1890,6 @@ export type SetlistPageQueryResult = {
   seoTitle: null;
   seoDescription: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: showsPageQuery
 // Query: *[_type == "showsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceGalleryHeading,  performanceGallerySubheading,  performanceImages[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},    alt,    caption  },  upcomingShowsHeading,  emptyStateHeading,  emptyStateText,  showCountPrefix,  showSingular,  showPlural,  statsLabel1,  statsLabel2,  statsLabel3,  eventDetailsLabel,  dateTimeLabel,  venueLabel,  viewOnMapText,  getTicketsText,  soldOutText,  backToShowsText,  shareEventText,  importantInfoText,  canceledBadgeText,  soldOutBadgeText,  canceledMessageText,  seoTitle,  seoDescription,  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}}
 export type ShowsPageQueryResult = {
@@ -2264,8 +1961,6 @@ export type ShowsPageQueryResult = {
   seoDescription: null;
   defaultEventImage: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: merchPageQuery
 // Query: *[_type == "merchPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  emptyStateHeading,  emptyStateText,  emptyStateButton1Text,  emptyStateButton1Link,  emptyStateButton2Text,  emptyStateButton2Link,  contentHeading,  contentSubheading,  trustBadges[]{    _key,    title,    description,    icon  },  seoTitle,  seoDescription}
 export type MerchPageQueryResult = {
@@ -2279,28 +1974,8 @@ export type MerchPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
-    mobilePosition:
-      | "bottom-center"
-      | "bottom-left"
-      | "bottom-right"
-      | "center-left"
-      | "center-right"
-      | "center"
-      | "top-center"
-      | "top-left"
-      | "top-right"
-      | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   emptyStateHeading: string | null;
@@ -2315,63 +1990,39 @@ export type MerchPageQueryResult = {
   seoTitle: null;
   seoDescription: null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: ampsPageQuery
 // Query: *[_type == "ampsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{    asset->,    alt  },  showcaseHeading,  showcaseText,  craftsmanshipHeading,  craftsmanshipText,  craftsmanshipImage{    asset->,    alt  },  shopHeading,  shopSubheading,  emptyStateHeading,  emptyStateText,  seoTitle,  seoDescription}
 export type AmpsPageQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: ampsProductsQuery
 // Query: *[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type AmpsProductsQueryResult = Array<never>;
-
-// Source: sanity/lib/queries.ts
 // Variable: allLessonPackagesQuery
 // Query: *[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active}
 export type AllLessonPackagesQueryResult = Array<never>;
-
-// Source: sanity/lib/queries.ts
 // Variable: lessonPackageBySlugQuery
 // Query: *[_type == "lessonPackage" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  description,  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active,  seoTitle,  seoDescription}
 export type LessonPackageBySlugQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: privacyPolicyQuery
 // Query: *[_type == "privacyPolicy"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
 export type PrivacyPolicyQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: termsOfServiceQuery
 // Query: *[_type == "termsOfService"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
 export type TermsOfServiceQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: returnsPolicyQuery
 // Query: *[_type == "returnsPolicy"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
 export type ReturnsPolicyQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: bioQuery
-// Query: *[_type == "bio"][0]{  _id,  pageTitle,  tagline,  lastUpdated,  seoDescription,  heroImage{asset->, alt},  content}
+// Query: *[_type == "bio"][0]{  _id,  pageTitle,  tagline,  lastUpdated,  seoDescription,  heroImage{asset->, hotspot, crop, alt},  content}
 export type BioQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: epkPageQuery
-// Query: *[_type == "epkPage"][0]{  _id,  heroImage{asset->, alt},  pageIntro,  genres,  influencedBy,  shortBio,  longBio,  bookingContactName,  bookingContactEmail,  bookingContactPhone,  bookingNotes,  pressPhotos[]{    _key,    asset->,    alt,    caption,    credit  },  videos[]{    _key,    title,    url,    description  },  pressQuotes[]{    _key,    quote,    source,    sourceUrl,    logo{asset->, alt}  },  notableShows[]{    _key,    venue,    city,    date,    event  },  stagePlotPdf{asset->{url, originalFilename}},  techRiderPdf{asset->{url, originalFilename}},  fullPressKitPdf{asset->{url, originalFilename}},  onesheet{asset->{url, originalFilename}},  seoTitle,  seoDescription}
+// Query: *[_type == "epkPage"][0]{  _id,  heroImage{asset->, hotspot, crop, alt},  pageIntro,  genres,  influencedBy,  shortBio,  longBio,  bookingContactName,  bookingContactEmail,  bookingContactPhone,  bookingNotes,  pressPhotos[]{    _key,    asset->,    alt,    caption,    credit  },  videos[]{    _key,    title,    url,    description  },  pressQuotes[]{    _key,    quote,    source,    sourceUrl,    logo{asset->, alt}  },  notableShows[]{    _key,    venue,    city,    date,    event  },  stagePlotPdf{asset->{url, originalFilename}},  techRiderPdf{asset->{url, originalFilename}},  fullPressKitPdf{asset->{url, originalFilename}},  onesheet{asset->{url, originalFilename}},  seoTitle,  seoDescription}
 export type EpkPageQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: checkoutSettingsQuery
 // Query: *[_type == "checkoutSettings"][0]{  _id,  trustBadges[]{    _key,    title,    description,    icon  },  deliveryEstimateText,  secureCheckoutText,  cartHeading,  cartEmptyHeading,  cartEmptyText,  cartEmptyButtonText,  secureCheckoutHeading,  redirectingHeading,  redirectingText,  redirectingSubtext,  orderSummaryHeading,  returnToCartText,  sslEncryptionText,  checkoutUnavailableHeading}
 export type CheckoutSettingsQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: orderConfirmationPageQuery
 // Query: *[_type == "orderConfirmationPage"][0]{  _id,  thankYouHeading,  orderConfirmedLabel,  orderReceivedText,  whatsNextHeading,  nextStepEmail,  nextStepShipping,  nextStepTracking,  continueShoppingText,  viewShowsText,  noOrderHeading,  noOrderText}
 export type OrderConfirmationPageQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: allSongsQuery
 // Query: *[_type == "song"] | order(order asc){  _id,  title,  key,  artist,  notes,  order}
 export type AllSongsQueryResult = Array<{
@@ -2382,8 +2033,6 @@ export type AllSongsQueryResult = Array<{
   notes: string | null;
   order: number | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: pageBySlugQuery
 // Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  name,  heading,  subheading,  modules[]{      _type,  _key,  _type == "hero" => {    headline,    headlineDesktopSize,    headlineMobileSize,    headlineTracking,    headlineLineHeight,    subhead,    subheadTracking,    subheadLineHeight,    mediaType,    image{asset->, hotspot, crop, alt},    mobileImage{asset->, hotspot, crop, alt},    desktopPosition,    mobilePosition,    video,    backgroundVariant,    sectionPadding,    ctas[]{label, href, variant}  },  _type == "richText" => {    content,    backgroundVariant,    sectionPadding  },  _type == "imageGallery" => {    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},    backgroundVariant,    sectionPadding  },  _type == "featureGrid" => {    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},    backgroundVariant,    sectionPadding  },  _type == "ctaBanner" => {    heading,    headingTracking,    headingLineHeight,    body,    backgroundVariant,    sectionPadding,    cta{label, href}  },  _type == "videoEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "musicEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "testimonials" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      name,      role,      quote,      image{asset->, hotspot, crop, alt}    },    backgroundVariant,    sectionPadding  },  _type == "faq" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      question,      answer    },    backgroundVariant,    sectionPadding  },  _type == "callToAction" => @,  _type == "infoSection" => @  },  seo{    title,    description,    ogImage{asset->}  }}
 export type PageBySlugQueryResult = {
@@ -2392,325 +2041,265 @@ export type PageBySlugQueryResult = {
   name: string | null;
   heading: string | null;
   subheading: string | null;
-  modules: Array<
-    | {
-        _type: "callToAction";
-        _key: string;
-        heading?: string;
+  modules: Array<{
+    _type: "callToAction";
+    _key: string;
+    heading?: string;
+    text?: string;
+    buttonText?: string;
+    link?: Link;
+  } | {
+    _type: "ctaBanner";
+    _key: string;
+    heading: string | null;
+    headingTracking: null;
+    headingLineHeight: null;
+    body: string | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+    cta: {
+      label: string | null;
+      href: string | null;
+    } | null;
+  } | {
+    _type: "featureGrid";
+    _key: string;
+    items: Array<{
+      title: string | null;
+      body: string | null;
+      iconType: "icon" | "image" | null;
+      icon: string | null;
+      image: {
+        asset: {
+          _id: string;
+          _type: "sanity.imageAsset";
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          originalFilename?: string;
+          label?: string;
+          title?: string;
+          description?: string;
+          altText?: string;
+          sha1hash?: string;
+          extension?: string;
+          mimeType?: string;
+          size?: number;
+          assetId?: string;
+          uploadId?: string;
+          path?: string;
+          url?: string;
+          metadata?: SanityImageMetadata;
+          source?: SanityAssetSourceData;
+        } | null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+        desktopPosition: null;
+        mobilePosition: null;
+      } | null;
+    }> | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+  } | {
+    _type: "hero";
+    _key: string;
+    headline: string | null;
+    headlineDesktopSize: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl" | null;
+    headlineMobileSize: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | null;
+    headlineTracking: null;
+    headlineLineHeight: null;
+    subhead: string | null;
+    subheadTracking: null;
+    subheadLineHeight: null;
+    mediaType: "image" | "video" | null;
+    image: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      alt: string | null;
+    } | null;
+    mobileImage: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      alt: string | null;
+    } | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    video: string | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+    ctas: Array<{
+      label: string | null;
+      href: string | null;
+      variant: "outline" | "primary" | "secondary" | null;
+    }> | null;
+  } | {
+    _type: "imageGallery";
+    _key: string;
+    images: Array<{
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      desktopPosition: null;
+      mobilePosition: null;
+      alt: string | null;
+      caption: string | null;
+    }> | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+  } | {
+    _type: "infoSection";
+    _key: string;
+    heading?: string;
+    subheading?: string;
+    content?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
         text?: string;
-        buttonText?: string;
-        link?: Link;
-      }
-    | {
-        _type: "ctaBanner";
+        _type: "span";
         _key: string;
-        heading: string | null;
-        headingTracking: null;
-        headingLineHeight: null;
-        body: string | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-        cta: {
-          label: string | null;
-          href: string | null;
-        } | null;
-      }
-    | {
-        _type: "featureGrid";
+      }>;
+      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        linkType?: "href" | "page" | "post";
+        href?: string;
+        page?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "page";
+        };
+        post?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "post";
+        };
+        openInNewTab?: boolean;
+        _type: "link";
         _key: string;
-        items: Array<{
-          title: string | null;
-          body: string | null;
-          iconType: "icon" | "image" | null;
-          icon: string | null;
-          image: {
-            asset: {
-              _id: string;
-              _type: "sanity.imageAsset";
-              _createdAt: string;
-              _updatedAt: string;
-              _rev: string;
-              originalFilename?: string;
-              label?: string;
-              title?: string;
-              description?: string;
-              altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
-              uploadId?: string;
-              path?: string;
-              url?: string;
-              metadata?: SanityImageMetadata;
-              source?: SanityAssetSourceData;
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-            desktopPosition: null;
-            mobilePosition: null;
-          } | null;
-        }> | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-      }
-    | {
-        _type: "hero";
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  } | {
+    _type: "musicEmbed";
+    _key: string;
+    provider: "bandcamp" | "spotify" | "youtube" | null;
+    url: string | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+  } | {
+    _type: "richText";
+    _key: string;
+    content: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
         _key: string;
-        headline: string | null;
-        headlineDesktopSize:
-          | "text-4xl"
-          | "text-5xl"
-          | "text-6xl"
-          | "text-7xl"
-          | "text-8xl"
-          | "text-9xl"
-          | null;
-        headlineMobileSize:
-          | "text-2xl"
-          | "text-3xl"
-          | "text-4xl"
-          | "text-5xl"
-          | "text-6xl"
-          | "text-7xl"
-          | null;
-        headlineTracking: null;
-        headlineLineHeight: null;
-        subhead: string | null;
-        subheadTracking: null;
-        subheadLineHeight: null;
-        mediaType: "image" | "video" | null;
-        image: {
-          asset: {
-            _id: string;
-            _type: "sanity.imageAsset";
-            _createdAt: string;
-            _updatedAt: string;
-            _rev: string;
-            originalFilename?: string;
-            label?: string;
-            title?: string;
-            description?: string;
-            altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
-            uploadId?: string;
-            path?: string;
-            url?: string;
-            metadata?: SanityImageMetadata;
-            source?: SanityAssetSourceData;
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-          alt: string | null;
-        } | null;
-        mobileImage: {
-          asset: {
-            _id: string;
-            _type: "sanity.imageAsset";
-            _createdAt: string;
-            _updatedAt: string;
-            _rev: string;
-            originalFilename?: string;
-            label?: string;
-            title?: string;
-            description?: string;
-            altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
-            uploadId?: string;
-            path?: string;
-            url?: string;
-            metadata?: SanityImageMetadata;
-            source?: SanityAssetSourceData;
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-          alt: string | null;
-        } | null;
-        desktopPosition:
-          | "bottom-center"
-          | "bottom-left"
-          | "bottom-right"
-          | "center-left"
-          | "center-right"
-          | "center"
-          | "top-center"
-          | "top-left"
-          | "top-right"
-          | null;
-        mobilePosition:
-          | "bottom-center"
-          | "bottom-left"
-          | "bottom-right"
-          | "center-left"
-          | "center-right"
-          | "center"
-          | "top-center"
-          | "top-left"
-          | "top-right"
-          | null;
-        video: string | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-        ctas: Array<{
-          label: string | null;
-          href: string | null;
-          variant: "outline" | "primary" | "secondary" | null;
-        }> | null;
-      }
-    | {
-        _type: "imageGallery";
+      }>;
+      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        linkType?: "href" | "page" | "post";
+        href?: string;
+        page?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "page";
+        };
+        post?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "post";
+        };
+        openInNewTab?: boolean;
+        _type: "link";
         _key: string;
-        images: Array<{
-          asset: {
-            _id: string;
-            _type: "sanity.imageAsset";
-            _createdAt: string;
-            _updatedAt: string;
-            _rev: string;
-            originalFilename?: string;
-            label?: string;
-            title?: string;
-            description?: string;
-            altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
-            uploadId?: string;
-            path?: string;
-            url?: string;
-            metadata?: SanityImageMetadata;
-            source?: SanityAssetSourceData;
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-          desktopPosition: null;
-          mobilePosition: null;
-          alt: string | null;
-          caption: string | null;
-        }> | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-      }
-    | {
-        _type: "infoSection";
-        _key: string;
-        heading?: string;
-        subheading?: string;
-        content?: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            linkType?: "href" | "page" | "post";
-            href?: string;
-            page?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "page";
-            };
-            post?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "post";
-            };
-            openInNewTab?: boolean;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }>;
-      }
-    | {
-        _type: "musicEmbed";
-        _key: string;
-        provider: "bandcamp" | "spotify" | "youtube" | null;
-        url: string | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-      }
-    | {
-        _type: "richText";
-        _key: string;
-        content: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            linkType?: "href" | "page" | "post";
-            href?: string;
-            page?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "page";
-            };
-            post?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "post";
-            };
-            openInNewTab?: boolean;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }> | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-      }
-    | {
-        _type: "videoEmbed";
-        _key: string;
-        provider: "vimeo" | "youtube" | null;
-        url: string | null;
-        backgroundVariant: null;
-        sectionPadding: null;
-      }
-  > | null;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+  } | {
+    _type: "videoEmbed";
+    _key: string;
+    provider: "vimeo" | "youtube" | null;
+    url: string | null;
+    backgroundVariant: null;
+    sectionPadding: null;
+  }> | null;
   seo: {
     title: string | null;
     description: string | null;
@@ -2740,15 +2329,11 @@ export type PageBySlugQueryResult = {
     } | null;
   } | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: pagesSlugs
 // Query: *[_type == "page" && defined(slug.current)]{  "slug": slug.current}
 export type PagesSlugsResult = Array<{
   slug: string | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: upcomingEventsQuery
 // Query: *[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  isCanceled,  isSoldOut}
 export type UpcomingEventsQueryResult = Array<{
@@ -2791,35 +2376,13 @@ export type UpcomingEventsQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
-    mobilePosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
+    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
     alt: string | null;
   } | null;
   isCanceled: boolean | null;
   isSoldOut: boolean | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: pastEventsQuery
 // Query: *[_type == "event" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{  _id,  title,  startDateTime,  timezone,  venue,  city,  state,  country,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}}
 export type PastEventsQueryResult = Array<{
@@ -2856,33 +2419,11 @@ export type PastEventsQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
-    mobilePosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
+    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
     alt: string | null;
   } | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: eventsByMonthQuery
 // Query: *[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){  _id,  title,  startDateTime,  timezone,  venue,  city,  ticketUrl,  isCanceled,  isSoldOut}
 export type EventsByMonthQueryResult = Array<{
@@ -2896,8 +2437,6 @@ export type EventsByMonthQueryResult = Array<{
   isCanceled: boolean | null;
   isSoldOut: boolean | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: eventBySlugQuery
 // Query: *[_type == "event" && (slug.current == $slug || _id == $slug)][0]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  heroImage{asset->, hotspot, crop, desktopPosition, alt},  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},  lineup[]{name, role, bio},  specialNotes,  isCanceled,  isSoldOut}
 export type EventBySlugQueryResult = {
@@ -2940,28 +2479,8 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
-    mobilePosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
+    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
     alt: string | null;
   } | null;
   heroImage: {
@@ -2989,17 +2508,7 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
+    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
     alt: string | null;
   } | null;
   heroImageMobile: {
@@ -3027,17 +2536,7 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    mobilePosition:
-      | "bottom center"
-      | "bottom left"
-      | "bottom right"
-      | "center center"
-      | "center left"
-      | "center right"
-      | "top center"
-      | "top left"
-      | "top right"
-      | null;
+    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
     alt: string | null;
   } | null;
   lineup: Array<{
@@ -3049,15 +2548,11 @@ export type EventBySlugQueryResult = {
   isCanceled: boolean | null;
   isSoldOut: boolean | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: eventsSlugs
 // Query: *[_type == "event"]{  "slug": coalesce(slug.current, _id)}
 export type EventsSlugsResult = Array<{
   slug: string;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: allProductsQuery
 // Query: *[_type == "product"] | order(featured desc, _createdAt desc){  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type AllProductsQueryResult = Array<{
@@ -3093,8 +2588,6 @@ export type AllProductsQueryResult = Array<{
   lowStockThreshold: null;
   hasOptions: boolean | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: productBySlugQuery
 // Query: *[_type == "product" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  description,  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  availableDate,  materials,  careInstructions,  dimensions,  options[]{name, values},  variants[]{optionValues, priceCents, sku},  gelatoProductUid,  printAreas[]{areaName, artwork{asset->}},  shippingNotes,  relatedProducts[]->{    _id,    title,    "slug": slug.current,    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    badges  },  seo{title, description, ogImage{asset->}}}
 export type ProductBySlugQueryResult = {
@@ -3219,15 +2712,11 @@ export type ProductBySlugQueryResult = {
     } | null;
   } | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: productSlugsQuery
 // Query: *[_type == "product" && defined(slug.current)]{  "slug": slug.current}
 export type ProductSlugsQueryResult = Array<{
   slug: string | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: relatedProductsByCategoryQuery
 // Query: *[_type == "product" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  stockStatus,  badges,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type RelatedProductsByCategoryQueryResult = Array<{
@@ -3260,13 +2749,9 @@ export type RelatedProductsByCategoryQueryResult = Array<{
   lowStockThreshold: null;
   hasOptions: boolean | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: featuredProductsQuery
 // Query: *[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type FeaturedProductsQueryResult = Array<never>;
-
-// Source: sanity/lib/queries.ts
 // Variable: productSearchQuery
 // Query: *[_type == "product" && (  title match $searchTerm  || category match $searchTerm  || tags[] match $searchTerm)] | order(_score desc, _createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  badges,  tags}
 export type ProductSearchQueryResult = Array<{
@@ -3311,23 +2796,15 @@ export type ProductSearchQueryResult = Array<{
   badges: null;
   tags: null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: allCollectionsQuery
 // Query: *[_type == "productCollection"] | order(displayOrder asc, _createdAt desc){  _id,  title,  "slug": slug.current,  description,  image{asset->, alt},  featured,  displayOrder,  "productSlugs": products[]->slug.current}
 export type AllCollectionsQueryResult = Array<never>;
-
-// Source: sanity/lib/queries.ts
 // Variable: collectionBySlugQuery
 // Query: *[_type == "productCollection" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  description,  image{asset->, alt},  "products": products[]->{    _id,    title,    "slug": slug.current,    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    stockStatus,    featured,    badges,    tags,    inventoryQuantity,    trackInventory,    lowStockThreshold  }}
 export type CollectionBySlugQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: promoCodeByCodeQuery
 // Query: *[_type == "promoCode" && code == $code && active == true][0]{  _id,  code,  description,  discountType,  discountValue,  minimumPurchaseCents,  maxUses,  currentUses,  validFrom,  validUntil,  applicableProducts[]->{_id, title},  applicableCategories}
 export type PromoCodeByCodeQueryResult = null;
-
-// Source: sanity/lib/queries.ts
 // Variable: postQuery
 // Query: *[_type == "post" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  content,  date,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  author->{firstName, lastName, picture{asset->}}}
 export type PostQueryResult = {
@@ -3395,15 +2872,11 @@ export type PostQueryResult = {
     } | null;
   } | null;
 } | null;
-
-// Source: sanity/lib/queries.ts
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]{  "slug": slug.current}
 export type PostPagesSlugsResult = Array<{
   slug: string | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: allPostsQuery
 // Query: *[_type == "post"] | order(date desc){  _id,  title,  "slug": slug.current,  excerpt,  date,  author->{firstName, lastName}}
 export type AllPostsQueryResult = Array<{
@@ -3417,8 +2890,6 @@ export type AllPostsQueryResult = Array<{
     lastName: string | null;
   } | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: morePostsQuery
 // Query: *[_type == "post" && _id != $skip] | order(date desc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  date,  author->{firstName, lastName}}
 export type MorePostsQueryResult = Array<{
@@ -3432,81 +2903,74 @@ export type MorePostsQueryResult = Array<{
     lastName: string | null;
   } | null;
 }>;
-
-// Source: sanity/lib/queries.ts
 // Variable: sitemapQuery
 // Query: *[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
-export type SitemapQueryResult = Array<
-  | {
-      slug: string | null;
-      _type: "event";
-      _updatedAt: string;
-      startDateTime: string | null;
-      isCanceled: boolean | null;
-    }
-  | {
-      slug: string | null;
-      _type: "page";
-      _updatedAt: string;
-    }
-  | {
-      slug: string | null;
-      _type: "post";
-      _updatedAt: string;
-    }
-  | {
-      slug: string | null;
-      _type: "product";
-      _updatedAt: string;
-    }
->;
+export type SitemapQueryResult = Array<{
+  slug: string | null;
+  _type: "event";
+  _updatedAt: string;
+  startDateTime: string | null;
+  isCanceled: boolean | null;
+} | {
+  slug: string | null;
+  _type: "page";
+  _updatedAt: string;
+} | {
+  slug: string | null;
+  _type: "post";
+  _updatedAt: string;
+} | {
+  slug: string | null;
+  _type: "product";
+  _updatedAt: string;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type == "settings"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt,\n    metadataBase\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showAmpsPage,\n  showMerchPage,\n  showBioPage,\n  showEpkPage,\n  showContactPage\n}': SettingsQueryResult;
-    '*[_type == "storeSettings"][0]{\n  storeEnabled,\n  storeName,\n  siteUrl,\n  currency,\n  adminEmail,\n  emailFromName,\n  emailFromAddress,\n  orderConfirmationSubject,\n  shippingUpdateSubject,\n  shippingCountries,\n  processingTime,\n  returnPolicyDays,\n  returnPolicyNotes,\n  contactFormSubject,\n  fulfillmentFailureSubject,\n  newOrderSubject,\n  emailSignature\n}': StoreSettingsQueryResult;
-    '*[_type == "uiText"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navAmps,\n  navMerch,\n  navContact,\n  navBio,\n  navEpk,\n  footerBioLabel,\n  footerEpkLabel,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessHeading,\n  formSuccessMessage,\n  formSendAnotherText,\n  formPlaceholderName,\n  formPlaceholderEmail,\n  formPlaceholderSubject,\n  formPlaceholderMessage,\n  newsletterButtonText,\n  newsletterSuccessText,\n  newsletterPlaceholder,\n  newsletterDisclaimer,\n  footerBookingText,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}': UiTextQueryResult;
-    '*[_type == "navigation"][0]{\n  _id,\n  main[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      "slug": slug.current\n    }\n  },\n  footer[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      "slug": slug.current\n    }\n  }\n}': NavigationQueryResult;
-    '*[_type == "homePage"][0]{\n  _id,\n  heroSlides[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    mobileImage{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    alt,\n    desktopPosition,\n    mobilePosition\n  },\n  heroHeading,\n  heroHeadingDesktopSize,\n  heroHeadingMobileSize,\n  heroHeadingTracking,\n  heroHeadingLineHeight,\n  heroSubheadingTracking,\n  heroSubheadingLineHeight,\n  heroSubheading,\n  heroTagline,\n  heroButtonText,\n  marqueeTopItems[]{text, style},\n  marqueeBottomItems[]{text, style},\n  aboutHeading,\n  aboutText,\n  aboutVerticalLabel,\n  aboutImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumTitle,\n  albumYear,\n  albumFormat,\n  albumDescription,\n  albumImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumFeatures,\n  ctaLessonsHeading,\n  ctaLessonsText,\n  parallaxHeading,\n  parallaxSubheading,\n  parallaxImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    position,\n    offset\n  },\n  performanceSectionHeading,\n  performanceImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  gallerySectionHeading,\n  gallerySectionSubheading,\n  galleryImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    width,\n    height\n  },\n  upcomingShowsHeading,\n  seeAllShowsLinkText,\n  aboutButtonText,\n  ctaLessonsButtonText,\n  featuredVideoHeading,\n  featuredVideoSubheading,\n  featuredVideoUrl,\n  featuredVideoTitle,\n  bookingSectionHeading,\n  bookingSectionIntro,\n  bookingInquiriesHeading,\n  bookingInquiriesText,\n  bookingInquiryListHeading,\n  bookingInquiryItems,\n  bookingPerfectForHeading,\n  bookingEventTypes,\n  bookingTestimonialQuote,\n  bookingTestimonialAttribution,\n  studioSectionHeading,\n  studioSectionSubheading,\n  studioVideo1Url,\n  studioVideo2Url,\n  studioVideo1Title,\n  studioVideo2Title,\n  newsletterHeading,\n  newsletterText,\n  showAboutSection,\n  showAlbumSection,\n  showUpcomingShows,\n  showLessonsSection,\n  showBookingSection,\n  showGallerySection,\n  showStudioVideos,\n  showNewsletterSection,\n  seoTitle,\n  seoDescription\n}': HomePageQueryResult;
-    '*[_type == "lessonsPage"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  stats[]{\n    _key,\n    label,\n    value,\n    suffix\n  },\n  philosophyHeading,\n  philosophyText,\n  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  learningItemsHeading,\n  learningItems[]{\n    _key,\n    title,\n    description\n  },\n  ctaBoxHeading,\n  ctaBoxText,\n  credentials,\n  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emailButtonText,\n  scheduleButtonText,\n  testimonialQuote,\n  testimonialAttribution,\n  packagesHeading,\n  packagesSubheading,\n  packagesCtaText,\n  seoTitle,\n  seoDescription\n}': LessonsPageQueryResult;
-    '*[_type == "contactPage"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitGallery[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}\n  },\n  formHeading,\n  directContactHeading,\n  directContactDescription,\n  socialHeading,\n  quickLinksHeading,\n  aboutHeading,\n  quickLinkShowsText,\n  quickLinkLessonsText,\n  quickLinkSetlistText,\n  ctaSectionHeading,\n  ctaSectionText,\n  ctaSectionButtonText,\n  locationMapQuery,\n  connectHeading,\n  bookingCardTitle,\n  bookingCardDescription,\n  bookingCardLinkText,\n  lessonsCardTitle,\n  lessonsCardDescription,\n  lessonsCardLinkText,\n  locationCardTitle,\n  locationCardRegion,\n  locationCardDescription,\n  locationCardLinkText,\n  socialSubheading,\n  seoTitle,\n  seoDescription\n}': ContactPageQueryResult;
-    '*[_type == "setlistPage"][0]{\n  _id,\n  heroHeading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  introText,\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  ctaHeading,\n  ctaText,\n  ctaBookLessonButtonText,\n  ctaContactButtonText,\n  subtitleSuffix,\n  repertoireHeading,\n  songCountSummaryText,\n  requestHeading,\n  requestText,\n  requestButtonText,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  statsValue3,\n  seoTitle,\n  seoDescription\n}': SetlistPageQueryResult;
-    '*[_type == "showsPage"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}': ShowsPageQueryResult;
-    '*[_type == "merchPage"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButton1Text,\n  emptyStateButton1Link,\n  emptyStateButton2Text,\n  emptyStateButton2Link,\n  contentHeading,\n  contentSubheading,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  seoTitle,\n  seoDescription\n}': MerchPageQueryResult;
-    '*[_type == "ampsPage"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  seoTitle,\n  seoDescription\n}': AmpsPageQueryResult;
-    '*[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": images[0]{\n    "asset": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  "hasOptions": count(options) > 0\n}': AmpsProductsQueryResult;
-    '*[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active\n}': AllLessonPackagesQueryResult;
-    '*[_type == "lessonPackage" && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  description,\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active,\n  seoTitle,\n  seoDescription\n}': LessonPackageBySlugQueryResult;
-    '*[_type == "privacyPolicy"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}': PrivacyPolicyQueryResult;
-    '*[_type == "termsOfService"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}': TermsOfServiceQueryResult;
-    '*[_type == "returnsPolicy"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}': ReturnsPolicyQueryResult;
-    '*[_type == "bio"][0]{\n  _id,\n  pageTitle,\n  tagline,\n  lastUpdated,\n  seoDescription,\n  heroImage{asset->, alt},\n  content\n}': BioQueryResult;
-    '*[_type == "epkPage"][0]{\n  _id,\n  heroImage{asset->, alt},\n  pageIntro,\n  genres,\n  influencedBy,\n  shortBio,\n  longBio,\n  bookingContactName,\n  bookingContactEmail,\n  bookingContactPhone,\n  bookingNotes,\n  pressPhotos[]{\n    _key,\n    asset->,\n    alt,\n    caption,\n    credit\n  },\n  videos[]{\n    _key,\n    title,\n    url,\n    description\n  },\n  pressQuotes[]{\n    _key,\n    quote,\n    source,\n    sourceUrl,\n    logo{asset->, alt}\n  },\n  notableShows[]{\n    _key,\n    venue,\n    city,\n    date,\n    event\n  },\n  stagePlotPdf{asset->{url, originalFilename}},\n  techRiderPdf{asset->{url, originalFilename}},\n  fullPressKitPdf{asset->{url, originalFilename}},\n  onesheet{asset->{url, originalFilename}},\n  seoTitle,\n  seoDescription\n}': EpkPageQueryResult;
-    '*[_type == "checkoutSettings"][0]{\n  _id,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  deliveryEstimateText,\n  secureCheckoutText,\n  cartHeading,\n  cartEmptyHeading,\n  cartEmptyText,\n  cartEmptyButtonText,\n  secureCheckoutHeading,\n  redirectingHeading,\n  redirectingText,\n  redirectingSubtext,\n  orderSummaryHeading,\n  returnToCartText,\n  sslEncryptionText,\n  checkoutUnavailableHeading\n}': CheckoutSettingsQueryResult;
-    '*[_type == "orderConfirmationPage"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}': OrderConfirmationPageQueryResult;
-    '*[_type == "song"] | order(order asc){\n  _id,\n  title,\n  key,\n  artist,\n  notes,\n  order\n}': AllSongsQueryResult;
-    '*[_type == "page" && slug.current == $slug][0]{\n  _id,\n  _type,\n  name,\n  heading,\n  subheading,\n  modules[]{\n    \n  _type,\n  _key,\n  _type == "hero" => {\n    headline,\n    headlineDesktopSize,\n    headlineMobileSize,\n    headlineTracking,\n    headlineLineHeight,\n    subhead,\n    subheadTracking,\n    subheadLineHeight,\n    mediaType,\n    image{asset->, hotspot, crop, alt},\n    mobileImage{asset->, hotspot, crop, alt},\n    desktopPosition,\n    mobilePosition,\n    video,\n    backgroundVariant,\n    sectionPadding,\n    ctas[]{label, href, variant}\n  },\n  _type == "richText" => {\n    content,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "imageGallery" => {\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "featureGrid" => {\n    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "ctaBanner" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    body,\n    backgroundVariant,\n    sectionPadding,\n    cta{label, href}\n  },\n  _type == "videoEmbed" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "musicEmbed" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "testimonials" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    \'items\': coalesce(items, set->items),\n    items[]{\n      name,\n      role,\n      quote,\n      image{asset->, hotspot, crop, alt}\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "faq" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    \'items\': coalesce(items, set->items),\n    items[]{\n      question,\n      answer\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == "callToAction" => @,\n  _type == "infoSection" => @\n\n  },\n  seo{\n    title,\n    description,\n    ogImage{asset->}\n  }\n}': PageBySlugQueryResult;
-    '*[_type == "page" && defined(slug.current)]{\n  "slug": slug.current\n}': PagesSlugsResult;
-    '*[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}': UpcomingEventsQueryResult;
-    '*[_type == "event" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}': PastEventsQueryResult;
-    '*[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  ticketUrl,\n  isCanceled,\n  isSoldOut\n}': EventsByMonthQueryResult;
-    '*[_type == "event" && (slug.current == $slug || _id == $slug)][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroImage{asset->, hotspot, crop, desktopPosition, alt},\n  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},\n  lineup[]{name, role, bio},\n  specialNotes,\n  isCanceled,\n  isSoldOut\n}': EventBySlugQueryResult;
-    '*[_type == "event"]{\n  "slug": coalesce(slug.current, _id)\n}': EventsSlugsResult;
-    '*[_type == "product"] | order(featured desc, _createdAt desc){\n  _id,\n  title,\n  "slug": slug.current,\n  "image": images[0]{\n    "asset": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  "hasOptions": count(options) > 0\n}': AllProductsQueryResult;
-    '*[_type == "product" && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  availableDate,\n  materials,\n  careInstructions,\n  dimensions,\n  options[]{name, values},\n  variants[]{optionValues, priceCents, sku},\n  gelatoProductUid,\n  printAreas[]{areaName, artwork{asset->}},\n  shippingNotes,\n  relatedProducts[]->{\n    _id,\n    title,\n    "slug": slug.current,\n    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    badges\n  },\n  seo{title, description, ogImage{asset->}}\n}': ProductBySlugQueryResult;
-    '*[_type == "product" && defined(slug.current)]{\n  "slug": slug.current\n}': ProductSlugsQueryResult;
-    '*[_type == "product" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  "slug": slug.current,\n  "image": images[0]{\n    "asset": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  stockStatus,\n  badges,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  "hasOptions": count(options) > 0\n}': RelatedProductsByCategoryQueryResult;
-    '*[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  "slug": slug.current,\n  "image": images[0]{\n    "asset": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  "hasOptions": count(options) > 0\n}': FeaturedProductsQueryResult;
-    '*[_type == "product" && (\n  title match $searchTerm\n  || category match $searchTerm\n  || tags[] match $searchTerm\n)] | order(_score desc, _createdAt desc)[0...$limit]{\n  _id,\n  title,\n  "slug": slug.current,\n  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  badges,\n  tags\n}': ProductSearchQueryResult;
-    '*[_type == "productCollection"] | order(displayOrder asc, _createdAt desc){\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  image{asset->, alt},\n  featured,\n  displayOrder,\n  "productSlugs": products[]->slug.current\n}': AllCollectionsQueryResult;
-    '*[_type == "productCollection" && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  image{asset->, alt},\n  "products": products[]->{\n    _id,\n    title,\n    "slug": slug.current,\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    stockStatus,\n    featured,\n    badges,\n    tags,\n    inventoryQuantity,\n    trackInventory,\n    lowStockThreshold\n  }\n}': CollectionBySlugQueryResult;
-    '*[_type == "promoCode" && code == $code && active == true][0]{\n  _id,\n  code,\n  description,\n  discountType,\n  discountValue,\n  minimumPurchaseCents,\n  maxUses,\n  currentUses,\n  validFrom,\n  validUntil,\n  applicableProducts[]->{_id, title},\n  applicableCategories\n}': PromoCodeByCodeQueryResult;
-    '*[_type == "post" && slug.current == $slug][0]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  content,\n  date,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  author->{firstName, lastName, picture{asset->}}\n}': PostQueryResult;
-    '*[_type == "post" && defined(slug.current)]{\n  "slug": slug.current\n}': PostPagesSlugsResult;
-    '*[_type == "post"] | order(date desc){\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}': AllPostsQueryResult;
-    '*[_type == "post" && _id != $skip] | order(date desc)[0...$limit]{\n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}': MorePostsQueryResult;
-    '*[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){\n  "slug": slug.current,\n  _type,\n  _updatedAt,\n  _type == "event" => {\n    startDateTime,\n    isCanceled\n  }\n}': SitemapQueryResult;
+    "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt,\n    metadataBase\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showAmpsPage,\n  showMerchPage,\n  showBioPage,\n  showEpkPage,\n  showContactPage\n}": SettingsQueryResult;
+    "*[_type == \"storeSettings\"][0]{\n  storeEnabled,\n  storeName,\n  siteUrl,\n  currency,\n  adminEmail,\n  emailFromName,\n  emailFromAddress,\n  orderConfirmationSubject,\n  shippingUpdateSubject,\n  shippingCountries,\n  processingTime,\n  returnPolicyDays,\n  returnPolicyNotes,\n  contactFormSubject,\n  fulfillmentFailureSubject,\n  newOrderSubject,\n  emailSignature\n}": StoreSettingsQueryResult;
+    "*[_type == \"uiText\"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navAmps,\n  navMerch,\n  navContact,\n  navBio,\n  navEpk,\n  footerBioLabel,\n  footerEpkLabel,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessHeading,\n  formSuccessMessage,\n  formSendAnotherText,\n  formPlaceholderName,\n  formPlaceholderEmail,\n  formPlaceholderSubject,\n  formPlaceholderMessage,\n  newsletterButtonText,\n  newsletterSuccessText,\n  newsletterPlaceholder,\n  newsletterDisclaimer,\n  footerBookingText,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}": UiTextQueryResult;
+    "*[_type == \"navigation\"][0]{\n  _id,\n  main[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  },\n  footer[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  }\n}": NavigationQueryResult;
+    "*[_type == \"homePage\"][0]{\n  _id,\n  heroSlides[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    mobileImage{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    alt,\n    desktopPosition,\n    mobilePosition\n  },\n  heroHeading,\n  heroHeadingDesktopSize,\n  heroHeadingMobileSize,\n  heroHeadingTracking,\n  heroHeadingLineHeight,\n  heroSubheadingTracking,\n  heroSubheadingLineHeight,\n  heroSubheading,\n  heroTagline,\n  heroButtonText,\n  marqueeTopItems[]{text, style},\n  marqueeBottomItems[]{text, style},\n  aboutHeading,\n  aboutText,\n  aboutVerticalLabel,\n  aboutImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumTitle,\n  albumYear,\n  albumFormat,\n  albumDescription,\n  albumImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  albumFeatures,\n  ctaLessonsHeading,\n  ctaLessonsText,\n  parallaxHeading,\n  parallaxSubheading,\n  parallaxImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    position,\n    offset\n  },\n  performanceSectionHeading,\n  performanceImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  gallerySectionHeading,\n  gallerySectionSubheading,\n  galleryImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    width,\n    height\n  },\n  upcomingShowsHeading,\n  seeAllShowsLinkText,\n  aboutButtonText,\n  ctaLessonsButtonText,\n  featuredVideoHeading,\n  featuredVideoSubheading,\n  featuredVideoUrl,\n  featuredVideoTitle,\n  bookingSectionHeading,\n  bookingSectionIntro,\n  bookingInquiriesHeading,\n  bookingInquiriesText,\n  bookingInquiryListHeading,\n  bookingInquiryItems,\n  bookingPerfectForHeading,\n  bookingEventTypes,\n  bookingTestimonialQuote,\n  bookingTestimonialAttribution,\n  studioSectionHeading,\n  studioSectionSubheading,\n  studioVideo1Url,\n  studioVideo2Url,\n  studioVideo1Title,\n  studioVideo2Title,\n  newsletterHeading,\n  newsletterText,\n  showAboutSection,\n  showAlbumSection,\n  showUpcomingShows,\n  showLessonsSection,\n  showBookingSection,\n  showGallerySection,\n  showStudioVideos,\n  showNewsletterSection,\n  showMusicSection,\n  musicSectionHeading,\n  musicSectionSubheading,\n  spotifyArtistId,\n  spotifyPlaylistId,\n  spotifyEmbedType,\n  appleMusicUrl,\n  bandcampUrl,\n  seoTitle,\n  seoDescription\n}": HomePageQueryResult;
+    "*[_type == \"lessonsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  stats[]{\n    _key,\n    label,\n    value,\n    suffix\n  },\n  philosophyHeading,\n  philosophyText,\n  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  learningItemsHeading,\n  learningItems[]{\n    _key,\n    title,\n    description\n  },\n  ctaBoxHeading,\n  ctaBoxText,\n  credentials,\n  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emailButtonText,\n  scheduleButtonText,\n  testimonialQuote,\n  testimonialAttribution,\n  packagesHeading,\n  packagesSubheading,\n  packagesCtaText,\n  seoTitle,\n  seoDescription\n}": LessonsPageQueryResult;
+    "*[_type == \"contactPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitGallery[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}\n  },\n  formHeading,\n  directContactHeading,\n  directContactDescription,\n  socialHeading,\n  quickLinksHeading,\n  aboutHeading,\n  quickLinkShowsText,\n  quickLinkLessonsText,\n  quickLinkSetlistText,\n  ctaSectionHeading,\n  ctaSectionText,\n  ctaSectionButtonText,\n  locationMapQuery,\n  connectHeading,\n  bookingCardTitle,\n  bookingCardDescription,\n  bookingCardLinkText,\n  lessonsCardTitle,\n  lessonsCardDescription,\n  lessonsCardLinkText,\n  locationCardTitle,\n  locationCardRegion,\n  locationCardDescription,\n  locationCardLinkText,\n  socialSubheading,\n  seoTitle,\n  seoDescription\n}": ContactPageQueryResult;
+    "*[_type == \"setlistPage\"][0]{\n  _id,\n  heroHeading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  introText,\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  ctaHeading,\n  ctaText,\n  ctaBookLessonButtonText,\n  ctaContactButtonText,\n  subtitleSuffix,\n  repertoireHeading,\n  songCountSummaryText,\n  requestHeading,\n  requestText,\n  requestButtonText,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  statsValue3,\n  seoTitle,\n  seoDescription\n}": SetlistPageQueryResult;
+    "*[_type == \"showsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}": ShowsPageQueryResult;
+    "*[_type == \"merchPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButton1Text,\n  emptyStateButton1Link,\n  emptyStateButton2Text,\n  emptyStateButton2Link,\n  contentHeading,\n  contentSubheading,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  seoTitle,\n  seoDescription\n}": MerchPageQueryResult;
+    "*[_type == \"ampsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  seoTitle,\n  seoDescription\n}": AmpsPageQueryResult;
+    "*[_type == \"product\" && category == \"amps\"] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AmpsProductsQueryResult;
+    "*[_type == \"lessonPackage\" && active == true] | order(order asc, priceCents asc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active\n}": AllLessonPackagesQueryResult;
+    "*[_type == \"lessonPackage\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  description,\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active,\n  seoTitle,\n  seoDescription\n}": LessonPackageBySlugQueryResult;
+    "*[_type == \"privacyPolicy\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": PrivacyPolicyQueryResult;
+    "*[_type == \"termsOfService\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": TermsOfServiceQueryResult;
+    "*[_type == \"returnsPolicy\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": ReturnsPolicyQueryResult;
+    "*[_type == \"bio\"][0]{\n  _id,\n  pageTitle,\n  tagline,\n  lastUpdated,\n  seoDescription,\n  heroImage{asset->, hotspot, crop, alt},\n  content\n}": BioQueryResult;
+    "*[_type == \"epkPage\"][0]{\n  _id,\n  heroImage{asset->, hotspot, crop, alt},\n  pageIntro,\n  genres,\n  influencedBy,\n  shortBio,\n  longBio,\n  bookingContactName,\n  bookingContactEmail,\n  bookingContactPhone,\n  bookingNotes,\n  pressPhotos[]{\n    _key,\n    asset->,\n    alt,\n    caption,\n    credit\n  },\n  videos[]{\n    _key,\n    title,\n    url,\n    description\n  },\n  pressQuotes[]{\n    _key,\n    quote,\n    source,\n    sourceUrl,\n    logo{asset->, alt}\n  },\n  notableShows[]{\n    _key,\n    venue,\n    city,\n    date,\n    event\n  },\n  stagePlotPdf{asset->{url, originalFilename}},\n  techRiderPdf{asset->{url, originalFilename}},\n  fullPressKitPdf{asset->{url, originalFilename}},\n  onesheet{asset->{url, originalFilename}},\n  seoTitle,\n  seoDescription\n}": EpkPageQueryResult;
+    "*[_type == \"checkoutSettings\"][0]{\n  _id,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  deliveryEstimateText,\n  secureCheckoutText,\n  cartHeading,\n  cartEmptyHeading,\n  cartEmptyText,\n  cartEmptyButtonText,\n  secureCheckoutHeading,\n  redirectingHeading,\n  redirectingText,\n  redirectingSubtext,\n  orderSummaryHeading,\n  returnToCartText,\n  sslEncryptionText,\n  checkoutUnavailableHeading\n}": CheckoutSettingsQueryResult;
+    "*[_type == \"orderConfirmationPage\"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}": OrderConfirmationPageQueryResult;
+    "*[_type == \"song\"] | order(order asc){\n  _id,\n  title,\n  key,\n  artist,\n  notes,\n  order\n}": AllSongsQueryResult;
+    "*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  name,\n  heading,\n  subheading,\n  modules[]{\n    \n  _type,\n  _key,\n  _type == \"hero\" => {\n    headline,\n    headlineDesktopSize,\n    headlineMobileSize,\n    headlineTracking,\n    headlineLineHeight,\n    subhead,\n    subheadTracking,\n    subheadLineHeight,\n    mediaType,\n    image{asset->, hotspot, crop, alt},\n    mobileImage{asset->, hotspot, crop, alt},\n    desktopPosition,\n    mobilePosition,\n    video,\n    backgroundVariant,\n    sectionPadding,\n    ctas[]{label, href, variant}\n  },\n  _type == \"richText\" => {\n    content,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"imageGallery\" => {\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"featureGrid\" => {\n    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"ctaBanner\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    body,\n    backgroundVariant,\n    sectionPadding,\n    cta{label, href}\n  },\n  _type == \"videoEmbed\" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"musicEmbed\" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"testimonials\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    'items': coalesce(items, set->items),\n    items[]{\n      name,\n      role,\n      quote,\n      image{asset->, hotspot, crop, alt}\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"faq\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    'items': coalesce(items, set->items),\n    items[]{\n      question,\n      answer\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"callToAction\" => @,\n  _type == \"infoSection\" => @\n\n  },\n  seo{\n    title,\n    description,\n    ogImage{asset->}\n  }\n}": PageBySlugQueryResult;
+    "*[_type == \"page\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": PagesSlugsResult;
+    "*[_type == \"event\" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}": UpcomingEventsQueryResult;
+    "*[_type == \"event\" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}": PastEventsQueryResult;
+    "*[_type == \"event\" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  ticketUrl,\n  isCanceled,\n  isSoldOut\n}": EventsByMonthQueryResult;
+    "*[_type == \"event\" && (slug.current == $slug || _id == $slug)][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroImage{asset->, hotspot, crop, desktopPosition, alt},\n  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},\n  lineup[]{name, role, bio},\n  specialNotes,\n  isCanceled,\n  isSoldOut\n}": EventBySlugQueryResult;
+    "*[_type == \"event\"]{\n  \"slug\": coalesce(slug.current, _id)\n}": EventsSlugsResult;
+    "*[_type == \"product\"] | order(featured desc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AllProductsQueryResult;
+    "*[_type == \"product\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  availableDate,\n  materials,\n  careInstructions,\n  dimensions,\n  options[]{name, values},\n  variants[]{optionValues, priceCents, sku},\n  gelatoProductUid,\n  printAreas[]{areaName, artwork{asset->}},\n  shippingNotes,\n  relatedProducts[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    badges\n  },\n  seo{title, description, ogImage{asset->}}\n}": ProductBySlugQueryResult;
+    "*[_type == \"product\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": ProductSlugsQueryResult;
+    "*[_type == \"product\" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  stockStatus,\n  badges,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": RelatedProductsByCategoryQueryResult;
+    "*[_type == \"product\" && featured == true] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": FeaturedProductsQueryResult;
+    "*[_type == \"product\" && (\n  title match $searchTerm\n  || category match $searchTerm\n  || tags[] match $searchTerm\n)] | order(_score desc, _createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  badges,\n  tags\n}": ProductSearchQueryResult;
+    "*[_type == \"productCollection\"] | order(displayOrder asc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  featured,\n  displayOrder,\n  \"productSlugs\": products[]->slug.current\n}": AllCollectionsQueryResult;
+    "*[_type == \"productCollection\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  \"products\": products[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    stockStatus,\n    featured,\n    badges,\n    tags,\n    inventoryQuantity,\n    trackInventory,\n    lowStockThreshold\n  }\n}": CollectionBySlugQueryResult;
+    "*[_type == \"promoCode\" && code == $code && active == true][0]{\n  _id,\n  code,\n  description,\n  discountType,\n  discountValue,\n  minimumPurchaseCents,\n  maxUses,\n  currentUses,\n  validFrom,\n  validUntil,\n  applicableProducts[]->{_id, title},\n  applicableCategories\n}": PromoCodeByCodeQueryResult;
+    "*[_type == \"post\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  content,\n  date,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  author->{firstName, lastName, picture{asset->}}\n}": PostQueryResult;
+    "*[_type == \"post\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": PostPagesSlugsResult;
+    "*[_type == \"post\"] | order(date desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}": AllPostsQueryResult;
+    "*[_type == \"post\" && _id != $skip] | order(date desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}": MorePostsQueryResult;
+    "*[_type in [\"page\", \"product\", \"post\", \"event\"] && defined(slug.current)] | order(_type asc){\n  \"slug\": slug.current,\n  _type,\n  _updatedAt,\n  _type == \"event\" => {\n    startDateTime,\n    isCanceled\n  }\n}": SitemapQueryResult;
   }
 }

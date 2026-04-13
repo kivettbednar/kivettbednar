@@ -139,7 +139,7 @@ export function MerchPageContent({merchPage, products, collections}: Props) {
           <div className="max-w-5xl mx-auto text-center">
             {/* Main Heading - From Sanity */}
             <AnimatedSection animation="fadeUp" delay={0.2}>
-              <h1 className="font-bebas text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl uppercase tracking-wider text-white mb-6 leading-none drop-shadow-2xl">
+              <h1 className="font-bebas text-5xl sm:text-6xl md:text-7xl uppercase tracking-wider text-white mb-6 leading-none">
                 {heroHeading}
               </h1>
             </AnimatedSection>

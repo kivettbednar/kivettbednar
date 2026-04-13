@@ -275,11 +275,6 @@ export default async function ContactPage() {
           <div className="max-w-2xl mx-auto">
             <AnimatedSection animation="fadeIn">
               <div className="text-center mb-12">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="h-px bg-accent-primary w-12" />
-                  <MessageSquare className="w-5 h-5 text-accent-primary" />
-                  <div className="h-px bg-accent-primary w-12" />
-                </div>
                 <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-3">
                   Send a Message
                 </h2>
@@ -361,11 +356,6 @@ export default async function ContactPage() {
               <div className="max-w-6xl mx-auto">
                 <AnimatedSection animation="fadeIn">
                   <div className="text-center mb-16">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                      <div className="h-px bg-accent-primary w-12" />
-                      <span className="text-accent-primary text-sm uppercase tracking-wider font-bold">Gallery</span>
-                      <div className="h-px bg-accent-primary w-12" />
-                    </div>
                     <h2 className="font-bebas text-5xl uppercase tracking-wide text-text-primary">
                       {contactPage?.aboutHeading || 'Behind the Music'}
                     </h2>

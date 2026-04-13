@@ -141,7 +141,7 @@ export function Footer({
               </p>
 
               {/* Social icons */}
-              <div className="flex items-center gap-3 mt-6">
+              <div className="flex items-center gap-5 mt-6">
                 {social.map((link) => (
                   <a
                     key={link.url}
@@ -149,7 +149,7 @@ export function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={getPlatformLabel(link.platform)}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-border text-text-muted hover:text-accent-primary hover:border-accent-primary hover:bg-accent-primary/10 transition-all duration-300"
+                    className="text-text-muted hover:text-accent-primary transition-colors duration-300"
                   >
                     <SocialIcon platform={link.platform} />
                   </a>

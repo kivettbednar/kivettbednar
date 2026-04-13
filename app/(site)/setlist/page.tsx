@@ -126,11 +126,6 @@ export default async function SetlistPage() {
             {setlistPage?.introText && (
               <div className="max-w-3xl mx-auto text-center mb-16">
                 <AnimatedSection animation="fadeIn">
-                  <div className="flex items-center justify-center gap-3 mb-6">
-                    <div className="h-px bg-accent-primary w-12" />
-                    <Music className="w-5 h-5 text-accent-primary" />
-                    <div className="h-px bg-accent-primary w-12" />
-                  </div>
                   <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
                     {setlistPage.introText}
                   </p>

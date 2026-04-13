@@ -137,11 +137,8 @@ export function Header({siteName, navigation}: HeaderProps) {
           isScrolled ? 'shadow-lg shadow-black/50' : ''
         }`}
         style={{
-          backgroundColor: isScrolled ? 'rgba(10, 10, 10, 0.3)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(16px) saturate(180%)' : 'none',
+          backgroundColor: isScrolled ? 'rgba(10, 10, 10, 0.95)' : 'transparent',
           borderBottom: isScrolled ? '1px solid rgba(212, 175, 55, 0.2)' : 'none',
-          isolation: isScrolled ? 'isolate' : 'auto',
         }}
         role="banner"
       >
@@ -150,9 +147,7 @@ export function Header({siteName, navigation}: HeaderProps) {
           {/* Logo - White text with strong shadow for visibility over images */}
           <Link
             href="/"
-            className={`text-2xl font-bold tracking-tight transition-all duration-500 text-white hover:text-accent-primary ${
-              !mounted || (isHomePage && !isScrolled) ? 'opacity-0 pointer-events-none' : 'opacity-100'
-            }`}
+            className="text-2xl font-bold tracking-tight transition-colors duration-300 text-white hover:text-accent-primary"
             style={{
               textShadow: isScrolled
                 ? '0 1px 2px rgba(0,0,0,0.5)'
