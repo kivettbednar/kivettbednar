@@ -354,7 +354,61 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
           S.list()
             .title('Events & Content')
             .items([
-              S.documentTypeListItem('event').title('Events').icon(CalendarIcon),
+              S.listItem()
+                .title('Events')
+                .icon(CalendarIcon)
+                .child(
+                  S.list()
+                    .title('Events')
+                    .items([
+                      S.listItem()
+                        .title('Upcoming Events')
+                        .icon(CalendarIcon)
+                        .child(
+                          S.documentList()
+                            .title('Upcoming Events')
+                            .filter('_type == "event" && startDateTime >= now()')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'asc'}])
+                        ),
+                      S.listItem()
+                        .title('Past Events')
+                        .icon(CalendarIcon)
+                        .child(
+                          S.documentList()
+                            .title('Past Events')
+                            .filter('_type == "event" && startDateTime < now()')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
+                        ),
+                      S.listItem()
+                        .title('All Events')
+                        .icon(CalendarIcon)
+                        .child(
+                          S.documentList()
+                            .title('All Events')
+                            .filter('_type == "event"')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
+                        ),
+                      S.divider(),
+                      S.listItem()
+                        .title('Canceled')
+                        .icon(CalendarIcon)
+                        .child(
+                          S.documentList()
+                            .title('Canceled Events')
+                            .filter('_type == "event" && isCanceled == true')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
+                        ),
+                      S.listItem()
+                        .title('Sold Out')
+                        .icon(CalendarIcon)
+                        .child(
+                          S.documentList()
+                            .title('Sold Out Events')
+                            .filter('_type == "event" && isSoldOut == true && isCanceled != true')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'asc'}])
+                        ),
+                    ])
+                ),
               S.documentTypeListItem('lessonPackage').title('Lesson Packages').icon(BookIcon),
               S.documentTypeListItem('song').title('Setlist Songs').icon(DocumentIcon),
               S.documentTypeListItem('page').title('Custom Pages').icon(DocumentIcon),

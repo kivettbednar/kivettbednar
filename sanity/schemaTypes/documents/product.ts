@@ -4,6 +4,7 @@ import {imagePositionFields} from '@/sanity/lib/image-fields'
 import {formatPrice} from '@/lib/format'
 import {MarginDisplay} from '@/sanity/components/MarginDisplay'
 import {GelatoProductUidInput} from '@/sanity/components/GelatoProductUidInput'
+import {PriceInput} from '@/sanity/components/PriceInput'
 
 /**
  * Product schema for POD (Print on Demand) merch via Gelato
@@ -14,17 +15,30 @@ export const product = defineType({
   title: 'Product',
   type: 'document',
   icon: PackageIcon,
+  groups: [
+    {name: 'basics', title: 'Basics', default: true},
+    {name: 'images', title: 'Images'},
+    {name: 'pricing', title: 'Pricing'},
+    {name: 'variants', title: 'Options & Variants'},
+    {name: 'inventory', title: 'Inventory'},
+    {name: 'production', title: 'Production (POD)'},
+    {name: 'marketing', title: 'Marketing'},
+    {name: 'details', title: 'Details & Shipping'},
+    {name: 'seo', title: 'SEO'},
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Product Title',
       type: 'string',
+      group: 'basics',
       validation: (Rule) => Rule.required().min(2),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      group: 'basics',
       options: {
         source: 'title',
         maxLength: 96,
@@ -35,11 +49,38 @@ export const product = defineType({
       name: 'description',
       title: 'Description',
       type: 'blockContent',
+      group: 'basics',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      group: 'basics',
+      options: {
+        list: [
+          {title: 'Apparel', value: 'apparel'},
+          {title: 'Music', value: 'music'},
+          {title: 'Accessories', value: 'accessories'},
+          {title: 'Posters & Prints', value: 'prints'},
+          {title: 'Amps & Cases', value: 'amps'},
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Product',
+      type: 'boolean',
+      group: 'basics',
+      description: 'Show this product prominently on the merch page',
+      initialValue: false,
     }),
     defineField({
       name: 'images',
       title: 'Product Images',
       type: 'array',
+      group: 'images',
+      description: 'First image is used as the card thumbnail. Upload multiple to show in the product gallery.',
       of: [
         defineArrayMember({
           type: 'image',
@@ -60,16 +101,20 @@ export const product = defineType({
     }),
     defineField({
       name: 'priceCents',
-      title: 'Price (cents)',
+      title: 'Price',
       type: 'number',
-      description: 'Price in cents (e.g., 2500 = $25.00)',
+      group: 'pricing',
+      description: 'Enter in dollars (e.g. 25 = $25.00, 19.99 = $19.99). Stored as cents under the hood.',
+      components: {input: PriceInput},
       validation: (Rule) => Rule.required().positive().integer(),
     }),
     defineField({
       name: 'compareAtPriceCents',
-      title: 'Compare At Price (cents)',
+      title: 'Compare At Price (original)',
       type: 'number',
-      description: 'Original price before discount - creates "Was $X, Now $Y" display. Must be higher than sale price.',
+      group: 'pricing',
+      description: 'If set and higher than Price, shows "Was $X, Now $Y" on the product page.',
+      components: {input: PriceInput},
       validation: (Rule) =>
         Rule.integer().positive().custom((value, context) => {
           if (!value) return true
@@ -84,13 +129,15 @@ export const product = defineType({
       name: 'onSale',
       title: 'On Sale',
       type: 'boolean',
-      description: 'Mark product as on sale (shows sale badge)',
+      group: 'pricing',
+      description: 'Shows the "Sale" badge on the product card.',
       initialValue: false,
     }),
     defineField({
       name: 'currency',
       title: 'Currency',
       type: 'string',
+      group: 'pricing',
       initialValue: 'USD',
       options: {
         list: [
@@ -104,7 +151,8 @@ export const product = defineType({
       name: 'options',
       title: 'Product Options',
       type: 'array',
-      description: 'Options like Size, Color, etc.',
+      group: 'variants',
+      description: 'Define the axes customers choose from (e.g. Size → S/M/L, Color → Black/White). Leave empty if the product has no options.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -140,41 +188,47 @@ export const product = defineType({
       name: 'variants',
       title: 'Variants',
       type: 'array',
-      description: 'Product variants with option combinations',
+      group: 'variants',
+      description: 'Each variant = one combination of option values. Only needed if you want per-combination pricing or SKUs. Otherwise leave empty and all combinations share the base price.',
       of: [
         defineArrayMember({
           type: 'object',
           fields: [
             defineField({
               name: 'optionValues',
-              title: 'Option Values',
+              title: 'Which combination',
               type: 'array',
-              description: 'Key-value pairs like Size: Medium, Color: Black',
+              description: 'List the option values for this variant (e.g. Size: Medium, Color: Black)',
               of: [
                 defineArrayMember({
                   type: 'object',
                   fields: [
                     defineField({
                       name: 'key',
-                      title: 'Option Name',
+                      title: 'Option',
                       type: 'string',
-                      description: 'e.g., "Size", "Color"',
+                      description: 'Must match an option name above (e.g. "Size")',
                     }),
                     defineField({
                       name: 'value',
-                      title: 'Option Value',
+                      title: 'Value',
                       type: 'string',
-                      description: 'e.g., "Medium", "Black"',
+                      description: 'Must match one of the values for that option (e.g. "Medium")',
                     }),
                   ],
+                  preview: {
+                    select: {key: 'key', value: 'value'},
+                    prepare: ({key, value}) => ({title: `${key || '?'}: ${value || '?'}`}),
+                  },
                 }),
               ],
             }),
             defineField({
               name: 'priceCents',
-              title: 'Price Override (cents)',
+              title: 'Price override',
               type: 'number',
-              description: 'Optional price override for this variant',
+              components: {input: PriceInput},
+              description: 'Leave empty to use the base product price.',
             }),
             defineField({
               name: 'sku',
@@ -191,9 +245,9 @@ export const product = defineType({
               const values = optionValues && Array.isArray(optionValues)
                 ? optionValues
                     .map((opt: {key?: string; value?: string}) => `${opt.key}: ${opt.value}`)
-                    .join(', ')
+                    .join(' · ')
                 : 'No options'
-              const price = priceCents ? ` - $${formatPrice(priceCents)}` : ''
+              const price = priceCents ? ` — $${formatPrice(priceCents)}` : ''
               return {
                 title: values,
                 subtitle: `Variant${price}`,
@@ -207,21 +261,24 @@ export const product = defineType({
       name: 'gelatoProductUid',
       title: 'Gelato Product UID',
       type: 'string',
-      description: 'Find this in your Gelato dashboard under Products → Product details. Leave blank for non-print-on-demand items.',
+      group: 'production',
+      description: 'Leave blank for non-print-on-demand items. Find this in your Gelato dashboard under Products → Product details.',
       components: {input: GelatoProductUidInput},
     }),
     defineField({
       name: 'gelatoCostCents',
-      title: 'Gelato Cost (cents)',
+      title: 'Gelato Cost',
       type: 'number',
-      description: 'Production cost from Gelato in cents. Use /api/gelato/prices to look up. Your margin = Price - Cost.',
+      group: 'production',
+      description: 'Production cost from Gelato, in dollars. Margin = Price - Cost.',
       components: {input: MarginDisplay},
     }),
     defineField({
       name: 'printAreas',
       title: 'Print Areas',
       type: 'array',
-      description: 'Define artwork for each print area (front, back, etc.)',
+      group: 'production',
+      description: 'Upload artwork for each print area (front, back, sleeve).',
       of: [
         defineArrayMember({
           type: 'object',
@@ -230,12 +287,14 @@ export const product = defineType({
               name: 'areaName',
               title: 'Area Name',
               type: 'string',
-              description: 'e.g., "front", "back"',            }),
+              description: 'e.g., "front", "back"',
+            }),
             defineField({
               name: 'artwork',
               title: 'Artwork',
               type: 'image',
-              description: 'High-resolution artwork for this print area',            }),
+              description: 'High-resolution artwork for this print area',
+            }),
           ],
           preview: {
             select: {
@@ -250,27 +309,40 @@ export const product = defineType({
             },
           },
         }),
-      ],    }),
+      ],
+    }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Apparel', value: 'apparel'},
-          {title: 'Music', value: 'music'},
-          {title: 'Accessories', value: 'accessories'},
-          {title: 'Posters & Prints', value: 'prints'},
-          {title: 'Amps & Cases', value: 'amps'},
-        ],
-      },
-      validation: (Rule) => Rule.required(),
+      name: 'trackInventory',
+      title: 'Track inventory for this product?',
+      type: 'boolean',
+      group: 'inventory',
+      description: 'When on, "In Stock / Low Stock / Out of Stock" is computed from the quantity below. When off, set Stock Status manually.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'inventoryQuantity',
+      title: 'Inventory Quantity',
+      type: 'number',
+      group: 'inventory',
+      description: 'Current stock count. Use -1 for unlimited / made-to-order.',
+      initialValue: -1,
+      hidden: ({parent}) => !parent?.trackInventory,
+    }),
+    defineField({
+      name: 'lowStockThreshold',
+      title: 'Low Stock Threshold',
+      type: 'number',
+      group: 'inventory',
+      description: 'Show "Only X left" badge when quantity falls at or below this.',
+      initialValue: 5,
+      hidden: ({parent}) => !parent?.trackInventory,
     }),
     defineField({
       name: 'stockStatus',
-      title: 'Stock Status',
+      title: 'Stock Status (manual override)',
       type: 'string',
-      description: 'Updated automatically when inventory tracking is enabled. Set manually for non-tracked products.',
+      group: 'inventory',
+      description: 'Used when inventory tracking is off.',
       options: {
         list: [
           {title: 'In Stock', value: 'in_stock'},
@@ -280,34 +352,31 @@ export const product = defineType({
         ],
       },
       initialValue: 'in_stock',
+      hidden: ({parent}) => !!parent?.trackInventory,
     }),
     defineField({
-      name: 'featured',
-      title: 'Featured Product',
-      type: 'boolean',
-      description: 'Show this product prominently on the merch page',
-      initialValue: false,
+      name: 'availableDate',
+      title: 'Available Date',
+      type: 'datetime',
+      group: 'inventory',
+      description: 'For pre-orders — when the product becomes available.',
     }),
     defineField({
       name: 'tags',
       title: 'Product Tags',
       type: 'array',
+      group: 'marketing',
       of: [{type: 'string'}],
-      description: 'Tags for search and filtering (e.g., "vintage", "tour-exclusive", "limited-edition")',
-      options: {
-        layout: 'tags',
-      },
+      description: 'Free-form tags for search and filtering (e.g. "vintage", "tour-exclusive").',
+      options: {layout: 'tags'},
     }),
     defineField({
       name: 'badges',
       title: 'Product Badges',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'string',
-        }),
-      ],
-      description: 'Display badges like "New", "Best Seller", "Limited Edition"',
+      group: 'marketing',
+      of: [defineArrayMember({type: 'string'})],
+      description: 'Visual pills shown on the product card. Only these 5 are supported in code.',
       options: {
         list: [
           {title: 'New', value: 'new'},
@@ -319,48 +388,18 @@ export const product = defineType({
       },
     }),
     defineField({
-      name: 'inventoryQuantity',
-      title: 'Inventory Quantity',
-      type: 'number',
-      description: 'Current stock quantity (-1 for unlimited/made-to-order)',
-      initialValue: -1,
-    }),
-    defineField({
-      name: 'lowStockThreshold',
-      title: 'Low Stock Threshold',
-      type: 'number',
-      description: 'Show "low stock" warning when inventory falls below this number',
-      initialValue: 5,
-    }),
-    defineField({
-      name: 'trackInventory',
-      title: 'Track Inventory',
-      type: 'boolean',
-      description: 'Enable inventory tracking for this product',
-      initialValue: false,
-    }),
-    defineField({
-      name: 'availableDate',
-      title: 'Available Date',
-      type: 'datetime',
-      description: 'When product becomes available (for pre-orders)',
-    }),
-    defineField({
       name: 'relatedProducts',
       title: 'Related Products',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{type: 'product'}],
-        }),
-      ],
-      description: 'Products to show as "You might also like"',
+      group: 'marketing',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'product'}]})],
+      description: 'Shown as "You might also like" on the product page.',
     }),
     defineField({
       name: 'dimensions',
       title: 'Product Dimensions',
       type: 'object',
+      group: 'details',
       options: {
         collapsible: true,
         collapsed: true,
@@ -392,27 +431,31 @@ export const product = defineType({
       name: 'materials',
       title: 'Materials',
       type: 'text',
+      group: 'details',
       rows: 2,
-      description: 'Materials used in product (e.g., "100% Cotton", "Vinyl, Cardboard")',
+      description: 'e.g. "100% Cotton", "Vinyl, Cardboard"',
     }),
     defineField({
       name: 'careInstructions',
       title: 'Care Instructions',
       type: 'text',
+      group: 'details',
       rows: 3,
-      description: 'How to care for the product',
+      description: 'How to care for the product.',
     }),
     defineField({
       name: 'shippingNotes',
       title: 'Shipping Notes',
       type: 'text',
+      group: 'details',
       rows: 3,
-      description: 'Display shipping time estimates, international availability, etc.',
+      description: 'Shipping time estimates, international availability, etc.',
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
       type: 'object',
+      group: 'seo',
       options: {
         collapsible: true,
         collapsed: true,
@@ -442,13 +485,20 @@ export const product = defineType({
       title: 'title',
       priceCents: 'priceCents',
       currency: 'currency',
+      featured: 'featured',
+      onSale: 'onSale',
+      category: 'category',
       media: 'images.0',
     },
-    prepare({title, priceCents, currency, media}) {
-      const price = priceCents ? `${currency} $${formatPrice(priceCents)}` : 'No price'
+    prepare({title, priceCents, currency, featured, onSale, category, media}) {
+      const price = priceCents ? `${currency || 'USD'} $${formatPrice(priceCents)}` : 'No price'
+      const markers: string[] = []
+      if (featured) markers.push('★ Featured')
+      if (onSale) markers.push('Sale')
+      const subtitle = [price, category, ...markers].filter(Boolean).join(' · ')
       return {
         title,
-        subtitle: price,
+        subtitle,
         media,
       }
     },
