@@ -67,17 +67,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'epk')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const data = rawData as EpkData
     return {
-      title: data?.seoTitle || 'Press Kit | Kivett Bednar',
+      title: data?.seoTitle || 'Press Kit ',
       description: data?.seoDescription || 'Electronic Press Kit for Kivett Bednar — booking, photos, videos, and press materials.',
       alternates: {canonical: `${baseUrl}/epk`},
     }
   } catch {
     return {
-      title: 'Press Kit | Kivett Bednar',
+      title: 'Press Kit ',
       description: 'Electronic Press Kit for Kivett Bednar',
     }
   }

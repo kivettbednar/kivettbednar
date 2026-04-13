@@ -1,7 +1,7 @@
 import {Metadata} from 'next'
 
 export const metadata: Metadata = {
-  title: 'Order Confirmation | Kivett Bednar',
+  title: 'Order Confirmation',
   robots: {index: false, follow: false},
 }
 

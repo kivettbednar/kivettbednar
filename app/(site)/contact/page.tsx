@@ -18,17 +18,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'contact')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const contactPage = contactResult?.data
     return {
-      title: contactPage?.seoTitle || 'Contact | Kivett Bednar',
+      title: contactPage?.seoTitle || 'Contact ',
       description: contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries',
       alternates: { canonical: `${baseUrl}/contact` },
     }
   } catch {
     return {
-      title: 'Contact | Kivett Bednar',
+      title: 'Contact ',
       description: 'Get in touch',
     }
   }

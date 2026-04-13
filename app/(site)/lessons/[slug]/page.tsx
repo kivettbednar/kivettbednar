@@ -22,17 +22,17 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'lessons')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const p = pkg as any
     return {
-      title: p?.seoTitle || (p?.title ? `${p.title} | Lessons | Kivett Bednar` : 'Lesson Package | Kivett Bednar'),
+      title: p?.seoTitle || (p?.title ? `${p.title} | Lessons` : 'Lesson Package'),
       description: p?.seoDescription || p?.tagline || 'Guitar lesson package details',
       alternates: {canonical: `${baseUrl}/lessons/${slug}`},
     }
   } catch {
     return {
-      title: 'Lesson Package | Kivett Bednar',
+      title: 'Lesson Package',
       description: 'Guitar lesson package details',
     }
   }

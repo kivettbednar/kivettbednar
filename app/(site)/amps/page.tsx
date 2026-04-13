@@ -35,17 +35,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'amps')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const ampsPage = ampsResult?.data as AmpsPageData
     return {
-      title: ampsPage?.seoTitle || 'Custom Amps | Kivett Bednar',
+      title: ampsPage?.seoTitle || 'Custom Amps ',
       description: ampsPage?.seoDescription || 'Handcrafted artisan guitar amplifiers built with precision and soul.',
       alternates: {canonical: `${baseUrl}/amps`},
     }
   } catch {
     return {
-      title: 'Custom Amps | Kivett Bednar',
+      title: 'Custom Amps ',
       description: 'Handcrafted artisan guitar amplifiers',
     }
   }

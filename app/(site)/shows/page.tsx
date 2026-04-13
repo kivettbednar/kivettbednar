@@ -17,17 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'shows')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const showsPage = showsResult?.data
     return {
-      title: showsPage?.seoTitle || 'Shows | Kivett Bednar',
+      title: showsPage?.seoTitle || 'Shows ',
       description: showsPage?.seoDescription || 'Upcoming concerts and performances by Kivett Bednar - authentic blues in the Pacific Northwest',
       alternates: { canonical: `${baseUrl}/shows` },
     }
   } catch {
     return {
-      title: 'Shows | Kivett Bednar',
+      title: 'Shows ',
       description: 'Upcoming concerts and performances',
     }
   }

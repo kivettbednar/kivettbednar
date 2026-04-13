@@ -18,17 +18,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'lessons')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const lessonsPage = lessonsResult?.data
     return {
-      title: lessonsPage?.seoTitle || 'Lessons | Kivett Bednar',
+      title: lessonsPage?.seoTitle || 'Lessons ',
       description: lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome',
       alternates: { canonical: `${baseUrl}/lessons` },
     }
   } catch {
     return {
-      title: 'Lessons | Kivett Bednar',
+      title: 'Lessons ',
       description: 'Guitar and blues music lessons',
     }
   }

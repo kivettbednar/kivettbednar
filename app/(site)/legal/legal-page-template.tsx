@@ -71,7 +71,7 @@ export async function buildLegalMetadata({
     const data = raw as LegalCmsData
     if (data) {
       return {
-        title: `${data.pageTitle || pageName} | Kivett Bednar`,
+        title: `${data.pageTitle || pageName}`,
         description: data.seoDescription || fallbackDescription,
         alternates: {canonical: `${baseUrl}${canonicalPath}`},
       }
@@ -80,7 +80,7 @@ export async function buildLegalMetadata({
     // ignore
   }
   return {
-    title: `${pageName} | Kivett Bednar`,
+    title: `${pageName}`,
     description: fallbackDescription,
     alternates: {canonical: `${baseUrl}${canonicalPath}`},
   }

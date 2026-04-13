@@ -29,17 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'bio')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const data = rawData as BioPageData
     return {
-      title: `${data?.pageTitle || 'Bio'} | Kivett Bednar`,
+      title: data?.pageTitle || 'Bio',
       description: data?.seoDescription || 'About Kivett Bednar — blues guitarist, amp builder, artist.',
       alternates: {canonical: `${baseUrl}/bio`},
     }
   } catch {
     return {
-      title: 'Bio | Kivett Bednar',
+      title: 'Bio',
       description: 'About Kivett Bednar — blues guitarist, amp builder, artist.',
     }
   }

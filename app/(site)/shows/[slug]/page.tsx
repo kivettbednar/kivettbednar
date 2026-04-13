@@ -43,7 +43,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   ])
 
   if (!isPageEnabled(siteSettings, 'shows')) {
-    return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+    return {title: 'Page Unavailable ', robots: {index: false}}
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
@@ -55,13 +55,13 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     : undefined
 
   return {
-    title: event?.title ? `${event.title} | Kivett Bednar` : 'Event | Kivett Bednar',
+    title: event?.title ? `${event.title} ` : 'Event ',
     description: event?.excerpt || 'Event details',
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: event?.title || 'Event | Kivett Bednar',
+      title: event?.title || 'Event ',
       description: event?.excerpt || 'Event details',
       url: canonicalUrl,
       type: 'website',
@@ -71,7 +71,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     },
     twitter: {
       card: ogImageUrl ? 'summary_large_image' : 'summary',
-      title: event?.title || 'Event | Kivett Bednar',
+      title: event?.title || 'Event ',
       description: event?.excerpt || 'Event details',
       ...(ogImageUrl && {images: [ogImageUrl]}),
     },

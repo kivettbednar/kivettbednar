@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ])
     const homePage = homeResult?.data
     return {
-      title: homePage?.seoTitle || 'Kivett Bednar | Blues Guitarist & Musician',
+      title: {absolute: homePage?.seoTitle || 'Kivett Bednar | Blues Guitarist & Musician'},
       description: homePage?.seoDescription || 'Gritty Texas Blues meets the heart of the Pacific Northwest',
       alternates: {canonical: baseUrl},
       openGraph: {
@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   } catch {
     return {
-      title: 'Kivett Bednar | Blues Guitarist & Musician',
+      title: {absolute: 'Kivett Bednar | Blues Guitarist & Musician'},
       description: 'Gritty Texas Blues meets the heart of the Pacific Northwest',
     }
   }

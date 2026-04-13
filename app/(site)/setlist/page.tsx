@@ -18,17 +18,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'setlist')) {
-      return {title: 'Page Unavailable | Kivett Bednar', robots: {index: false}}
+      return {title: 'Page Unavailable ', robots: {index: false}}
     }
     const setlistPage = setlistResult?.data
     return {
-      title: setlistPage?.seoTitle || 'Blues Set List | Kivett Bednar',
+      title: setlistPage?.seoTitle || 'Blues Set List ',
       description: setlistPage?.seoDescription || 'A collection of classic blues songs performed by Kivett Bednar',
       alternates: { canonical: `${baseUrl}/setlist` },
     }
   } catch {
     return {
-      title: 'Blues Set List | Kivett Bednar',
+      title: 'Blues Set List ',
       description: 'A collection of classic blues songs',
     }
   }
