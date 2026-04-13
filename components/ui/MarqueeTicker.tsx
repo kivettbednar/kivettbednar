@@ -113,19 +113,15 @@ function TickerRow({items, direction}: {items: MarqueeItem[]; direction: 'left' 
   )
 }
 
-export function MarqueeTicker({topItems, bottomItems}: MarqueeTickerProps) {
-  const top = topItems || defaultTopItems
-  const bottom = bottomItems || defaultBottomItems
+export function MarqueeTicker({topItems}: MarqueeTickerProps) {
+  const items = topItems || defaultTopItems
 
   return (
     <div
-      className="relative overflow-hidden py-6 sm:py-5 bg-background/80 backdrop-blur-sm border-y border-accent-primary/10 marquee-mask"
+      className="relative overflow-hidden py-5 sm:py-6 bg-background/80 backdrop-blur-sm border-y border-accent-primary/10 marquee-mask"
       aria-hidden="true"
     >
-      <div className="space-y-4 sm:space-y-3">
-        <TickerRow items={top} direction="left" />
-        <TickerRow items={bottom} direction="right" />
-      </div>
+      <TickerRow items={items} direction="left" />
     </div>
   )
 }

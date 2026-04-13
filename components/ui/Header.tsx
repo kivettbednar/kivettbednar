@@ -16,10 +16,13 @@ interface HeaderProps {
 
 export function Header({siteName, navigation}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const isHomePage = pathname === '/'
+  const isScrolled = scrollY > 20
+  // Home page: logo fades from 0→1 across first 200px of scroll; elsewhere always visible.
+  const logoOpacity = !mounted || !isHomePage ? 1 : Math.min(1, Math.max(0, scrollY / 200))
   const [cartOpen, setCartOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const {items} = useCart()
@@ -79,20 +82,21 @@ export function Header({siteName, navigation}: HeaderProps) {
 
   const logoText = siteName || 'KIVETT BEDNAR'
 
-  // Detect scroll position with throttling for performance
+  // Track scroll Y (throttled via rAF) — used for scrolled-bg and home logo fade.
   useEffect(() => {
     let ticking = false
 
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20)
+          setScrollY(window.scrollY)
           ticking = false
         })
         ticking = true
       }
     }
 
+    handleScroll()
     window.addEventListener('scroll', handleScroll, {passive: true})
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -147,11 +151,14 @@ export function Header({siteName, navigation}: HeaderProps) {
           {/* Logo - White text with strong shadow for visibility over images */}
           <Link
             href="/"
-            className="text-2xl font-bold tracking-tight transition-colors duration-300 text-white hover:text-accent-primary"
+            className="text-2xl font-bold tracking-tight text-white hover:text-accent-primary"
             style={{
+              opacity: logoOpacity,
+              pointerEvents: logoOpacity < 0.2 ? 'none' : 'auto',
+              transition: 'color 0.2s ease',
               textShadow: isScrolled
                 ? '0 1px 2px rgba(0,0,0,0.5)'
-                : '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.5)'
+                : '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.5)',
             }}
           >
             {logoText}

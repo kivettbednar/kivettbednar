@@ -113,34 +113,34 @@ export default async function ShowsPage() {
         backgroundAlt={showsPage?.heroImage?.alt || 'Kivett Bednar performing live blues'}
       />
 
-      {/* Performance Photo Grid */}
-      <section className="bg-gradient-to-b from-background to-surface py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <AnimatedSection animation="fadeIn">
-              <h2 className="text-5xl font-bold text-center text-text-primary mb-4">
-                {showsPage?.performanceGalleryHeading || 'Live Performances'}
-              </h2>
-              <p className="text-xl text-center text-text-secondary mb-16">
-                {showsPage?.performanceGallerySubheading || 'Moments from the stage'}
-              </p>
-            </AnimatedSection>
-            {showsPage?.performanceImages && showsPage.performanceImages.length > 0 && (
-              <StaggeredImageGrid
-                images={showsPage.performanceImages
-                  .filter((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => img.image?.asset?.url)
-                  .map((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => ({
-                    src: img.image!.asset!.url!,
-                    alt: img.alt || img.image?.alt || 'Performance photo',
-                    caption: img.caption || '',
-                  }))
-                }
-                columns={3}
-              />
-            )}
-          </div>
-        </div>
-      </section>
+      {/* Performance Photo Grid — render only if Sanity has images */}
+      {(() => {
+        const validImages = (showsPage?.performanceImages || [])
+          .filter((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => img.image?.asset?.url)
+          .map((img: {image?: {asset?: {url?: string | null} | null; alt?: string | null} | null; alt?: string | null; caption?: string | null}) => ({
+            src: img.image!.asset!.url!,
+            alt: img.alt || img.image?.alt || 'Performance photo',
+            caption: img.caption || '',
+          }))
+        if (validImages.length === 0) return null
+        return (
+          <section className="bg-gradient-to-b from-background to-surface py-24">
+            <div className="container mx-auto px-4">
+              <div className="max-w-6xl mx-auto">
+                <AnimatedSection animation="fadeIn">
+                  <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-center text-text-primary mb-4">
+                    {showsPage?.performanceGalleryHeading || 'Live Performances'}
+                  </h2>
+                  <p className="text-lg text-center text-text-secondary mb-16">
+                    {showsPage?.performanceGallerySubheading || 'Moments from the stage'}
+                  </p>
+                </AnimatedSection>
+                <StaggeredImageGrid images={validImages} columns={3} />
+              </div>
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Shows Content */}
       <div className="bg-background py-16">

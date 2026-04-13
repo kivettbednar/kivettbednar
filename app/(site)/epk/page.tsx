@@ -5,6 +5,9 @@ import {client} from '@/sanity/lib/client'
 import {epkPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {LegalPortableText} from '@/components/ui/LegalPortableText'
+import {AnimatedHero} from '@/components/ui/AnimatedHero'
+import {AnimatedSection} from '@/components/animations/AnimatedSection'
+import {PageSection} from '@/components/ui/PageSection'
 import {getSiteSettings, isPageEnabled} from '@/lib/site-settings'
 import {Mail, Phone, Download, ExternalLink, Calendar, MapPin, Quote} from 'lucide-react'
 
@@ -128,70 +131,39 @@ export default async function EpkPage() {
 
   const data = rawData as EpkData
   const heroImageUrl = data?.heroImage?.asset?.url
-  const hs = data?.heroImage?.hotspot
-  const heroObjectPosition = hs?.x != null && hs?.y != null
-    ? `${(hs.x * 100).toFixed(2)}% ${(hs.y * 100).toFixed(2)}%`
-    : 'center 25%'
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
-      <section className="relative">
-        {heroImageUrl ? (
-          <div className="relative h-[50vh] min-h-[400px] overflow-hidden">
-            <Image
-              src={heroImageUrl}
-              alt={data?.heroImage?.alt || 'Press kit hero'}
-              fill
-              priority
-              className="object-cover"
-              style={{objectPosition: heroObjectPosition}}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-background" />
-            <div className="absolute inset-0 flex items-end pb-12">
-              <div className="container mx-auto px-4">
-                <div className="max-w-4xl">
-                  <p className="text-accent-primary text-sm uppercase tracking-widest font-bold mb-3">
-                    Electronic Press Kit
-                  </p>
-                  <h1 className="font-bebas text-5xl md:text-7xl uppercase tracking-wide text-white mb-4">
-                    Press Kit
-                  </h1>
-                  {data?.genres && data.genres.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {data.genres.map((genre) => (
-                        <span
-                          key={genre}
-                          className="px-3 py-1 bg-accent-primary/20 border border-accent-primary text-accent-primary text-xs uppercase tracking-wider"
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="pt-32 pb-12 bg-surface">
-            <div className="container mx-auto px-4 text-center">
-              <p className="text-accent-primary text-sm uppercase tracking-widest font-bold mb-3">
-                Electronic Press Kit
-              </p>
-              <h1 className="font-bebas text-5xl md:text-6xl uppercase tracking-wide text-text-primary">
-                Press Kit
-              </h1>
-            </div>
-          </div>
-        )}
-      </section>
+      <AnimatedHero
+        title="Press Kit"
+        subtitle={data?.pageIntro || 'Electronic Press Kit'}
+        variant="contact"
+        backgroundImage={heroImageUrl || undefined}
+        backgroundAlt={data?.heroImage?.alt || 'Press kit hero'}
+      />
 
-      <div className="container mx-auto px-4 py-16">
+      {data?.genres && data.genres.length > 0 && (
+        <div className="container mx-auto px-4 pt-10">
+          <AnimatedSection animation="fadeUp">
+            <div className="max-w-5xl mx-auto flex flex-wrap gap-2 justify-center">
+              {data.genres.map((genre) => (
+                <span
+                  key={genre}
+                  className="px-3 py-1 bg-accent-primary/10 border border-accent-primary/40 text-accent-primary text-xs uppercase tracking-wider"
+                >
+                  {genre}
+                </span>
+              ))}
+            </div>
+          </AnimatedSection>
+        </div>
+      )}
+
+      <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto space-y-20">
           {/* Booking Contact (top priority for press use) */}
           {(data?.bookingContactEmail || data?.bookingContactPhone) && (
-            <section className="bg-surface-elevated border border-accent-primary/30 p-8 md:p-10">
+            <PageSection className="bg-surface-elevated border border-accent-primary/30 p-8 md:p-10">
               <h2 className="font-bebas text-2xl uppercase tracking-wide text-accent-primary mb-6">
                 Booking Contact
               </h2>
@@ -225,12 +197,12 @@ export default async function EpkPage() {
                   </div>
                 )}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Page intro / Short bio */}
           {(data?.pageIntro || data?.shortBio) && (
-            <section>
+            <PageSection>
               {data.pageIntro && (
                 <p className="text-xl md:text-2xl text-text-secondary leading-relaxed mb-6">
                   {data.pageIntro}
@@ -244,12 +216,12 @@ export default async function EpkPage() {
                   <p className="text-text-secondary leading-relaxed">{data.shortBio}</p>
                 </div>
               )}
-            </section>
+            </PageSection>
           )}
 
           {/* Press Photos */}
           {data?.pressPhotos && data.pressPhotos.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-6">
                 Press Photos
               </h2>
@@ -290,12 +262,12 @@ export default async function EpkPage() {
                   )
                 })}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Videos */}
           {data?.videos && data.videos.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-8">
                 Videos
               </h2>
@@ -334,12 +306,12 @@ export default async function EpkPage() {
                   )
                 })}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Press Quotes */}
           {data?.pressQuotes && data.pressQuotes.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-8">
                 Press Quotes
               </h2>
@@ -380,12 +352,12 @@ export default async function EpkPage() {
                   </div>
                 ))}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Notable Shows */}
           {data?.notableShows && data.notableShows.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-8">
                 Notable Performances
               </h2>
@@ -415,22 +387,22 @@ export default async function EpkPage() {
                   </div>
                 ))}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Long Bio */}
           {data?.longBio && data.longBio.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-8">
                 Full Bio
               </h2>
               <LegalPortableText value={data.longBio} />
-            </section>
+            </PageSection>
           )}
 
           {/* Influences */}
           {data?.influencedBy && data.influencedBy.length > 0 && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-4">
                 Influenced By
               </h2>
@@ -444,12 +416,12 @@ export default async function EpkPage() {
                   </span>
                 ))}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Tech Downloads */}
           {(data?.stagePlotPdf?.asset?.url || data?.techRiderPdf?.asset?.url) && (
-            <section>
+            <PageSection>
               <h2 className="font-bebas text-3xl md:text-4xl uppercase tracking-wide text-text-primary mb-8">
                 Technical Documents
               </h2>
@@ -481,12 +453,12 @@ export default async function EpkPage() {
                   </a>
                 )}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Press Kit Downloads */}
           {(data?.fullPressKitPdf?.asset?.url || data?.onesheet?.asset?.url) && (
-            <section className="bg-accent-primary/5 border border-accent-primary/30 p-8 md:p-10">
+            <PageSection className="bg-accent-primary/5 border border-accent-primary/30 p-8 md:p-10">
               <h2 className="font-bebas text-2xl md:text-3xl uppercase tracking-wide text-text-primary mb-6">
                 Download the Full Press Kit
               </h2>
@@ -512,7 +484,7 @@ export default async function EpkPage() {
                   </a>
                 )}
               </div>
-            </section>
+            </PageSection>
           )}
 
           {/* Empty state */}

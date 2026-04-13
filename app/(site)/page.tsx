@@ -12,7 +12,6 @@ import {SplitScreenImage} from '@/components/ui/SplitScreenImage'
 import {NewsletterForm} from '@/components/ui/NewsletterForm'
 import {MarqueeTicker} from '@/components/ui/MarqueeTicker'
 import {AmbientOrbs} from '@/components/ui/AmbientOrbs'
-import {ScrollProgress} from '@/components/ui/ScrollProgress'
 import {LiveVideoSlider} from '@/components/ui/LiveVideoSlider'
 
 // Helper function to extract YouTube video ID from URL or return ID as-is
@@ -104,9 +103,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Scroll Progress Bar */}
-      <ScrollProgress />
-
       {/* Ambient Gradient Orbs */}
       <AmbientOrbs />
 
@@ -240,32 +236,23 @@ export default async function HomePage() {
         <section className="py-16 sm:py-20 md:py-28 bg-background section-overlap-diagonal">
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
-              {/* Header row */}
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-14">
-                <div>
-                  <AnimatedSection animation="fadeUp">
-                    <span className="flex items-center gap-3 mb-4">
-                      <span className="h-px w-10 bg-accent-primary" />
-                      <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
-                        Live Dates
-                      </span>
+              {/* Header */}
+              <div className="mb-10 md:mb-14">
+                <AnimatedSection animation="fadeUp">
+                  <span className="flex items-center gap-3 mb-4">
+                    <span className="h-px w-10 bg-accent-primary" />
+                    <span className="text-[11px] uppercase tracking-[0.35em] text-accent-primary font-medium">
+                      Live Dates
                     </span>
-                  </AnimatedSection>
-                  <TextReveal
-                    text={homePage.upcomingShowsHeading || 'Upcoming Shows'}
-                    className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none text-text-primary"
-                  />
-                </div>
-                <Link
-                  href="/shows"
-                  className="group inline-flex items-center gap-2 text-accent-primary text-sm uppercase tracking-[0.25em] font-semibold hover:gap-3 transition-all self-start md:self-auto"
-                >
-                  <span>{homePage.seeAllShowsLinkText || 'See all shows'}</span>
-                  <span className="arrow-slide">→</span>
-                </Link>
+                  </span>
+                </AnimatedSection>
+                <TextReveal
+                  text={homePage.upcomingShowsHeading || 'Upcoming Shows'}
+                  className="font-bebas text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none text-text-primary"
+                />
               </div>
 
-              {/* Desktop: clean 3-column grid, no row-span, no dashed ghost */}
+              {/* Desktop: clean 3-column grid */}
               <div className="hidden md:grid md:grid-cols-3 gap-6">
                 {events.slice(0, 3).map((event, index: number) => (
                   <AnimatedSection
@@ -287,6 +274,19 @@ export default async function HomePage() {
                   </div>
                 ))}
               </div>
+
+              {/* Single CTA below grid */}
+              <AnimatedSection animation="fadeUp" delay={0.3}>
+                <div className="mt-10 md:mt-14 flex justify-center">
+                  <Link
+                    href="/shows"
+                    className="group inline-flex items-center gap-2 text-accent-primary text-sm uppercase tracking-[0.25em] font-semibold border-b border-accent-primary/40 hover:border-accent-primary pb-1 transition-colors"
+                  >
+                    <span>{homePage.seeAllShowsLinkText || 'View all shows'}</span>
+                    <span className="arrow-slide">→</span>
+                  </Link>
+                </div>
+              </AnimatedSection>
             </div>
           </div>
         </section>
@@ -448,14 +448,18 @@ export default async function HomePage() {
         {/* Heavy dark overlay + blur */}
         <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
         <div className="relative z-10 container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-2xl mx-auto text-center">
             <AnimatedSection animation="fadeUp">
-              <h2 className="text-display-lg text-text-primary mb-6">
+              <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-4">
                 {homePage.newsletterHeading || 'Stay Connected'}
               </h2>
-              <p className="text-xl text-text-secondary mb-10 max-w-2xl mx-auto">
-                {homePage.newsletterText || 'Get the latest show announcements, new music releases, and exclusive content delivered to your inbox.'}
+            </AnimatedSection>
+            <AnimatedSection animation="fadeUp" delay={0.1}>
+              <p className="text-lg text-text-secondary mb-10 max-w-xl mx-auto">
+                {homePage.newsletterText || 'Show announcements, new music, and the occasional note from the road.'}
               </p>
+            </AnimatedSection>
+            <AnimatedSection animation="fadeUp" delay={0.2}>
               <NewsletterForm
                 buttonText={uiText?.newsletterButtonText || undefined}
                 successText={uiText?.newsletterSuccessText || undefined}

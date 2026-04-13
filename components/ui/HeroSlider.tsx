@@ -217,10 +217,6 @@ export function HeroSlider({
                 {nextShow.venue}
                 {nextShow.city ? <span className="text-white/50 not-italic"> · {nextShow.city}</span> : null}
               </div>
-              <div className="mt-3 flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] text-white/60 group-hover:text-accent-primary transition-colors">
-                <span>All Shows</span>
-                <span className="arrow-slide">→</span>
-              </div>
             </Link>
           </motion.div>
         )}
