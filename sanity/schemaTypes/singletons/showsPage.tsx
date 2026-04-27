@@ -1,83 +1,98 @@
 import {CalendarIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {imagePositionFields} from '@/sanity/lib/image-fields'
-import {seoFields} from '@/sanity/lib/schema-fields'
+import {seoFieldsInGroup} from '@/sanity/lib/schema-fields'
 
 /**
- * Shows Page singleton schema - content for the shows/events page
+ * Shows Page singleton — content for the /shows route and shared labels
+ * used by individual event pages.
  */
-
 export const showsPage = defineType({
   name: 'showsPage',
   title: 'Shows Page',
   type: 'document',
   icon: CalendarIcon,
+  groups: [
+    {name: 'hero', title: 'Hero', default: true},
+    {name: 'gallery', title: 'Performance Gallery'},
+    {name: 'upcoming', title: 'Upcoming Shows'},
+    {name: 'eventDetail', title: 'Event Detail Labels'},
+    {name: 'fallback', title: 'Fallbacks'},
+    {name: 'seo', title: 'SEO'},
+  ],
   fields: [
-    // Hero Section
+    // === HERO ===
     defineField({
       name: 'heroHeading',
       title: 'Hero Heading',
       type: 'string',
-      description: 'Main heading (e.g., "Live Shows")',    }),
+      description: 'Big headline at the top of the page (e.g., "Live Shows").',
+      group: 'hero',
+    }),
     defineField({
       name: 'heroSubheading',
       title: 'Hero Subheading',
       type: 'text',
-      description: 'Subtitle text below the heading',    }),
+      description: 'Short tagline below the headline.',
+      group: 'hero',
+    }),
     defineField({
       name: 'heroImage',
-      title: 'Hero Desktop Image',
+      title: 'Hero Background Image (Desktop)',
       type: 'image',
-      description: 'Desktop background image for the hero section',
-      options: {
-        hotspot: true,
-      },
+      description: 'Background image used on desktop. Recommended: 1920×1080 or larger.',
+      group: 'hero',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
           title: 'Alt Text',
           type: 'string',
-          description: 'Describe the image for accessibility',
+          description: 'Describe the image for screen readers.',
         }),
         ...imagePositionFields,
       ],
     }),
     defineField({
       name: 'heroMobileImage',
-      title: 'Hero Mobile Image (Optional)',
+      title: 'Hero Background Image (Mobile, optional)',
       type: 'image',
-      description: 'Different image for mobile devices. If not set, desktop image will be used.',
-      options: {
-        hotspot: true,
-      },
+      description: 'A separate mobile-friendly image. If empty, the desktop image is used.',
+      group: 'hero',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
           title: 'Alt Text',
           type: 'string',
-              initialValue: 'Kivett Bednar performing live',
+          initialValue: 'Kivett Bednar performing live',
         }),
         ...imagePositionFields,
       ],
     }),
 
-    // Performance Gallery Section
+    // === PERFORMANCE GALLERY ===
     defineField({
       name: 'performanceGalleryHeading',
-      title: 'Performance Gallery Heading',
+      title: 'Gallery Heading',
       type: 'string',
-      description: 'Heading for the performance photos section',    }),
+      description: 'Heading above the performance photo grid.',
+      group: 'gallery',
+    }),
     defineField({
       name: 'performanceGallerySubheading',
-      title: 'Performance Gallery Subheading',
+      title: 'Gallery Subheading',
       type: 'string',
-      description: 'Subtitle for the performance photos section',
+      description: 'Optional one-line subheading.',
+      group: 'gallery',
     }),
     defineField({
       name: 'performanceImages',
-      title: 'Performance Gallery Images',
+      title: 'Gallery Images',
       type: 'array',
-      description: 'Grid of performance photos (recommended: 6 images)',      of: [
+      description: 'Photos shown in the gallery grid. Recommended: 6 images.',
+      group: 'gallery',
+      of: [
         defineArrayMember({
           type: 'object',
           name: 'performanceImage',
@@ -86,185 +101,199 @@ export const showsPage = defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              options: {
-                hotspot: true,
-              },            }),
+              options: {hotspot: true},
+            }),
             defineField({
               name: 'alt',
               title: 'Alt Text',
               type: 'string',
-              description: 'Describe the image for accessibility',            }),
+              description: 'Describe the image for screen readers.',
+            }),
             defineField({
               name: 'caption',
               title: 'Caption',
               type: 'string',
-              description: 'Short caption displayed on the image',
+              description: 'Short caption shown over the image.',
             }),
             ...imagePositionFields,
           ],
           preview: {
-            select: {
-              title: 'caption',
-              subtitle: 'alt',
-              media: 'image',
-            },
+            select: {title: 'caption', subtitle: 'alt', media: 'image'},
           },
         }),
       ],
     }),
 
-    // Upcoming Shows Section
+    // === UPCOMING SHOWS ===
     defineField({
       name: 'upcomingShowsHeading',
       title: 'Upcoming Shows Heading',
       type: 'string',
-      description: 'Heading for upcoming shows list',    }),
+      description: 'Heading above the list of upcoming shows.',
+      group: 'upcoming',
+    }),
     defineField({
       name: 'emptyStateHeading',
-      title: 'No Shows - Heading',
+      title: 'Empty State — Heading',
       type: 'string',
-      description: 'Heading when no upcoming shows exist',    }),
+      description: 'Shown when there are no upcoming shows.',
+      group: 'upcoming',
+    }),
     defineField({
       name: 'emptyStateText',
-      title: 'No Shows - Message',
+      title: 'Empty State — Message',
       type: 'text',
-      description: 'Message displayed when no upcoming shows are scheduled',    }),
-
-    // Dynamic Count Text
+      description: 'Friendly note shown when no shows are scheduled.',
+      group: 'upcoming',
+    }),
     defineField({
       name: 'showCountPrefix',
       title: 'Show Count Prefix',
       type: 'string',
-      description: 'Text prefix before show count (e.g., " upcoming")',
+      description: 'Text before the count (e.g., " upcoming"). Note the leading space.',
       initialValue: ' upcoming',
+      group: 'upcoming',
     }),
     defineField({
       name: 'showSingular',
-      title: 'Show: Singular Form',
+      title: 'Show — Singular',
       type: 'string',
-      description: 'Singular form (e.g., "show")',
-      initialValue: 'show',    }),
+      description: 'Used when count is 1 (e.g., "show").',
+      initialValue: 'show',
+      group: 'upcoming',
+    }),
     defineField({
       name: 'showPlural',
-      title: 'Show: Plural Form',
+      title: 'Show — Plural',
       type: 'string',
-      description: 'Plural form (e.g., "shows")',
-      initialValue: 'shows',    }),
-
-    // Stats Banner Labels
+      description: 'Used when count is 2+ (e.g., "shows").',
+      initialValue: 'shows',
+      group: 'upcoming',
+    }),
     defineField({
       name: 'statsLabel1',
-      title: 'Stats Label 1',
+      title: 'Stats Label — 1',
       type: 'string',
-      description: 'Label for first stat (default: "Upcoming Shows")',
       initialValue: 'Upcoming Shows',
+      group: 'upcoming',
     }),
     defineField({
       name: 'statsLabel2',
-      title: 'Stats Label 2',
+      title: 'Stats Label — 2',
       type: 'string',
-      description: 'Label for second stat (default: "Live Blues")',
       initialValue: 'Live Blues',
+      group: 'upcoming',
     }),
     defineField({
       name: 'statsLabel3',
-      title: 'Stats Label 3',
+      title: 'Stats Label — 3',
       type: 'string',
-      description: 'Label for third stat (default: "Pacific Northwest")',
       initialValue: 'Pacific Northwest',
+      group: 'upcoming',
     }),
 
-    // Event Detail Page Labels
+    // === EVENT DETAIL LABELS ===
     defineField({
       name: 'eventDetailsLabel',
       title: 'Event Details Label',
       type: 'string',
       initialValue: 'Event Details',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'dateTimeLabel',
       title: 'Date & Time Label',
       type: 'string',
       initialValue: 'Date & Time',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'venueLabel',
       title: 'Venue Label',
       type: 'string',
       initialValue: 'Venue',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'viewOnMapText',
-      title: 'View on Map Text',
+      title: 'View on Map Link Text',
       type: 'string',
       initialValue: 'View on Map',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'getTicketsText',
-      title: 'Get Tickets Text',
+      title: 'Get Tickets Button Text',
       type: 'string',
       initialValue: 'Get Tickets',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'soldOutText',
-      title: 'Sold Out Text',
+      title: 'Sold Out Button Text',
       type: 'string',
       initialValue: 'Sold Out',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'backToShowsText',
-      title: 'Back to Shows Text',
+      title: 'Back-to-Shows Link Text',
       type: 'string',
       initialValue: 'Back to All Shows',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'shareEventText',
       title: 'Share Event Text',
       type: 'string',
       initialValue: 'Share Event',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'importantInfoText',
-      title: 'Important Information Label',
+      title: 'Important Info Heading',
       type: 'string',
       initialValue: 'Important Information',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'canceledBadgeText',
       title: 'Canceled Badge Text',
       type: 'string',
       initialValue: 'CANCELED',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'soldOutBadgeText',
       title: 'Sold Out Badge Text',
       type: 'string',
       initialValue: 'SOLD OUT',
+      group: 'eventDetail',
     }),
     defineField({
       name: 'canceledMessageText',
       title: 'Canceled Event Message',
       type: 'string',
       initialValue: 'This event has been canceled',
+      group: 'eventDetail',
     }),
-    ...seoFields,
+
+    // === FALLBACKS ===
     defineField({
       name: 'defaultEventImage',
       title: 'Default Event Image',
       type: 'image',
-      description: 'Fallback image for events without their own hero image',
-      options: { hotspot: true },
-      fields: [
-        defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
-      ],
+      description: 'Used as the cover image for events that don\'t have their own.',
+      group: 'fallback',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: 'Alt Text', type: 'string'})],
     }),
+
+    ...seoFieldsInGroup('seo'),
   ],
   preview: {
     prepare() {
-      return {
-        title: 'Shows Page',
-        subtitle: 'Live shows and events content',
-      }
+      return {title: 'Shows Page', subtitle: 'Live shows and events'}
     },
   },
 })

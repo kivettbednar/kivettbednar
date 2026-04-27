@@ -1,37 +1,68 @@
 import {EnvelopeIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {imagePositionFields} from '@/sanity/lib/image-fields'
-import {seoFields} from '@/sanity/lib/schema-fields'
+import {seoFieldsInGroup} from '@/sanity/lib/schema-fields'
 
 /**
- * Contact Page singleton schema
+ * Contact Page singleton — content for the /contact route.
  */
-
 export const contactPage = defineType({
   name: 'contactPage',
   title: 'Contact Page',
   type: 'document',
   icon: EnvelopeIcon,
+  groups: [
+    {name: 'hero', title: 'Hero', default: true},
+    {name: 'portraits', title: 'Portraits'},
+    {name: 'cards', title: 'Connect Cards'},
+    {name: 'sections', title: 'Section Headings'},
+    {name: 'cta', title: 'Call to Action'},
+    {name: 'seo', title: 'SEO'},
+  ],
   fields: [
-    // Hero Section
+    // === HERO ===
     defineField({
       name: 'heroHeading',
       title: 'Hero Heading',
-      type: 'string',    }),
+      type: 'string',
+      description: 'Big headline at the top of the page.',
+      group: 'hero',
+    }),
     defineField({
       name: 'heroSubheading',
       title: 'Hero Subheading',
       type: 'text',
       rows: 2,
+      description: 'Short tagline below the headline.',
+      group: 'hero',
     }),
     defineField({
       name: 'heroImage',
       title: 'Hero Background Image',
       type: 'image',
-      description: 'Background image for hero section',
-      options: {
-        hotspot: true,
-      },
+      description: 'Large background image behind the hero text.',
+      group: 'hero',
+      options: {hotspot: true},
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Describe the image for screen readers.',
+          initialValue: 'Kivett Bednar',
+        }),
+        ...imagePositionFields,
+      ],
+    }),
+
+    // === PORTRAITS ===
+    defineField({
+      name: 'portraitImage',
+      title: 'Main Portrait Image',
+      type: 'image',
+      description: 'The primary portrait shown on the Contact page.',
+      group: 'portraits',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
@@ -42,30 +73,12 @@ export const contactPage = defineType({
         ...imagePositionFields,
       ],
     }),
-
-    // Portrait Section
-    defineField({
-      name: 'portraitImage',
-      title: 'Main Portrait Image',
-      type: 'image',
-      description: 'Primary portrait photo',
-      options: {
-        hotspot: true,
-      },
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string',
-              initialValue: 'Kivett Bednar',        }),
-        ...imagePositionFields,
-      ],
-    }),
     defineField({
       name: 'portraitGallery',
       title: 'Portrait Gallery',
       type: 'array',
-      description: 'Additional portrait/performance images',
+      description: 'Optional secondary photos shown alongside the main portrait.',
+      group: 'portraits',
       of: [
         defineArrayMember({
           type: 'object',
@@ -75,9 +88,7 @@ export const contactPage = defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              options: {
-                hotspot: true,
-              },
+              options: {hotspot: true},
               fields: [
                 defineField({
                   name: 'alt',
@@ -90,212 +101,201 @@ export const contactPage = defineType({
             }),
           ],
           preview: {
-            select: {
-              title: 'image.alt',
-              media: 'image',
-            },
+            select: {title: 'image.alt', media: 'image'},
           },
         }),
       ],
     }),
 
-    // Connect Section
+    // === CARDS ===
     defineField({
       name: 'connectHeading',
       title: 'Connect Section Heading',
       type: 'string',
-      description: 'Heading for the contact cards section (e.g., "Let\'s Connect")',
+      description: 'Heading above the three connect cards.',
       initialValue: "Let's Connect",
+      group: 'cards',
     }),
-
-    // Booking Card
     defineField({
       name: 'bookingCardTitle',
-      title: 'Booking Card Title',
+      title: 'Booking Card — Title',
       type: 'string',
-      description: 'Title for the booking card',
       initialValue: 'Book a Show',
+      group: 'cards',
     }),
     defineField({
       name: 'bookingCardDescription',
-      title: 'Booking Card Description',
+      title: 'Booking Card — Description',
       type: 'text',
       rows: 2,
-      description: 'Description text for booking card',
       initialValue: 'Looking for live blues at your venue or private event? Check out upcoming shows or reach out to discuss booking.',
+      group: 'cards',
     }),
     defineField({
       name: 'bookingCardLinkText',
-      title: 'Booking Card Link Text',
+      title: 'Booking Card — Link Text',
       type: 'string',
-      description: 'Link text for booking card',
       initialValue: 'View Shows →',
+      group: 'cards',
     }),
-
-    // Lessons Card
     defineField({
       name: 'lessonsCardTitle',
-      title: 'Lessons Card Title',
+      title: 'Lessons Card — Title',
       type: 'string',
-      description: 'Title for the lessons card',
       initialValue: 'Guitar Lessons',
+      group: 'cards',
     }),
     defineField({
       name: 'lessonsCardDescription',
-      title: 'Lessons Card Description',
+      title: 'Lessons Card — Description',
       type: 'text',
       rows: 2,
-      description: 'Description text for lessons card',
       initialValue: 'Learn blues guitar from decades of experience. All skill levels welcome — from beginners to advanced players.',
+      group: 'cards',
     }),
     defineField({
       name: 'lessonsCardLinkText',
-      title: 'Lessons Card Link Text',
+      title: 'Lessons Card — Link Text',
       type: 'string',
-      description: 'Link text for lessons card',
       initialValue: 'Learn More →',
+      group: 'cards',
     }),
-
-    // Location Card
     defineField({
       name: 'locationCardTitle',
-      title: 'Location Card Title',
+      title: 'Location Card — Title',
       type: 'string',
-      description: 'Title for the location card',
       initialValue: 'Based In',
+      group: 'cards',
     }),
     defineField({
       name: 'locationCardRegion',
-      title: 'Location Card Region',
+      title: 'Location Card — Region',
       type: 'string',
-      description: 'Region name displayed prominently',
+      description: 'The region name shown prominently on the card.',
       initialValue: 'Pacific Northwest',
+      group: 'cards',
     }),
     defineField({
       name: 'locationCardDescription',
-      title: 'Location Card Description',
+      title: 'Location Card — Description',
       type: 'text',
       rows: 2,
-      description: 'Description text for location card',
       initialValue: 'Gritty Texas Blues meets the heart of the Pacific Northwest. Available for shows and events throughout the region.',
+      group: 'cards',
     }),
     defineField({
       name: 'locationCardLinkText',
-      title: 'Location Card Link Text',
+      title: 'Location Card — Link Text',
       type: 'string',
-      description: 'Link text for location card',
       initialValue: 'View on Map →',
+      group: 'cards',
     }),
-
-    // Social Section
     defineField({
-      name: 'socialSubheading',
-      title: 'Social Section Subheading',
+      name: 'locationMapQuery',
+      title: 'Location Map Search',
       type: 'string',
-      description: 'Subtitle under social section heading',
-      initialValue: 'Stay connected for show updates, behind-the-scenes content, and more',
+      description: 'Google Maps search term used by the "View on Map" link (e.g., "Portland Oregon").',
+      initialValue: 'Portland Oregon',
+      group: 'cards',
     }),
 
-    // Section Headings
+    // === SECTION HEADINGS ===
     defineField({
       name: 'formHeading',
       title: 'Contact Form Heading',
       type: 'string',
-      description: 'Heading for the contact form section',
+      group: 'sections',
     }),
     defineField({
       name: 'directContactHeading',
       title: 'Direct Contact Heading',
       type: 'string',
-      description: 'Heading for direct contact info section',
+      group: 'sections',
     }),
     defineField({
       name: 'directContactDescription',
       title: 'Direct Contact Description',
       type: 'text',
       rows: 2,
-      description: 'Description text for direct contact section',
       initialValue: 'For booking inquiries, press questions, or guitar lessons, reach out directly:',
+      group: 'sections',
     }),
     defineField({
       name: 'socialHeading',
       title: 'Social Links Heading',
       type: 'string',
-      description: 'Heading for social media links',
+      group: 'sections',
+    }),
+    defineField({
+      name: 'socialSubheading',
+      title: 'Social Links Subheading',
+      type: 'string',
+      initialValue: 'Stay connected for show updates, behind-the-scenes content, and more',
+      group: 'sections',
     }),
     defineField({
       name: 'quickLinksHeading',
       title: 'Quick Links Heading',
       type: 'string',
-      description: 'Heading for quick navigation links',
+      group: 'sections',
+    }),
+    defineField({
+      name: 'quickLinkShowsText',
+      title: 'Quick Link — Shows',
+      type: 'string',
+      initialValue: 'Upcoming Shows',
+      group: 'sections',
+    }),
+    defineField({
+      name: 'quickLinkLessonsText',
+      title: 'Quick Link — Lessons',
+      type: 'string',
+      initialValue: 'Guitar Lessons',
+      group: 'sections',
+    }),
+    defineField({
+      name: 'quickLinkSetlistText',
+      title: 'Quick Link — Setlist',
+      type: 'string',
+      initialValue: 'Blues Setlist',
+      group: 'sections',
     }),
     defineField({
       name: 'aboutHeading',
       title: 'About Section Heading',
       type: 'string',
-      description: 'Heading for about/bio section',
+      group: 'sections',
     }),
 
-    // Quick Links Labels
-    defineField({
-      name: 'quickLinkShowsText',
-      title: 'Quick Link: Shows Text',
-      type: 'string',
-      description: 'Text for "Upcoming Shows" quick link',
-      initialValue: 'Upcoming Shows',
-    }),
-    defineField({
-      name: 'quickLinkLessonsText',
-      title: 'Quick Link: Lessons Text',
-      type: 'string',
-      description: 'Text for "Guitar Lessons" quick link',
-      initialValue: 'Guitar Lessons',
-    }),
-    defineField({
-      name: 'quickLinkSetlistText',
-      title: 'Quick Link: Setlist Text',
-      type: 'string',
-      description: 'Text for "Blues Setlist" quick link',
-      initialValue: 'Blues Setlist',
-    }),
-
-    // CTA Section
+    // === CTA ===
     defineField({
       name: 'ctaSectionHeading',
-      title: 'CTA Section Heading',
+      title: 'CTA Heading',
       type: 'string',
-      description: 'Heading for "Looking for Live Blues?" CTA section',
       initialValue: 'Looking for Live Blues?',
+      group: 'cta',
     }),
     defineField({
       name: 'ctaSectionText',
-      title: 'CTA Section Text',
+      title: 'CTA Body Text',
       type: 'text',
       rows: 2,
-      description: 'Description text for shows CTA section',
       initialValue: 'Check out upcoming performances and get your tickets before they sell out.',
+      group: 'cta',
     }),
     defineField({
       name: 'ctaSectionButtonText',
-      title: 'CTA Section Button Text',
+      title: 'CTA Button Text',
       type: 'string',
-      description: 'Button text for shows CTA',
       initialValue: 'See Upcoming Shows',
+      group: 'cta',
     }),
-    defineField({
-      name: 'locationMapQuery',
-      title: 'Location Map Query',
-      type: 'string',
-      description: 'Google Maps search query for "Based In" card (e.g., "Portland Oregon")',
-      initialValue: 'Portland Oregon',
-    }),
-    ...seoFields,
+
+    ...seoFieldsInGroup('seo'),
   ],
   preview: {
     prepare() {
-      return {
-        title: 'Contact Page',
-      }
+      return {title: 'Contact Page'}
     },
   },
 })

@@ -17,35 +17,11 @@ import {
   CheckmarkCircleIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
-import pluralize from 'pluralize-esm'
 
 /**
- * Enhanced Structure builder for professional ecommerce CMS
- * Organizes content by type with dedicated sections for store management
+ * Custom Studio structure organized by editorial focus:
+ * Site Pages · Store · Orders · Events & Content · Subscribers · Settings.
  */
-
-// Singleton document types that should not appear in the document list
-const SINGLETON_TYPES = [
-  'settings',
-  'homePage',
-  'showsPage',
-  'lessonsPage',
-  'contactPage',
-  'setlistPage',
-  'merchPage',
-  'navigation',
-  'uiText',
-  'checkoutSettings',
-  'storeSettings',
-  'orderConfirmationPage',
-  'privacyPolicy',
-  'termsOfService',
-  'returnsPolicy',
-  'ampsPage',
-  'bio',
-  'epkPage',
-  'assist.instruction.context',
-]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
@@ -411,43 +387,18 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 ),
               S.documentTypeListItem('lessonPackage').title('Lesson Packages').icon(BookIcon),
               S.documentTypeListItem('song').title('Setlist Songs').icon(DocumentIcon),
-              S.documentTypeListItem('page').title('Custom Pages').icon(DocumentIcon),
-              S.documentTypeListItem('post').title('Blog Posts').icon(DocumentIcon),
             ])
         ),
 
       S.divider(),
 
-      // === PEOPLE & SUBSCRIBERS ===
+      // === SUBSCRIBERS ===
       S.listItem()
-        .title('👥 People & Subscribers')
+        .title('👥 Subscribers')
         .icon(UserIcon)
         .child(
-          S.list()
-            .title('People & Subscribers')
-            .items([
-              S.documentTypeListItem('person').title('People').icon(UserIcon),
-              S.documentTypeListItem('newsletterSubscriber')
-                .title('Newsletter Subscribers')
-                .icon(EnvelopeIcon),
-            ])
-        ),
-
-      S.divider(),
-
-      // === REUSABLE CONTENT ===
-      S.listItem()
-        .title('📝 Reusable Content')
-        .icon(ComponentIcon)
-        .child(
-          S.list()
-            .title('Reusable Content')
-            .items([
-              S.documentTypeListItem('testimonialsSet')
-                .title('Testimonials Sets')
-                .icon(StarIcon),
-              S.documentTypeListItem('faqSet').title('FAQ Sets').icon(InfoOutlineIcon),
-            ])
+          S.documentTypeList('newsletterSubscriber')
+            .title('Newsletter Subscribers')
         ),
 
       S.divider(),
@@ -473,13 +424,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .icon(CogIcon),
 
               S.listItem()
-                .title('Navigation')
-                .id('navigation')
-                .child(S.document().schemaType('navigation').documentId('navigation'))
-                .icon(ComponentIcon),
-
-              S.listItem()
-                .title('UI Text')
+                .title('UI Text & Labels')
                 .id('uiText')
                 .child(S.document().schemaType('uiText').documentId('uiText'))
                 .icon(DocumentIcon),

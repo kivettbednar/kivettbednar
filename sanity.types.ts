@@ -13,325 +13,6 @@
  */
 
 // Source: schema.json
-export type Faq = {
-  _type: "faq";
-  set?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "faqSet";
-  };
-  heading?: string;
-  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
-  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  items?: Array<{
-    question?: string;
-    answer?: string;
-    _type: "qa";
-    _key: string;
-  }>;
-};
-
-export type Testimonials = {
-  _type: "testimonials";
-  set?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "testimonialsSet";
-  };
-  heading?: string;
-  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
-  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  items?: Array<{
-    name?: string;
-    role?: string;
-    quote?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _type: "testimonial";
-    _key: string;
-  }>;
-};
-
-export type MusicEmbed = {
-  _type: "musicEmbed";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  provider?: "spotify" | "bandcamp" | "youtube";
-  url?: string;
-};
-
-export type VideoEmbed = {
-  _type: "videoEmbed";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  provider?: "youtube" | "vimeo";
-  url?: string;
-};
-
-export type CtaBanner = {
-  _type: "ctaBanner";
-  heading?: string;
-  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
-  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
-  body?: string;
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  cta?: {
-    label?: string;
-    href?: string;
-  };
-};
-
-export type FeatureGrid = {
-  _type: "featureGrid";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  items?: Array<{
-    title?: string;
-    body?: string;
-    iconType?: "image" | "icon";
-    icon?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-      mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-      _type: "image";
-    };
-    _key: string;
-  }>;
-};
-
-export type ImageGallery = {
-  _type: "imageGallery";
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  images?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    caption?: string;
-    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-    _type: "image";
-    _key: string;
-  }>;
-};
-
-export type RichText = {
-  _type: "richText";
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      linkType?: "href" | "page" | "post" | "product";
-      href?: string;
-      page?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
-      };
-      post?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "post";
-      };
-      product?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "product";
-      };
-      openInNewTab?: boolean;
-      _type: "link";
-      _key: string;
-    } | {
-      label: string;
-      variant?: "primary" | "secondary" | "outline";
-      href: string;
-      _type: "button";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-};
-
-export type Hero = {
-  _type: "hero";
-  headline: string;
-  headlineDesktopSize?: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl";
-  headlineMobileSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl";
-  headlineTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
-  headlineLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
-  subhead?: string;
-  subheadTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
-  subheadLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
-  mediaType?: "image" | "video";
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  mobileImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-  mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-  video?: string;
-  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
-  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
-  ctas?: Array<{
-    label?: string;
-    href?: string;
-    variant?: "primary" | "secondary" | "outline";
-    _key: string;
-  }>;
-};
-
-export type CallToAction = {
-  _type: "callToAction";
-  heading?: string;
-  text?: string;
-  buttonText?: string;
-  link?: Link;
-};
-
-export type Link = {
-  _type: "link";
-  linkType?: "href" | "page" | "post" | "product";
-  href?: string;
-  page?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  };
-  post?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "post";
-  };
-  product?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "product";
-  };
-  openInNewTab?: boolean;
-};
-
-export type InfoSection = {
-  _type: "infoSection";
-  heading?: string;
-  subheading?: string;
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      linkType?: "href" | "page" | "post" | "product";
-      href?: string;
-      page?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
-      };
-      post?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "post";
-      };
-      product?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "product";
-      };
-      openInNewTab?: boolean;
-      _type: "link";
-      _key: string;
-    } | {
-      label: string;
-      variant?: "primary" | "secondary" | "outline";
-      href: string;
-      _type: "button";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-};
-
 export type BlockContent = Array<{
   children?: Array<{
     marks?: Array<string>;
@@ -342,20 +23,8 @@ export type BlockContent = Array<{
   style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
   listItem?: "bullet" | "number";
   markDefs?: Array<{
-    linkType?: "href" | "page" | "post" | "product";
+    linkType?: "href" | "product";
     href?: string;
-    page?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "page";
-    };
-    post?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "post";
-    };
     product?: {
       _ref: string;
       _type: "reference";
@@ -441,47 +110,6 @@ export type Song = {
   artist?: string;
   notes?: string;
   order: number;
-};
-
-export type FaqSet = {
-  _id: string;
-  _type: "faqSet";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  items?: Array<{
-    question: string;
-    answer: string;
-    _key: string;
-  }>;
-};
-
-export type TestimonialsSet = {
-  _id: string;
-  _type: "testimonialsSet";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  items?: Array<{
-    name: string;
-    role?: string;
-    quote: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _key: string;
-  }>;
 };
 
 export type Order = {
@@ -899,6 +527,111 @@ export type PrivacyPolicy = {
   seoDescription?: string;
 };
 
+export type Product = {
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: BlockContent;
+  category: "apparel" | "music" | "accessories" | "prints" | "amps";
+  featured?: boolean;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    _type: "image";
+    _key: string;
+  }>;
+  priceCents: number;
+  compareAtPriceCents?: number;
+  onSale?: boolean;
+  currency?: "USD" | "EUR" | "GBP";
+  options?: Array<{
+    name?: string;
+    values?: Array<string>;
+    _key: string;
+  }>;
+  variants?: Array<{
+    optionValues?: Array<{
+      key?: string;
+      value?: string;
+      _key: string;
+    }>;
+    priceCents?: number;
+    sku?: string;
+    _key: string;
+  }>;
+  gelatoProductUid?: string;
+  gelatoCostCents?: number;
+  printAreas?: Array<{
+    areaName?: string;
+    artwork?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    _key: string;
+  }>;
+  trackInventory?: boolean;
+  inventoryQuantity?: number;
+  lowStockThreshold?: number;
+  stockStatus?: "in_stock" | "low_stock" | "out_of_stock" | "pre_order";
+  availableDate?: string;
+  tags?: Array<string>;
+  badges?: Array<string>;
+  relatedProducts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "product";
+  }>;
+  dimensions?: {
+    length?: number;
+    width?: number;
+    height?: number;
+    weight?: number;
+  };
+  materials?: string;
+  careInstructions?: string;
+  shippingNotes?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+};
+
 export type OrderConfirmationPage = {
   _id: string;
   _type: "orderConfirmationPage";
@@ -1153,20 +886,20 @@ export type ContactPage = {
   locationCardRegion?: string;
   locationCardDescription?: string;
   locationCardLinkText?: string;
-  socialSubheading?: string;
+  locationMapQuery?: string;
   formHeading?: string;
   directContactHeading?: string;
   directContactDescription?: string;
   socialHeading?: string;
+  socialSubheading?: string;
   quickLinksHeading?: string;
-  aboutHeading?: string;
   quickLinkShowsText?: string;
   quickLinkLessonsText?: string;
   quickLinkSetlistText?: string;
+  aboutHeading?: string;
   ctaSectionHeading?: string;
   ctaSectionText?: string;
   ctaSectionButtonText?: string;
-  locationMapQuery?: string;
   seoTitle?: string;
   seoDescription?: string;
 };
@@ -1350,8 +1083,6 @@ export type ShowsPage = {
   canceledBadgeText?: string;
   soldOutBadgeText?: string;
   canceledMessageText?: string;
-  seoTitle?: string;
-  seoDescription?: string;
   defaultEventImage?: {
     asset?: {
       _ref: string;
@@ -1365,6 +1096,8 @@ export type ShowsPage = {
     alt?: string;
     _type: "image";
   };
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type HomePage = {
@@ -1531,6 +1264,7 @@ export type UiText = {
   footerBioLabel?: string;
   footerEpkLabel?: string;
   footerCopyrightText?: string;
+  footerBookingText?: string;
   formLabelName?: string;
   formLabelEmail?: string;
   formLabelSubject?: string;
@@ -1548,7 +1282,6 @@ export type UiText = {
   newsletterSuccessText?: string;
   newsletterPlaceholder?: string;
   newsletterDisclaimer?: string;
-  footerBookingText?: string;
   buttonViewSetlist?: string;
   buttonScheduleLesson?: string;
   buttonBookLesson?: string;
@@ -1564,249 +1297,6 @@ export type UiText = {
   setlistSubtitleSuffix?: string;
   socialFacebook?: string;
   socialInstagram?: string;
-};
-
-export type Navigation = {
-  _id: string;
-  _type: "navigation";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  main?: Array<{
-    title?: string;
-    href?: string;
-    docRef?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "page";
-    };
-    _type: "navItem";
-    _key: string;
-  }>;
-  footer?: Array<{
-    title?: string;
-    href?: string;
-    docRef?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "page";
-    };
-    _type: "footerItem";
-    _key: string;
-  }>;
-};
-
-export type Page = {
-  _id: string;
-  _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  slug?: Slug;
-  heading?: string;
-  subheading?: string;
-  modules?: Array<{
-    _key: string;
-  } & Hero | {
-    _key: string;
-  } & RichText | {
-    _key: string;
-  } & ImageGallery | {
-    _key: string;
-  } & FeatureGrid | {
-    _key: string;
-  } & CtaBanner | {
-    _key: string;
-  } & VideoEmbed | {
-    _key: string;
-  } & MusicEmbed | {
-    _key: string;
-  } & CallToAction | {
-    _key: string;
-  } & InfoSection | {
-    _key: string;
-  } & Testimonials | {
-    _key: string;
-  } & Faq>;
-  seo?: {
-    title?: string;
-    description?: string;
-    ogImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-  };
-};
-
-export type Post = {
-  _id: string;
-  _type: "post";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  content?: BlockContent;
-  excerpt?: string;
-  coverImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  date?: string;
-  author?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "person";
-  };
-};
-
-export type Person = {
-  _id: string;
-  _type: "person";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  firstName: string;
-  lastName?: string;
-  picture?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-};
-
-export type Product = {
-  _id: string;
-  _type: "product";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  description?: BlockContent;
-  category: "apparel" | "music" | "accessories" | "prints" | "amps";
-  featured?: boolean;
-  images?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-    _type: "image";
-    _key: string;
-  }>;
-  priceCents: number;
-  compareAtPriceCents?: number;
-  onSale?: boolean;
-  currency?: "USD" | "EUR" | "GBP";
-  options?: Array<{
-    name?: string;
-    values?: Array<string>;
-    _key: string;
-  }>;
-  variants?: Array<{
-    optionValues?: Array<{
-      key?: string;
-      value?: string;
-      _key: string;
-    }>;
-    priceCents?: number;
-    sku?: string;
-    _key: string;
-  }>;
-  gelatoProductUid?: string;
-  gelatoCostCents?: number;
-  printAreas?: Array<{
-    areaName?: string;
-    artwork?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _key: string;
-  }>;
-  trackInventory?: boolean;
-  inventoryQuantity?: number;
-  lowStockThreshold?: number;
-  stockStatus?: "in_stock" | "low_stock" | "out_of_stock" | "pre_order";
-  availableDate?: string;
-  tags?: Array<string>;
-  badges?: Array<string>;
-  relatedProducts?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "product";
-  }>;
-  dimensions?: {
-    length?: number;
-    width?: number;
-    height?: number;
-    weight?: number;
-  };
-  materials?: string;
-  careInstructions?: string;
-  shippingNotes?: string;
-  seo?: {
-    title?: string;
-    description?: string;
-    ogImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-  };
 };
 
 export type Settings = {
@@ -2100,7 +1590,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Faq | Testimonials | MusicEmbed | VideoEmbed | CtaBanner | FeatureGrid | ImageGallery | RichText | Hero | CallToAction | Link | InfoSection | BlockContent | NewsletterSubscriber | LessonPackage | Song | FaqSet | TestimonialsSet | Order | ProductCollection | PromoCode | Event | EpkPage | Bio | AmpsPage | ReturnsPolicy | TermsOfService | PrivacyPolicy | OrderConfirmationPage | StoreSettings | CheckoutSettings | MerchPage | SetlistPage | ContactPage | LessonsPage | ShowsPage | HomePage | UiText | Navigation | Page | Post | Person | Product | Settings | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = BlockContent | NewsletterSubscriber | LessonPackage | Song | Order | ProductCollection | PromoCode | Event | EpkPage | Bio | AmpsPage | ReturnsPolicy | TermsOfService | PrivacyPolicy | Product | OrderConfirmationPage | StoreSettings | CheckoutSettings | MerchPage | SetlistPage | ContactPage | LessonsPage | ShowsPage | HomePage | UiText | Settings | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -2235,27 +1725,6 @@ export type UiTextQueryResult = {
   setlistSubtitleSuffix: string | null;
   socialFacebook: string | null;
   socialInstagram: string | null;
-} | null;
-// Variable: navigationQuery
-// Query: *[_type == "navigation"][0]{  _id,  main[]{    title,    href,    docRef->{      _type,      "slug": slug.current    }  },  footer[]{    title,    href,    docRef->{      _type,      "slug": slug.current    }  }}
-export type NavigationQueryResult = {
-  _id: string;
-  main: Array<{
-    title: string | null;
-    href: string | null;
-    docRef: {
-      _type: "page";
-      slug: string | null;
-    } | null;
-  }> | null;
-  footer: Array<{
-    title: string | null;
-    href: string | null;
-    docRef: {
-      _type: "page";
-      slug: string | null;
-    } | null;
-  }> | null;
 } | null;
 // Variable: homePageQuery
 // Query: *[_type == "homePage"][0]{  _id,  heroSlides[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      alt    },    mobileImage{      asset->{_id, url},      hotspot,      crop,      alt    },    alt,    desktopPosition,    mobilePosition  },  heroHeading,  heroHeadingDesktopSize,  heroHeadingMobileSize,  heroHeadingTracking,  heroHeadingLineHeight,  heroSubheadingTracking,  heroSubheadingLineHeight,  heroSubheading,  heroTagline,  heroButtonText,  marqueeTopItems[]{text, style},  marqueeBottomItems[]{text, style},  aboutHeading,  aboutText,  aboutVerticalLabel,  aboutImage{    asset->{_id, url},    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  aboutButtonText,  gallerySectionHeading,  gallerySectionSubheading,  galleryImages[]{    _key,    image{      asset->{_id, url},      hotspot,      crop,      desktopPosition,      mobilePosition,      alt    },    alt,    width,    height  },  upcomingShowsHeading,  seeAllShowsLinkText,  featuredVideoHeading,  featuredVideoSubheading,  liveVideos[]{url, title, subtitle},  "legacyFeaturedVideoUrl": featuredVideoUrl,  "legacyFeaturedVideoTitle": featuredVideoTitle,  "legacyStudioVideo1Url": studioVideo1Url,  "legacyStudioVideo1Title": studioVideo1Title,  "legacyStudioVideo2Url": studioVideo2Url,  "legacyStudioVideo2Title": studioVideo2Title,  bookingSectionHeading,  bookingSectionIntro,  bookingInquiriesHeading,  bookingInquiriesText,  bookingInquiryListHeading,  bookingInquiryItems,  bookingTestimonialQuote,  bookingTestimonialAttribution,  newsletterHeading,  newsletterText,  showAboutSection,  showUpcomingShows,  showBookingSection,  showGallerySection,  showNewsletterSection,  showMusicSection,  musicSectionHeading,  musicSectionSubheading,  spotifyArtistId,  spotifyPlaylistId,  spotifyEmbedType,  appleMusicUrl,  bandcampUrl,  seoTitle,  seoDescription}
@@ -3145,383 +2614,6 @@ export type AllSongsQueryResult = Array<{
   notes: string | null;
   order: number;
 }>;
-// Variable: pageBySlugQuery
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  name,  heading,  subheading,  modules[]{      _type,  _key,  _type == "hero" => {    headline,    headlineDesktopSize,    headlineMobileSize,    headlineTracking,    headlineLineHeight,    subhead,    subheadTracking,    subheadLineHeight,    mediaType,    image{asset->, hotspot, crop, alt},    mobileImage{asset->, hotspot, crop, alt},    desktopPosition,    mobilePosition,    video,    backgroundVariant,    sectionPadding,    ctas[]{label, href, variant}  },  _type == "richText" => {    content,    backgroundVariant,    sectionPadding  },  _type == "imageGallery" => {    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},    backgroundVariant,    sectionPadding  },  _type == "featureGrid" => {    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},    backgroundVariant,    sectionPadding  },  _type == "ctaBanner" => {    heading,    headingTracking,    headingLineHeight,    body,    backgroundVariant,    sectionPadding,    cta{label, href}  },  _type == "videoEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "musicEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "testimonials" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      name,      role,      quote,      image{asset->, hotspot, crop, alt}    },    backgroundVariant,    sectionPadding  },  _type == "faq" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      question,      answer    },    backgroundVariant,    sectionPadding  },  _type == "callToAction" => @,  _type == "infoSection" => @  },  seo{    title,    description,    ogImage{asset->}  }}
-export type PageBySlugQueryResult = {
-  _id: string;
-  _type: "page";
-  name: string;
-  heading: string | null;
-  subheading: string | null;
-  modules: Array<{
-    _type: "callToAction";
-    _key: string;
-    heading?: string;
-    text?: string;
-    buttonText?: string;
-    link?: Link;
-  } | {
-    _type: "ctaBanner";
-    _key: string;
-    heading: string | null;
-    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
-    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
-    body: string | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-    cta: {
-      label: string | null;
-      href: string | null;
-    } | null;
-  } | {
-    _type: "faq";
-    _key: string;
-    heading: string | null;
-    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
-    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
-    items: Array<{
-      question: string | null;
-      answer: string | null;
-    }> | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "featureGrid";
-    _key: string;
-    items: Array<{
-      title: string | null;
-      body: string | null;
-      iconType: "icon" | "image" | null;
-      icon: string | null;
-      image: {
-        asset: {
-          _id: string;
-          _type: "sanity.imageAsset";
-          _createdAt: string;
-          _updatedAt: string;
-          _rev: string;
-          originalFilename?: string;
-          label?: string;
-          title?: string;
-          description?: string;
-          altText?: string;
-          sha1hash?: string;
-          extension?: string;
-          mimeType?: string;
-          size?: number;
-          assetId?: string;
-          uploadId?: string;
-          path?: string;
-          url?: string;
-          metadata?: SanityImageMetadata;
-          source?: SanityAssetSourceData;
-        } | null;
-        hotspot: SanityImageHotspot | null;
-        crop: SanityImageCrop | null;
-        desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-        mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-      } | null;
-    }> | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "hero";
-    _key: string;
-    headline: string;
-    headlineDesktopSize: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl" | null;
-    headlineMobileSize: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | null;
-    headlineTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
-    headlineLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
-    subhead: string | null;
-    subheadTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
-    subheadLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
-    mediaType: "image" | "video" | null;
-    image: {
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-      alt: string | null;
-    } | null;
-    mobileImage: {
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-      alt: string | null;
-    } | null;
-    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-    video: string | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-    ctas: Array<{
-      label: string | null;
-      href: string | null;
-      variant: "outline" | "primary" | "secondary" | null;
-    }> | null;
-  } | {
-    _type: "imageGallery";
-    _key: string;
-    images: Array<{
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-      desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-      mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
-      alt: string | null;
-      caption: string | null;
-    }> | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "infoSection";
-    _key: string;
-    heading?: string;
-    subheading?: string;
-    content?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        label: string;
-        variant?: "outline" | "primary" | "secondary";
-        href: string;
-        _type: "button";
-        _key: string;
-      } | {
-        linkType?: "href" | "page" | "post" | "product";
-        href?: string;
-        page?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "page";
-        };
-        post?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "post";
-        };
-        product?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "product";
-        };
-        openInNewTab?: boolean;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  } | {
-    _type: "musicEmbed";
-    _key: string;
-    provider: "bandcamp" | "spotify" | "youtube" | null;
-    url: string | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "richText";
-    _key: string;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        label: string;
-        variant?: "outline" | "primary" | "secondary";
-        href: string;
-        _type: "button";
-        _key: string;
-      } | {
-        linkType?: "href" | "page" | "post" | "product";
-        href?: string;
-        page?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "page";
-        };
-        post?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "post";
-        };
-        product?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "product";
-        };
-        openInNewTab?: boolean;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }> | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "testimonials";
-    _key: string;
-    heading: string | null;
-    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
-    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
-    items: Array<{
-      name: string | null;
-      role: string | null;
-      quote: string | null;
-      image: {
-        asset: {
-          _id: string;
-          _type: "sanity.imageAsset";
-          _createdAt: string;
-          _updatedAt: string;
-          _rev: string;
-          originalFilename?: string;
-          label?: string;
-          title?: string;
-          description?: string;
-          altText?: string;
-          sha1hash?: string;
-          extension?: string;
-          mimeType?: string;
-          size?: number;
-          assetId?: string;
-          uploadId?: string;
-          path?: string;
-          url?: string;
-          metadata?: SanityImageMetadata;
-          source?: SanityAssetSourceData;
-        } | null;
-        hotspot: SanityImageHotspot | null;
-        crop: SanityImageCrop | null;
-        alt: null;
-      } | null;
-    }> | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  } | {
-    _type: "videoEmbed";
-    _key: string;
-    provider: "vimeo" | "youtube" | null;
-    url: string | null;
-    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
-    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
-  }> | null;
-  seo: {
-    title: string | null;
-    description: string | null;
-    ogImage: {
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-    } | null;
-  } | null;
-} | null;
-// Variable: pagesSlugs
-// Query: *[_type == "page" && defined(slug.current)]{  "slug": slug.current}
-export type PagesSlugsResult = Array<{
-  slug: string | null;
-}>;
 // Variable: upcomingEventsQuery
 // Query: *[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  isCanceled,  isSoldOut}
 export type UpcomingEventsQueryResult = Array<{
@@ -4194,120 +3286,14 @@ export type PromoCodeByCodeQueryResult = {
   }> | null;
   applicableCategories: Array<string> | null;
 } | null;
-// Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  content,  date,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  author->{firstName, lastName, picture{asset->}}}
-export type PostQueryResult = {
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  excerpt: string | null;
-  content: BlockContent | null;
-  date: string | null;
-  coverImage: {
-    asset: {
-      _id: string;
-      _type: "sanity.imageAsset";
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      originalFilename?: string;
-      label?: string;
-      title?: string;
-      description?: string;
-      altText?: string;
-      sha1hash?: string;
-      extension?: string;
-      mimeType?: string;
-      size?: number;
-      assetId?: string;
-      uploadId?: string;
-      path?: string;
-      url?: string;
-      metadata?: SanityImageMetadata;
-      source?: SanityAssetSourceData;
-    } | null;
-    hotspot: SanityImageHotspot | null;
-    crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
-    alt: string | null;
-  } | null;
-  author: {
-    firstName: string;
-    lastName: string | null;
-    picture: {
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-    } | null;
-  } | null;
-} | null;
-// Variable: postPagesSlugs
-// Query: *[_type == "post" && defined(slug.current)]{  "slug": slug.current}
-export type PostPagesSlugsResult = Array<{
-  slug: string | null;
-}>;
-// Variable: allPostsQuery
-// Query: *[_type == "post"] | order(date desc){  _id,  title,  "slug": slug.current,  excerpt,  date,  author->{firstName, lastName}}
-export type AllPostsQueryResult = Array<{
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  excerpt: string | null;
-  date: string | null;
-  author: {
-    firstName: string;
-    lastName: string | null;
-  } | null;
-}>;
-// Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip] | order(date desc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  date,  author->{firstName, lastName}}
-export type MorePostsQueryResult = Array<{
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  excerpt: string | null;
-  date: string | null;
-  author: {
-    firstName: string;
-    lastName: string | null;
-  } | null;
-}>;
 // Variable: sitemapQuery
-// Query: *[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
+// Query: *[_type in ["product", "event"] && defined(slug.current)] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
 export type SitemapQueryResult = Array<{
   slug: string;
   _type: "event";
   _updatedAt: string;
   startDateTime: string;
   isCanceled: boolean | null;
-} | {
-  slug: string | null;
-  _type: "page";
-  _updatedAt: string;
-} | {
-  slug: string | null;
-  _type: "post";
-  _updatedAt: string;
 } | {
   slug: string;
   _type: "product";
@@ -4321,7 +3307,6 @@ declare module "@sanity/client" {
     "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showAmpsPage,\n  showMerchPage,\n  showBioPage,\n  showEpkPage,\n  showContactPage\n}": SettingsQueryResult;
     "*[_type == \"storeSettings\"][0]{\n  storeEnabled,\n  storeName,\n  siteUrl,\n  currency,\n  adminEmail,\n  emailFromName,\n  emailFromAddress,\n  orderConfirmationSubject,\n  shippingUpdateSubject,\n  shippingCountries,\n  processingTime,\n  returnPolicyDays,\n  returnPolicyNotes,\n  contactFormSubject,\n  fulfillmentFailureSubject,\n  newOrderSubject,\n  emailSignature\n}": StoreSettingsQueryResult;
     "*[_type == \"uiText\"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navAmps,\n  navMerch,\n  navContact,\n  navBio,\n  navEpk,\n  footerBioLabel,\n  footerEpkLabel,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessHeading,\n  formSuccessMessage,\n  formSendAnotherText,\n  formPlaceholderName,\n  formPlaceholderEmail,\n  formPlaceholderSubject,\n  formPlaceholderMessage,\n  newsletterButtonText,\n  newsletterSuccessText,\n  newsletterPlaceholder,\n  newsletterDisclaimer,\n  footerBookingText,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}": UiTextQueryResult;
-    "*[_type == \"navigation\"][0]{\n  _id,\n  main[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  },\n  footer[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  }\n}": NavigationQueryResult;
     "*[_type == \"homePage\"][0]{\n  _id,\n  heroSlides[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    mobileImage{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    alt,\n    desktopPosition,\n    mobilePosition\n  },\n  heroHeading,\n  heroHeadingDesktopSize,\n  heroHeadingMobileSize,\n  heroHeadingTracking,\n  heroHeadingLineHeight,\n  heroSubheadingTracking,\n  heroSubheadingLineHeight,\n  heroSubheading,\n  heroTagline,\n  heroButtonText,\n  marqueeTopItems[]{text, style},\n  marqueeBottomItems[]{text, style},\n  aboutHeading,\n  aboutText,\n  aboutVerticalLabel,\n  aboutImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  aboutButtonText,\n  gallerySectionHeading,\n  gallerySectionSubheading,\n  galleryImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    width,\n    height\n  },\n  upcomingShowsHeading,\n  seeAllShowsLinkText,\n  featuredVideoHeading,\n  featuredVideoSubheading,\n  liveVideos[]{url, title, subtitle},\n  \"legacyFeaturedVideoUrl\": featuredVideoUrl,\n  \"legacyFeaturedVideoTitle\": featuredVideoTitle,\n  \"legacyStudioVideo1Url\": studioVideo1Url,\n  \"legacyStudioVideo1Title\": studioVideo1Title,\n  \"legacyStudioVideo2Url\": studioVideo2Url,\n  \"legacyStudioVideo2Title\": studioVideo2Title,\n  bookingSectionHeading,\n  bookingSectionIntro,\n  bookingInquiriesHeading,\n  bookingInquiriesText,\n  bookingInquiryListHeading,\n  bookingInquiryItems,\n  bookingTestimonialQuote,\n  bookingTestimonialAttribution,\n  newsletterHeading,\n  newsletterText,\n  showAboutSection,\n  showUpcomingShows,\n  showBookingSection,\n  showGallerySection,\n  showNewsletterSection,\n  showMusicSection,\n  musicSectionHeading,\n  musicSectionSubheading,\n  spotifyArtistId,\n  spotifyPlaylistId,\n  spotifyEmbedType,\n  appleMusicUrl,\n  bandcampUrl,\n  seoTitle,\n  seoDescription\n}": HomePageQueryResult;
     "*[_type == \"lessonsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  stats[]{\n    _key,\n    label,\n    value,\n    suffix\n  },\n  philosophyHeading,\n  philosophyText,\n  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  learningItemsHeading,\n  learningItems[]{\n    _key,\n    title,\n    description\n  },\n  ctaBoxHeading,\n  ctaBoxText,\n  credentials,\n  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emailButtonText,\n  scheduleButtonText,\n  testimonialQuote,\n  testimonialAttribution,\n  packagesHeading,\n  packagesSubheading,\n  packagesCtaText,\n  seoTitle,\n  seoDescription\n}": LessonsPageQueryResult;
     "*[_type == \"contactPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitGallery[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}\n  },\n  formHeading,\n  directContactHeading,\n  directContactDescription,\n  socialHeading,\n  quickLinksHeading,\n  aboutHeading,\n  quickLinkShowsText,\n  quickLinkLessonsText,\n  quickLinkSetlistText,\n  ctaSectionHeading,\n  ctaSectionText,\n  ctaSectionButtonText,\n  locationMapQuery,\n  connectHeading,\n  bookingCardTitle,\n  bookingCardDescription,\n  bookingCardLinkText,\n  lessonsCardTitle,\n  lessonsCardDescription,\n  lessonsCardLinkText,\n  locationCardTitle,\n  locationCardRegion,\n  locationCardDescription,\n  locationCardLinkText,\n  socialSubheading,\n  seoTitle,\n  seoDescription\n}": ContactPageQueryResult;
@@ -4340,8 +3325,6 @@ declare module "@sanity/client" {
     "*[_type == \"checkoutSettings\"][0]{\n  _id,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  deliveryEstimateText,\n  secureCheckoutText,\n  cartHeading,\n  cartEmptyHeading,\n  cartEmptyText,\n  cartEmptyButtonText,\n  secureCheckoutHeading,\n  redirectingHeading,\n  redirectingText,\n  redirectingSubtext,\n  orderSummaryHeading,\n  returnToCartText,\n  sslEncryptionText,\n  checkoutUnavailableHeading\n}": CheckoutSettingsQueryResult;
     "*[_type == \"orderConfirmationPage\"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}": OrderConfirmationPageQueryResult;
     "*[_type == \"song\"] | order(order asc){\n  _id,\n  title,\n  key,\n  artist,\n  notes,\n  order\n}": AllSongsQueryResult;
-    "*[_type == \"page\" && slug.current == $slug][0]{\n  _id,\n  _type,\n  name,\n  heading,\n  subheading,\n  modules[]{\n    \n  _type,\n  _key,\n  _type == \"hero\" => {\n    headline,\n    headlineDesktopSize,\n    headlineMobileSize,\n    headlineTracking,\n    headlineLineHeight,\n    subhead,\n    subheadTracking,\n    subheadLineHeight,\n    mediaType,\n    image{asset->, hotspot, crop, alt},\n    mobileImage{asset->, hotspot, crop, alt},\n    desktopPosition,\n    mobilePosition,\n    video,\n    backgroundVariant,\n    sectionPadding,\n    ctas[]{label, href, variant}\n  },\n  _type == \"richText\" => {\n    content,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"imageGallery\" => {\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"featureGrid\" => {\n    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"ctaBanner\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    body,\n    backgroundVariant,\n    sectionPadding,\n    cta{label, href}\n  },\n  _type == \"videoEmbed\" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"musicEmbed\" => {\n    provider,\n    url,\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"testimonials\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    'items': coalesce(items, set->items),\n    items[]{\n      name,\n      role,\n      quote,\n      image{asset->, hotspot, crop, alt}\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"faq\" => {\n    heading,\n    headingTracking,\n    headingLineHeight,\n    'items': coalesce(items, set->items),\n    items[]{\n      question,\n      answer\n    },\n    backgroundVariant,\n    sectionPadding\n  },\n  _type == \"callToAction\" => @,\n  _type == \"infoSection\" => @\n\n  },\n  seo{\n    title,\n    description,\n    ogImage{asset->}\n  }\n}": PageBySlugQueryResult;
-    "*[_type == \"page\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": PagesSlugsResult;
     "*[_type == \"event\" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}": UpcomingEventsQueryResult;
     "*[_type == \"event\" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}": PastEventsQueryResult;
     "*[_type == \"event\" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  ticketUrl,\n  isCanceled,\n  isSoldOut\n}": EventsByMonthQueryResult;
@@ -4356,10 +3339,6 @@ declare module "@sanity/client" {
     "*[_type == \"productCollection\"] | order(displayOrder asc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  featured,\n  displayOrder,\n  \"productSlugs\": products[]->slug.current\n}": AllCollectionsQueryResult;
     "*[_type == \"productCollection\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  \"products\": products[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    stockStatus,\n    featured,\n    badges,\n    tags,\n    inventoryQuantity,\n    trackInventory,\n    lowStockThreshold\n  }\n}": CollectionBySlugQueryResult;
     "*[_type == \"promoCode\" && code == $code && active == true][0]{\n  _id,\n  code,\n  description,\n  discountType,\n  discountValue,\n  minimumPurchaseCents,\n  maxUses,\n  currentUses,\n  validFrom,\n  validUntil,\n  applicableProducts[]->{_id, title},\n  applicableCategories\n}": PromoCodeByCodeQueryResult;
-    "*[_type == \"post\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  content,\n  date,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  author->{firstName, lastName, picture{asset->}}\n}": PostQueryResult;
-    "*[_type == \"post\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": PostPagesSlugsResult;
-    "*[_type == \"post\"] | order(date desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}": AllPostsQueryResult;
-    "*[_type == \"post\" && _id != $skip] | order(date desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  date,\n  author->{firstName, lastName}\n}": MorePostsQueryResult;
-    "*[_type in [\"page\", \"product\", \"post\", \"event\"] && defined(slug.current)] | order(_type asc){\n  \"slug\": slug.current,\n  _type,\n  _updatedAt,\n  _type == \"event\" => {\n    startDateTime,\n    isCanceled\n  }\n}": SitemapQueryResult;
+    "*[_type in [\"product\", \"event\"] && defined(slug.current)] | order(_type asc){\n  \"slug\": slug.current,\n  _type,\n  _updatedAt,\n  _type == \"event\" => {\n    startDateTime,\n    isCanceled\n  }\n}": SitemapQueryResult;
   }
 }

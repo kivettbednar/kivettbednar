@@ -103,26 +103,6 @@ export const uiTextQuery = defineQuery(`*[_type == "uiText"][0]{
   socialInstagram
 }`)
 
-export const navigationQuery = defineQuery(`*[_type == "navigation"][0]{
-  _id,
-  main[]{
-    title,
-    href,
-    docRef->{
-      _type,
-      "slug": slug.current
-    }
-  },
-  footer[]{
-    title,
-    href,
-    docRef->{
-      _type,
-      "slug": slug.current
-    }
-  }
-}`)
-
 // Home Page
 export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   _id,
@@ -637,115 +617,6 @@ export const allSongsQuery = defineQuery(`*[_type == "song"] | order(order asc){
   order
 }`)
 
-// Module query fragment
-const moduleFields = /* groq */ `
-  _type,
-  _key,
-  _type == "hero" => {
-    headline,
-    headlineDesktopSize,
-    headlineMobileSize,
-    headlineTracking,
-    headlineLineHeight,
-    subhead,
-    subheadTracking,
-    subheadLineHeight,
-    mediaType,
-    image{asset->, hotspot, crop, alt},
-    mobileImage{asset->, hotspot, crop, alt},
-    desktopPosition,
-    mobilePosition,
-    video,
-    backgroundVariant,
-    sectionPadding,
-    ctas[]{label, href, variant}
-  },
-  _type == "richText" => {
-    content,
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "imageGallery" => {
-    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "featureGrid" => {
-    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "ctaBanner" => {
-    heading,
-    headingTracking,
-    headingLineHeight,
-    body,
-    backgroundVariant,
-    sectionPadding,
-    cta{label, href}
-  },
-  _type == "videoEmbed" => {
-    provider,
-    url,
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "musicEmbed" => {
-    provider,
-    url,
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "testimonials" => {
-    heading,
-    headingTracking,
-    headingLineHeight,
-    'items': coalesce(items, set->items),
-    items[]{
-      name,
-      role,
-      quote,
-      image{asset->, hotspot, crop, alt}
-    },
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "faq" => {
-    heading,
-    headingTracking,
-    headingLineHeight,
-    'items': coalesce(items, set->items),
-    items[]{
-      question,
-      answer
-    },
-    backgroundVariant,
-    sectionPadding
-  },
-  _type == "callToAction" => @,
-  _type == "infoSection" => @
-`
-
-// Pages
-export const pageBySlugQuery = defineQuery(`*[_type == "page" && slug.current == $slug][0]{
-  _id,
-  _type,
-  name,
-  heading,
-  subheading,
-  modules[]{
-    ${moduleFields}
-  },
-  seo{
-    title,
-    description,
-    ogImage{asset->}
-  }
-}`)
-
-export const pagesSlugs = defineQuery(`*[_type == "page" && defined(slug.current)]{
-  "slug": slug.current
-}`)
 
 // Events
 export const upcomingEventsQuery = defineQuery(`*[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{
@@ -1023,42 +894,8 @@ export const promoCodeByCodeQuery = defineQuery(`*[_type == "promoCode" && code 
   applicableCategories
 }`)
 
-// Posts (blog functionality - template remnant)
-export const postQuery = defineQuery(`*[_type == "post" && slug.current == $slug][0]{
-  _id,
-  title,
-  "slug": slug.current,
-  excerpt,
-  content,
-  date,
-  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},
-  author->{firstName, lastName, picture{asset->}}
-}`)
-
-export const postPagesSlugs = defineQuery(`*[_type == "post" && defined(slug.current)]{
-  "slug": slug.current
-}`)
-
-export const allPostsQuery = defineQuery(`*[_type == "post"] | order(date desc){
-  _id,
-  title,
-  "slug": slug.current,
-  excerpt,
-  date,
-  author->{firstName, lastName}
-}`)
-
-export const morePostsQuery = defineQuery(`*[_type == "post" && _id != $skip] | order(date desc)[0...$limit]{
-  _id,
-  title,
-  "slug": slug.current,
-  excerpt,
-  date,
-  author->{firstName, lastName}
-}`)
-
 // Sitemap
-export const sitemapQuery = defineQuery(`*[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){
+export const sitemapQuery = defineQuery(`*[_type in ["product", "event"] && defined(slug.current)] | order(_type asc){
   "slug": slug.current,
   _type,
   _updatedAt,

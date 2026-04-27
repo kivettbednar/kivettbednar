@@ -1,16 +1,9 @@
 import {defineArrayMember, defineType, defineField} from 'sanity'
 
 /**
- * This is the schema definition for the rich text fields used for
- * for this blog studio. When you import it in schemas.js it can be
- * reused in other parts of the studio with:
- *  {
- *    name: 'someName',
- *    title: 'Some title',
- *    type: 'blockContent'
- *  }
- *
- * Learn more: https://www.sanity.io/docs/block-content
+ * Rich-text "block content" used by Bio, EPK, policy pages, and other
+ * long-form fields. Supports a Link annotation (URL or Product) and a
+ * Button annotation. Plain paragraphs by default.
  */
 export const blockContent = defineType({
   title: 'Block Content',
@@ -34,8 +27,6 @@ export const blockContent = defineType({
                 options: {
                   list: [
                     {title: 'URL', value: 'href'},
-                    {title: 'Page', value: 'page'},
-                    {title: 'Post', value: 'post'},
                     {title: 'Product', value: 'product'},
                   ],
                   layout: 'radio',
@@ -50,34 +41,6 @@ export const blockContent = defineType({
                   Rule.custom((value, context: any) => {
                     if (context.parent?.linkType === 'href' && !value) {
                       return 'URL is required when Link Type is URL'
-                    }
-                    return true
-                  }),
-              }),
-              defineField({
-                name: 'page',
-                title: 'Page',
-                type: 'reference',
-                to: [{type: 'page'}],
-                hidden: ({parent}) => parent?.linkType !== 'page',
-                validation: (Rule) =>
-                  Rule.custom((value, context: any) => {
-                    if (context.parent?.linkType === 'page' && !value) {
-                      return 'Page reference is required when Link Type is Page'
-                    }
-                    return true
-                  }),
-              }),
-              defineField({
-                name: 'post',
-                title: 'Post',
-                type: 'reference',
-                to: [{type: 'post'}],
-                hidden: ({parent}) => parent?.linkType !== 'post',
-                validation: (Rule) =>
-                  Rule.custom((value, context: any) => {
-                    if (context.parent?.linkType === 'post' && !value) {
-                      return 'Post reference is required when Link Type is Post'
                     }
                     return true
                   }),

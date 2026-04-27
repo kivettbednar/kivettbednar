@@ -33,19 +33,7 @@ export async function POST(req: NextRequest) {
           revalidatePath(`/shows/${body.slug.current}`)
         }
         break
-      case 'post':
-        revalidatePath('/posts')
-        if (body.slug?.current) {
-          revalidatePath(`/posts/${body.slug.current}`)
-        }
-        break
-      case 'page':
-        if (body.slug?.current) {
-          revalidatePath(`/${body.slug.current}`)
-        }
-        break
       case 'settings':
-      case 'navigation':
       case 'uiText':
         // These affect all pages
         revalidatePath('/', 'layout')
