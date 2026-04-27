@@ -13,14 +13,73 @@
  */
 
 // Source: schema.json
+export type Faq = {
+  _type: "faq";
+  set?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "faqSet";
+  };
+  heading?: string;
+  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
+  items?: Array<{
+    question?: string;
+    answer?: string;
+    _type: "qa";
+    _key: string;
+  }>;
+};
+
+export type Testimonials = {
+  _type: "testimonials";
+  set?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "testimonialsSet";
+  };
+  heading?: string;
+  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
+  items?: Array<{
+    name?: string;
+    role?: string;
+    quote?: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    _type: "testimonial";
+    _key: string;
+  }>;
+};
+
 export type MusicEmbed = {
   _type: "musicEmbed";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   provider?: "spotify" | "bandcamp" | "youtube";
   url?: string;
 };
 
 export type VideoEmbed = {
   _type: "videoEmbed";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   provider?: "youtube" | "vimeo";
   url?: string;
 };
@@ -28,7 +87,11 @@ export type VideoEmbed = {
 export type CtaBanner = {
   _type: "ctaBanner";
   heading?: string;
+  headingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  headingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
   body?: string;
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   cta?: {
     label?: string;
     href?: string;
@@ -37,6 +100,8 @@ export type CtaBanner = {
 
 export type FeatureGrid = {
   _type: "featureGrid";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   items?: Array<{
     title?: string;
     body?: string;
@@ -53,6 +118,8 @@ export type FeatureGrid = {
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt?: string;
+      desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+      mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
       _type: "image";
     };
     _key: string;
@@ -61,6 +128,8 @@ export type FeatureGrid = {
 
 export type ImageGallery = {
   _type: "imageGallery";
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   images?: Array<{
     asset?: {
       _ref: string;
@@ -73,6 +142,8 @@ export type ImageGallery = {
     crop?: SanityImageCrop;
     alt?: string;
     caption?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
     _key: string;
   }>;
@@ -90,7 +161,7 @@ export type RichText = {
     style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
     listItem?: "bullet" | "number";
     markDefs?: Array<{
-      linkType?: "href" | "page" | "post";
+      linkType?: "href" | "page" | "post" | "product";
       href?: string;
       page?: {
         _ref: string;
@@ -104,22 +175,40 @@ export type RichText = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "post";
       };
+      product?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "product";
+      };
       openInNewTab?: boolean;
       _type: "link";
+      _key: string;
+    } | {
+      label: string;
+      variant?: "primary" | "secondary" | "outline";
+      href: string;
+      _type: "button";
       _key: string;
     }>;
     level?: number;
     _type: "block";
     _key: string;
   }>;
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
 };
 
 export type Hero = {
   _type: "hero";
-  headline?: string;
+  headline: string;
   headlineDesktopSize?: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl";
   headlineMobileSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl";
+  headlineTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  headlineLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
   subhead?: string;
+  subheadTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  subheadLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
   mediaType?: "image" | "video";
   image?: {
     asset?: {
@@ -150,6 +239,8 @@ export type Hero = {
   desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
   mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
   video?: string;
+  backgroundVariant?: "default" | "surface" | "surface-elevated" | "dark-gradient";
+  sectionPadding?: "none" | "sm" | "md" | "lg" | "xl";
   ctas?: Array<{
     label?: string;
     href?: string;
@@ -168,7 +259,7 @@ export type CallToAction = {
 
 export type Link = {
   _type: "link";
-  linkType?: "href" | "page" | "post";
+  linkType?: "href" | "page" | "post" | "product";
   href?: string;
   page?: {
     _ref: string;
@@ -181,6 +272,12 @@ export type Link = {
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "post";
+  };
+  product?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "product";
   };
   openInNewTab?: boolean;
 };
@@ -199,7 +296,7 @@ export type InfoSection = {
     style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
     listItem?: "bullet" | "number";
     markDefs?: Array<{
-      linkType?: "href" | "page" | "post";
+      linkType?: "href" | "page" | "post" | "product";
       href?: string;
       page?: {
         _ref: string;
@@ -213,8 +310,20 @@ export type InfoSection = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "post";
       };
+      product?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "product";
+      };
       openInNewTab?: boolean;
       _type: "link";
+      _key: string;
+    } | {
+      label: string;
+      variant?: "primary" | "secondary" | "outline";
+      href: string;
+      _type: "button";
       _key: string;
     }>;
     level?: number;
@@ -233,7 +342,7 @@ export type BlockContent = Array<{
   style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
   listItem?: "bullet" | "number";
   markDefs?: Array<{
-    linkType?: "href" | "page" | "post";
+    linkType?: "href" | "page" | "post" | "product";
     href?: string;
     page?: {
       _ref: string;
@@ -247,8 +356,20 @@ export type BlockContent = Array<{
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "post";
     };
+    product?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "product";
+    };
     openInNewTab?: boolean;
     _type: "link";
+    _key: string;
+  } | {
+    label: string;
+    variant?: "primary" | "secondary" | "outline";
+    href: string;
+    _type: "button";
     _key: string;
   }>;
   level?: number;
@@ -262,35 +383,22 @@ export type NewsletterSubscriber = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  email?: string;
+  email: string;
   subscribedAt?: string;
   status?: "active" | "unsubscribed";
   source?: string;
 };
 
-export type Song = {
+export type LessonPackage = {
   _id: string;
-  _type: "song";
+  _type: "lessonPackage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  key?: string;
-  artist?: string;
-  notes?: string;
-  order?: number;
-};
-
-export type Product = {
-  _id: string;
-  _type: "product";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  description?: BlockContent;
-  images?: Array<{
+  title: string;
+  slug: Slug;
+  tagline?: string;
+  image?: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -302,59 +410,185 @@ export type Product = {
     crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
-    _key: string;
-  }>;
-  priceCents?: number;
-  currency?: "USD" | "EUR" | "GBP";
-  options?: Array<{
-    name?: string;
-    values?: Array<string>;
-    _key: string;
-  }>;
-  variants?: Array<{
-    optionValues?: Array<{
-      key?: string;
-      value?: string;
-      _key: string;
-    }>;
-    priceCents?: number;
-    sku?: string;
-    _key: string;
-  }>;
-  gelatoProductUid?: string;
-  printAreas?: Array<{
-    areaName?: string;
-    artwork?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _key: string;
-  }>;
-  shippingNotes?: string;
-  seo?: {
-    title?: string;
-    description?: string;
-    ogImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
   };
+  level?: "beginner" | "intermediate" | "advanced" | "all";
+  format?: "in_person" | "online" | "both";
+  duration?: string;
+  sessionsCount?: number;
+  sessionLength?: string;
+  priceCents: number;
+  currency?: "usd" | "cad" | "gbp" | "eur";
+  compareAtPriceCents?: number;
+  description?: BlockContent;
+  features?: Array<string>;
+  includes?: Array<string>;
+  featured?: boolean;
+  order?: number;
+  badge?: string;
+  active?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+};
+
+export type Song = {
+  _id: string;
+  _type: "song";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  key?: string;
+  artist?: string;
+  notes?: string;
+  order: number;
+};
+
+export type FaqSet = {
+  _id: string;
+  _type: "faqSet";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  items?: Array<{
+    question: string;
+    answer: string;
+    _key: string;
+  }>;
+};
+
+export type TestimonialsSet = {
+  _id: string;
+  _type: "testimonialsSet";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  items?: Array<{
+    name: string;
+    role?: string;
+    quote: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    _key: string;
+  }>;
+};
+
+export type Order = {
+  _id: string;
+  _type: "order";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  stripeSessionId?: string;
+  email?: string;
+  name?: string;
+  phone?: string;
+  address?: {
+    line1?: string;
+    line2?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  items?: Array<{
+    productId?: string;
+    productTitle?: string;
+    productSlug?: string;
+    quantity?: number;
+    priceCents?: number;
+    options?: string;
+    gelatoProductUid?: string;
+    imageUrl?: string;
+    _key: string;
+  }>;
+  totalCents?: number;
+  currency?: string;
+  gelatoOrderId?: string;
+  gelatoStatus?: string;
+  status?: "pending" | "submitted" | "in_production" | "shipped" | "delivered" | "canceled" | "refunded" | "disputed" | "failed" | "gelato_failed";
+  promoCode?: string;
+  discountAmountCents?: number;
+  gelatoError?: string;
+  postProcessed?: boolean;
+  shippingMethod?: string;
+  deliveryEstimate?: string;
+  carrier?: string;
+  trackingNumber?: string;
+  trackingUrl?: string;
+  notes?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type ProductCollection = {
+  _id: string;
+  _type: "productCollection";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  products?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "product";
+  }>;
+  featured?: boolean;
+  displayOrder?: number;
+};
+
+export type PromoCode = {
+  _id: string;
+  _type: "promoCode";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  code: string;
+  description?: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  minimumPurchaseCents?: number;
+  maxUses?: number;
+  currentUses?: number;
+  active?: boolean;
+  validFrom?: string;
+  validUntil?: string;
+  applicableProducts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "product";
+  }>;
+  applicableCategories?: Array<string>;
 };
 
 export type Event = {
@@ -363,15 +597,15 @@ export type Event = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
+  title: string;
+  slug: Slug;
   excerpt?: string;
-  startDateTime?: string;
+  startDateTime: string;
   endDateTime?: string;
-  timezone?: string;
-  venue?: string;
+  timezone?: "America/Los_Angeles" | "America/Denver" | "America/Phoenix" | "America/Chicago" | "America/New_York" | "America/Anchorage" | "Pacific/Honolulu" | "Europe/London" | "Europe/Paris" | "UTC";
+  venue: string;
   address?: string;
-  city?: string;
+  city: string;
   state?: string;
   country?: string;
   ticketUrl?: string;
@@ -386,8 +620,8 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
-    mobilePosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   heroImage?: {
@@ -401,7 +635,8 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    desktopPosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   heroImageMobile?: {
@@ -415,7 +650,8 @@ export type Event = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    mobilePosition?: "top left" | "top center" | "top right" | "center left" | "center center" | "center right" | "bottom left" | "bottom center" | "bottom right";
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   description?: BlockContent;
@@ -428,6 +664,312 @@ export type Event = {
   specialNotes?: string;
   isCanceled?: boolean;
   isSoldOut?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+};
+
+export type EpkPage = {
+  _id: string;
+  _type: "epkPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  pageIntro?: string;
+  genres?: Array<string>;
+  influencedBy?: Array<string>;
+  shortBio?: string;
+  longBio?: BlockContent;
+  bookingContactName?: string;
+  bookingContactEmail?: string;
+  bookingContactPhone?: string;
+  bookingNotes?: string;
+  pressPhotos?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    credit?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  videos?: Array<{
+    title: string;
+    url: string;
+    description?: string;
+    _type: "epkVideo";
+    _key: string;
+  }>;
+  pressQuotes?: Array<{
+    quote: string;
+    source: string;
+    sourceUrl?: string;
+    logo?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+    _type: "pressQuote";
+    _key: string;
+  }>;
+  notableShows?: Array<{
+    venue: string;
+    city?: string;
+    date?: string;
+    event?: string;
+    _type: "notableShow";
+    _key: string;
+  }>;
+  stagePlotPdf?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    media?: unknown;
+    _type: "file";
+  };
+  techRiderPdf?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    media?: unknown;
+    _type: "file";
+  };
+  fullPressKitPdf?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    media?: unknown;
+    _type: "file";
+  };
+  onesheet?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    media?: unknown;
+    _type: "file";
+  };
+  seoTitle?: string;
+  seoDescription?: string;
+};
+
+export type Bio = {
+  _id: string;
+  _type: "bio";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  pageTitle?: string;
+  tagline?: string;
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  lastUpdated?: string;
+  content?: BlockContent;
+  seoDescription?: string;
+};
+
+export type AmpsPage = {
+  _id: string;
+  _type: "ampsPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heroHeading?: string;
+  heroSubheading?: string;
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  showcaseHeading?: string;
+  showcaseText?: string;
+  craftsmanshipHeading?: string;
+  craftsmanshipText?: string;
+  craftsmanshipImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  shopHeading?: string;
+  shopSubheading?: string;
+  emptyStateHeading?: string;
+  emptyStateText?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+};
+
+export type ReturnsPolicy = {
+  _id: string;
+  _type: "returnsPolicy";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  pageTitle?: string;
+  lastUpdated?: string;
+  content?: BlockContent;
+  seoDescription?: string;
+};
+
+export type TermsOfService = {
+  _id: string;
+  _type: "termsOfService";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  pageTitle?: string;
+  lastUpdated?: string;
+  content?: BlockContent;
+  seoDescription?: string;
+};
+
+export type PrivacyPolicy = {
+  _id: string;
+  _type: "privacyPolicy";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  pageTitle?: string;
+  lastUpdated?: string;
+  content?: BlockContent;
+  seoDescription?: string;
+};
+
+export type OrderConfirmationPage = {
+  _id: string;
+  _type: "orderConfirmationPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  thankYouHeading?: string;
+  orderConfirmedLabel?: string;
+  orderReceivedText?: string;
+  whatsNextHeading?: string;
+  nextStepEmail?: string;
+  nextStepShipping?: string;
+  nextStepTracking?: string;
+  continueShoppingText?: string;
+  viewShowsText?: string;
+  noOrderHeading?: string;
+  noOrderText?: string;
+};
+
+export type StoreSettings = {
+  _id: string;
+  _type: "storeSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  storeEnabled?: boolean;
+  storeName?: string;
+  siteUrl?: string;
+  currency?: "usd" | "cad" | "gbp" | "eur";
+  adminEmail?: string;
+  emailFromName?: string;
+  emailFromAddress?: string;
+  orderConfirmationSubject?: string;
+  shippingUpdateSubject?: string;
+  contactFormSubject?: string;
+  fulfillmentFailureSubject?: string;
+  newOrderSubject?: string;
+  emailSignature?: string;
+  shippingCountries?: Array<string>;
+  processingTime?: string;
+  returnPolicyDays?: number;
+  returnPolicyNotes?: string;
+};
+
+export type CheckoutSettings = {
+  _id: string;
+  _type: "checkoutSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  trustBadges?: Array<{
+    title?: string;
+    description?: string;
+    icon?: "lock" | "shield" | "truck" | "star" | "guitar" | "package";
+    _type: "trustBadge";
+    _key: string;
+  }>;
+  deliveryEstimateText?: string;
+  secureCheckoutText?: string;
+  cartHeading?: string;
+  cartEmptyHeading?: string;
+  cartEmptyText?: string;
+  cartEmptyButtonText?: string;
+  secureCheckoutHeading?: string;
+  redirectingHeading?: string;
+  redirectingText?: string;
+  redirectingSubtext?: string;
+  orderSummaryHeading?: string;
+  returnToCartText?: string;
+  sslEncryptionText?: string;
+  checkoutUnavailableHeading?: string;
 };
 
 export type MerchPage = {
@@ -461,6 +1003,15 @@ export type MerchPage = {
   emptyStateButton2Link?: string;
   contentHeading?: string;
   contentSubheading?: string;
+  trustBadges?: Array<{
+    title?: string;
+    description?: string;
+    icon?: "shield" | "star" | "truck" | "guitar" | "package" | "sparkles";
+    _type: "trustBadge";
+    _key: string;
+  }>;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type SetlistPage = {
@@ -481,6 +1032,8 @@ export type SetlistPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   introText?: string;
@@ -495,6 +1048,8 @@ export type SetlistPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   guitarImage?: {
@@ -508,13 +1063,26 @@ export type SetlistPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   ctaHeading?: string;
   ctaText?: string;
   ctaBookLessonButtonText?: string;
   ctaContactButtonText?: string;
+  statsLabel1?: string;
+  statsLabel2?: string;
+  statsValue3?: string;
+  statsLabel3?: string;
+  repertoireHeading?: string;
+  songCountSummaryText?: string;
+  requestHeading?: string;
+  requestText?: string;
+  requestButtonText?: string;
   subtitleSuffix?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type ContactPage = {
@@ -536,6 +1104,8 @@ export type ContactPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   portraitImage?: {
@@ -549,6 +1119,8 @@ export type ContactPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   portraitGallery?: Array<{
@@ -562,12 +1134,26 @@ export type ContactPage = {
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
+      alt?: string;
+      desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+      mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
       _type: "image";
     };
-    alt?: string;
     _type: "portraitGalleryImage";
     _key: string;
   }>;
+  connectHeading?: string;
+  bookingCardTitle?: string;
+  bookingCardDescription?: string;
+  bookingCardLinkText?: string;
+  lessonsCardTitle?: string;
+  lessonsCardDescription?: string;
+  lessonsCardLinkText?: string;
+  locationCardTitle?: string;
+  locationCardRegion?: string;
+  locationCardDescription?: string;
+  locationCardLinkText?: string;
+  socialSubheading?: string;
   formHeading?: string;
   directContactHeading?: string;
   directContactDescription?: string;
@@ -580,6 +1166,9 @@ export type ContactPage = {
   ctaSectionHeading?: string;
   ctaSectionText?: string;
   ctaSectionButtonText?: string;
+  locationMapQuery?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type LessonsPage = {
@@ -605,6 +1194,13 @@ export type LessonsPage = {
     mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
+  stats?: Array<{
+    label?: string;
+    value?: string;
+    suffix?: string;
+    _type: "stat";
+    _key: string;
+  }>;
   philosophyHeading?: string;
   philosophyText?: string;
   philosophyImage?: {
@@ -618,6 +1214,8 @@ export type LessonsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   learningItemsHeading?: string;
@@ -641,6 +1239,8 @@ export type LessonsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   performanceImage?: {
@@ -654,10 +1254,19 @@ export type LessonsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   emailButtonText?: string;
   scheduleButtonText?: string;
+  testimonialQuote?: string;
+  testimonialAttribution?: string;
+  packagesHeading?: string;
+  packagesSubheading?: string;
+  packagesCtaText?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type ShowsPage = {
@@ -679,6 +1288,8 @@ export type ShowsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
   heroMobileImage?: {
@@ -692,10 +1303,10 @@ export type ShowsPage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
-  heroDesktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
-  heroMobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
   performanceGalleryHeading?: string;
   performanceGallerySubheading?: string;
   performanceImages?: Array<{
@@ -713,6 +1324,8 @@ export type ShowsPage = {
     };
     alt?: string;
     caption?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "performanceImage";
     _key: string;
   }>;
@@ -722,6 +1335,36 @@ export type ShowsPage = {
   showCountPrefix?: string;
   showSingular?: string;
   showPlural?: string;
+  statsLabel1?: string;
+  statsLabel2?: string;
+  statsLabel3?: string;
+  eventDetailsLabel?: string;
+  dateTimeLabel?: string;
+  venueLabel?: string;
+  viewOnMapText?: string;
+  getTicketsText?: string;
+  soldOutText?: string;
+  backToShowsText?: string;
+  shareEventText?: string;
+  importantInfoText?: string;
+  canceledBadgeText?: string;
+  soldOutBadgeText?: string;
+  canceledMessageText?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  defaultEventImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
 };
 
 export type HomePage = {
@@ -764,10 +1407,35 @@ export type HomePage = {
   heroHeading?: string;
   heroHeadingDesktopSize?: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl";
   heroHeadingMobileSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl";
+  heroHeadingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  heroHeadingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
   heroSubheading?: string;
+  heroSubheadingTracking?: "tracking-tighter" | "tracking-tight" | "tracking-normal" | "tracking-wide" | "tracking-wider" | "tracking-widest";
+  heroSubheadingLineHeight?: "leading-none" | "leading-tight" | "leading-snug" | "leading-normal" | "leading-relaxed";
   heroTagline?: string;
+  heroButtonText?: string;
+  marqueeTopItems?: Array<{
+    text?: string;
+    style?: "anton" | "playfair";
+    _type: "marqueeItem";
+    _key: string;
+  }>;
+  marqueeBottomItems?: Array<{
+    text?: string;
+    style?: "anton" | "playfair";
+    _type: "marqueeItem";
+    _key: string;
+  }>;
+  musicSectionHeading?: string;
+  musicSectionSubheading?: string;
+  spotifyArtistId?: string;
+  spotifyPlaylistId?: string;
+  spotifyEmbedType?: "artist" | "album" | "playlist";
+  appleMusicUrl?: string;
+  bandcampUrl?: string;
   aboutHeading?: string;
   aboutText?: string;
+  aboutVerticalLabel?: string;
   aboutImage?: {
     asset?: {
       _ref: string;
@@ -779,63 +1447,30 @@ export type HomePage = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
-  albumTitle?: string;
-  albumYear?: string;
-  albumFormat?: string;
-  albumDescription?: string;
-  albumImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  albumFeatures?: Array<string>;
-  ctaLessonsHeading?: string;
-  ctaLessonsText?: string;
-  parallaxHeading?: string;
-  parallaxSubheading?: string;
-  parallaxImages?: Array<{
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    alt?: string;
-    position?: "left" | "right";
-    offset?: number;
-    _type: "parallaxImage";
+  aboutButtonText?: string;
+  upcomingShowsHeading?: string;
+  seeAllShowsLinkText?: string;
+  featuredVideoHeading?: string;
+  featuredVideoSubheading?: string;
+  liveVideos?: Array<{
+    url: string;
+    title?: string;
+    subtitle?: string;
+    _type: "liveVideo";
     _key: string;
   }>;
-  performanceSectionHeading?: string;
-  performanceImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
+  bookingSectionHeading?: string;
+  bookingSectionIntro?: string;
+  bookingInquiryListHeading?: string;
+  bookingInquiryItems?: Array<string>;
+  bookingInquiriesHeading?: string;
+  bookingInquiriesText?: string;
+  bookingTestimonialQuote?: string;
+  bookingTestimonialAttribution?: string;
   gallerySectionHeading?: string;
   gallerySectionSubheading?: string;
   galleryImages?: Array<{
@@ -857,38 +1492,22 @@ export type HomePage = {
     _type: "galleryImage";
     _key: string;
   }>;
-  upcomingShowsHeading?: string;
-  seeAllShowsLinkText?: string;
-  featuredVideoHeading?: string;
-  featuredVideoSubheading?: string;
-  featuredVideoUrl?: string;
-  bookingSectionHeading?: string;
-  bookingSectionIntro?: string;
-  bookingInquiriesHeading?: string;
-  bookingInquiriesText?: string;
-  bookingInquiryListHeading?: string;
-  bookingInquiryItems?: Array<string>;
-  bookingPerfectForHeading?: string;
-  bookingEventTypes?: Array<string>;
-  bookingTestimonialQuote?: string;
-  bookingTestimonialAttribution?: string;
-  studioSectionHeading?: string;
-  studioSectionSubheading?: string;
-  studioVideo1Url?: string;
-  studioVideo2Url?: string;
   newsletterHeading?: string;
   newsletterText?: string;
-  heroButtonText?: string;
-  aboutButtonText?: string;
-  ctaLessonsButtonText?: string;
+  showMusicSection?: boolean;
   showAboutSection?: boolean;
-  showAlbumSection?: boolean;
   showUpcomingShows?: boolean;
-  showLessonsSection?: boolean;
   showBookingSection?: boolean;
   showGallerySection?: boolean;
-  showStudioVideos?: boolean;
   showNewsletterSection?: boolean;
+  featuredVideoUrl?: string;
+  featuredVideoTitle?: string;
+  studioVideo1Url?: string;
+  studioVideo1Title?: string;
+  studioVideo2Url?: string;
+  studioVideo2Title?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type UiText = {
@@ -902,10 +1521,15 @@ export type UiText = {
   navShows?: string;
   navLessons?: string;
   navSetlist?: string;
+  navAmps?: string;
   navMerch?: string;
   navContact?: string;
+  navBio?: string;
+  navEpk?: string;
   footerNavigationHeading?: string;
   footerConnectHeading?: string;
+  footerBioLabel?: string;
+  footerEpkLabel?: string;
   footerCopyrightText?: string;
   formLabelName?: string;
   formLabelEmail?: string;
@@ -913,7 +1537,18 @@ export type UiText = {
   formLabelMessage?: string;
   formButtonSubmit?: string;
   formButtonSending?: string;
+  formSuccessHeading?: string;
   formSuccessMessage?: string;
+  formSendAnotherText?: string;
+  formPlaceholderName?: string;
+  formPlaceholderEmail?: string;
+  formPlaceholderSubject?: string;
+  formPlaceholderMessage?: string;
+  newsletterButtonText?: string;
+  newsletterSuccessText?: string;
+  newsletterPlaceholder?: string;
+  newsletterDisclaimer?: string;
+  footerBookingText?: string;
   buttonViewSetlist?: string;
   buttonScheduleLesson?: string;
   buttonBookLesson?: string;
@@ -963,76 +1598,13 @@ export type Navigation = {
   }>;
 };
 
-export type Settings = {
-  _id: string;
-  _type: "settings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      linkType?: "href" | "page" | "post";
-      href?: string;
-      page?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
-      };
-      post?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "post";
-      };
-      openInNewTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    metadataBase?: string;
-    _type: "image";
-  };
-  contactEmail?: string;
-  bookingUrl?: string;
-  socialLinks?: Array<{
-    platform?: "facebook" | "instagram" | "youtube" | "twitter" | "spotify" | "soundcloud" | "bandcamp";
-    url?: string;
-    _type: "socialLink";
-    _key: string;
-  }>;
-};
-
 export type Page = {
   _id: string;
   _type: "page";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   slug?: Slug;
   heading?: string;
   subheading?: string;
@@ -1054,7 +1626,11 @@ export type Page = {
     _key: string;
   } & CallToAction | {
     _key: string;
-  } & InfoSection>;
+  } & InfoSection | {
+    _key: string;
+  } & Testimonials | {
+    _key: string;
+  } & Faq>;
   seo?: {
     title?: string;
     description?: string;
@@ -1111,7 +1687,7 @@ export type Person = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  firstName?: string;
+  firstName: string;
   lastName?: string;
   picture?: {
     asset?: {
@@ -1126,6 +1702,163 @@ export type Person = {
     alt?: string;
     _type: "image";
   };
+};
+
+export type Product = {
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: BlockContent;
+  category: "apparel" | "music" | "accessories" | "prints" | "amps";
+  featured?: boolean;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    desktopPosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    _type: "image";
+    _key: string;
+  }>;
+  priceCents: number;
+  compareAtPriceCents?: number;
+  onSale?: boolean;
+  currency?: "USD" | "EUR" | "GBP";
+  options?: Array<{
+    name?: string;
+    values?: Array<string>;
+    _key: string;
+  }>;
+  variants?: Array<{
+    optionValues?: Array<{
+      key?: string;
+      value?: string;
+      _key: string;
+    }>;
+    priceCents?: number;
+    sku?: string;
+    _key: string;
+  }>;
+  gelatoProductUid?: string;
+  gelatoCostCents?: number;
+  printAreas?: Array<{
+    areaName?: string;
+    artwork?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    _key: string;
+  }>;
+  trackInventory?: boolean;
+  inventoryQuantity?: number;
+  lowStockThreshold?: number;
+  stockStatus?: "in_stock" | "low_stock" | "out_of_stock" | "pre_order";
+  availableDate?: string;
+  tags?: Array<string>;
+  badges?: Array<string>;
+  relatedProducts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "product";
+  }>;
+  dimensions?: {
+    length?: number;
+    width?: number;
+    height?: number;
+    weight?: number;
+  };
+  materials?: string;
+  careInstructions?: string;
+  shippingNotes?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+};
+
+export type Settings = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  contactEmail?: string;
+  bookingUrl?: string;
+  socialLinks?: Array<{
+    platform: "instagram" | "facebook" | "youtube" | "tiktok" | "twitter" | "threads" | "spotify" | "applemusic" | "bandcamp" | "soundcloud";
+    url: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+  showShowsPage?: boolean;
+  showLessonsPage?: boolean;
+  showSetlistPage?: boolean;
+  showAmpsPage?: boolean;
+  showMerchPage?: boolean;
+  showBioPage?: boolean;
+  showEpkPage?: boolean;
+  showContactPage?: boolean;
 };
 
 export type SanityAssistInstructionTask = {
@@ -1164,7 +1897,7 @@ export type SanityAssistOutputField = {
 
 export type SanityAssistInstructionContext = {
   _type: "sanity.assist.instruction.context";
-  reference?: {
+  reference: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
@@ -1197,7 +1930,7 @@ export type AssistInstructionContext = {
 
 export type SanityAssistInstructionUserInput = {
   _type: "sanity.assist.instruction.userInput";
-  message?: string;
+  message: string;
   description?: string;
 };
 
@@ -1270,25 +2003,25 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
 export type SanityFileAsset = {
@@ -1356,7 +2089,7 @@ export type Geopoint = {
 
 export type Slug = {
   _type: "slug";
-  current?: string;
+  current: string;
   source?: string;
 };
 
@@ -1367,14 +2100,14 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = MusicEmbed | VideoEmbed | CtaBanner | FeatureGrid | ImageGallery | RichText | Hero | CallToAction | Link | InfoSection | BlockContent | NewsletterSubscriber | Song | Product | Event | MerchPage | SetlistPage | ContactPage | LessonsPage | ShowsPage | HomePage | UiText | Navigation | Settings | Page | Post | Person | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Faq | Testimonials | MusicEmbed | VideoEmbed | CtaBanner | FeatureGrid | ImageGallery | RichText | Hero | CallToAction | Link | InfoSection | BlockContent | NewsletterSubscriber | LessonPackage | Song | FaqSet | TestimonialsSet | Order | ProductCollection | PromoCode | Event | EpkPage | Bio | AmpsPage | ReturnsPolicy | TermsOfService | PrivacyPolicy | OrderConfirmationPage | StoreSettings | CheckoutSettings | MerchPage | SetlistPage | ContactPage | LessonsPage | ShowsPage | HomePage | UiText | Navigation | Page | Post | Person | Product | Settings | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]{  _id,  title,  description,  ogImage{    asset->,    alt,    metadataBase  },  contactEmail,  bookingUrl,  socialLinks[]{    platform,    url  },  showShowsPage,  showLessonsPage,  showSetlistPage,  showAmpsPage,  showMerchPage,  showBioPage,  showEpkPage,  showContactPage}
+// Query: *[_type == "settings"][0]{  _id,  title,  description,  ogImage{    asset->,    alt  },  contactEmail,  bookingUrl,  socialLinks[]{    platform,    url  },  showShowsPage,  showLessonsPage,  showSetlistPage,  showAmpsPage,  showMerchPage,  showBioPage,  showEpkPage,  showContactPage}
 export type SettingsQueryResult = {
   _id: string;
-  title: string | null;
+  title: string;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1384,25 +2117,7 @@ export type SettingsQueryResult = {
     }>;
     style?: "normal";
     listItem?: never;
-    markDefs?: Array<{
-      linkType?: "href" | "page" | "post";
-      href?: string;
-      page?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
-      };
-      post?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "post";
-      };
-      openInNewTab?: boolean;
-      _type: "link";
-      _key: string;
-    }>;
+    markDefs?: null;
     level?: number;
     _type: "block";
     _key: string;
@@ -1431,26 +2146,43 @@ export type SettingsQueryResult = {
       source?: SanityAssetSourceData;
     } | null;
     alt: string | null;
-    metadataBase: string | null;
   } | null;
   contactEmail: string | null;
   bookingUrl: string | null;
   socialLinks: Array<{
-    platform: "bandcamp" | "facebook" | "instagram" | "soundcloud" | "spotify" | "twitter" | "youtube" | null;
-    url: string | null;
+    platform: "applemusic" | "bandcamp" | "facebook" | "instagram" | "soundcloud" | "spotify" | "threads" | "tiktok" | "twitter" | "youtube";
+    url: string;
   }> | null;
-  showShowsPage: null;
-  showLessonsPage: null;
-  showSetlistPage: null;
-  showAmpsPage: null;
-  showMerchPage: null;
-  showBioPage: null;
-  showEpkPage: null;
-  showContactPage: null;
+  showShowsPage: boolean | null;
+  showLessonsPage: boolean | null;
+  showSetlistPage: boolean | null;
+  showAmpsPage: boolean | null;
+  showMerchPage: boolean | null;
+  showBioPage: boolean | null;
+  showEpkPage: boolean | null;
+  showContactPage: boolean | null;
 } | null;
 // Variable: storeSettingsQuery
 // Query: *[_type == "storeSettings"][0]{  storeEnabled,  storeName,  siteUrl,  currency,  adminEmail,  emailFromName,  emailFromAddress,  orderConfirmationSubject,  shippingUpdateSubject,  shippingCountries,  processingTime,  returnPolicyDays,  returnPolicyNotes,  contactFormSubject,  fulfillmentFailureSubject,  newOrderSubject,  emailSignature}
-export type StoreSettingsQueryResult = null;
+export type StoreSettingsQueryResult = {
+  storeEnabled: boolean | null;
+  storeName: string | null;
+  siteUrl: string | null;
+  currency: "cad" | "eur" | "gbp" | "usd" | null;
+  adminEmail: string | null;
+  emailFromName: string | null;
+  emailFromAddress: string | null;
+  orderConfirmationSubject: string | null;
+  shippingUpdateSubject: string | null;
+  shippingCountries: Array<string> | null;
+  processingTime: string | null;
+  returnPolicyDays: number | null;
+  returnPolicyNotes: string | null;
+  contactFormSubject: string | null;
+  fulfillmentFailureSubject: string | null;
+  newOrderSubject: string | null;
+  emailSignature: string | null;
+} | null;
 // Variable: uiTextQuery
 // Query: *[_type == "uiText"][0]{  _id,  siteName,  siteTagline,  navShows,  navLessons,  navSetlist,  navAmps,  navMerch,  navContact,  navBio,  navEpk,  footerBioLabel,  footerEpkLabel,  footerNavigationHeading,  footerConnectHeading,  footerCopyrightText,  formLabelName,  formLabelEmail,  formLabelSubject,  formLabelMessage,  formButtonSubmit,  formButtonSending,  formSuccessHeading,  formSuccessMessage,  formSendAnotherText,  formPlaceholderName,  formPlaceholderEmail,  formPlaceholderSubject,  formPlaceholderMessage,  newsletterButtonText,  newsletterSuccessText,  newsletterPlaceholder,  newsletterDisclaimer,  footerBookingText,  buttonViewSetlist,  buttonScheduleLesson,  buttonBookLesson,  buttonEmailMe,  buttonGetInTouch,  linkSeeAllShows,  linkUpcomingShows,  linkGuitarLessons,  linkBluesSetlist,  showsCountSingular,  showsCountPlural,  upcomingPrefix,  setlistSubtitleSuffix,  socialFacebook,  socialInstagram}
 export type UiTextQueryResult = {
@@ -1460,13 +2192,13 @@ export type UiTextQueryResult = {
   navShows: string | null;
   navLessons: string | null;
   navSetlist: string | null;
-  navAmps: null;
+  navAmps: string | null;
   navMerch: string | null;
   navContact: string | null;
-  navBio: null;
-  navEpk: null;
-  footerBioLabel: null;
-  footerEpkLabel: null;
+  navBio: string | null;
+  navEpk: string | null;
+  footerBioLabel: string | null;
+  footerEpkLabel: string | null;
   footerNavigationHeading: string | null;
   footerConnectHeading: string | null;
   footerCopyrightText: string | null;
@@ -1476,18 +2208,18 @@ export type UiTextQueryResult = {
   formLabelMessage: string | null;
   formButtonSubmit: string | null;
   formButtonSending: string | null;
-  formSuccessHeading: null;
+  formSuccessHeading: string | null;
   formSuccessMessage: string | null;
-  formSendAnotherText: null;
-  formPlaceholderName: null;
-  formPlaceholderEmail: null;
-  formPlaceholderSubject: null;
-  formPlaceholderMessage: null;
-  newsletterButtonText: null;
-  newsletterSuccessText: null;
-  newsletterPlaceholder: null;
-  newsletterDisclaimer: null;
-  footerBookingText: null;
+  formSendAnotherText: string | null;
+  formPlaceholderName: string | null;
+  formPlaceholderEmail: string | null;
+  formPlaceholderSubject: string | null;
+  formPlaceholderMessage: string | null;
+  newsletterButtonText: string | null;
+  newsletterSuccessText: string | null;
+  newsletterPlaceholder: string | null;
+  newsletterDisclaimer: string | null;
+  footerBookingText: string | null;
   buttonViewSetlist: string | null;
   buttonScheduleLesson: string | null;
   buttonBookLesson: string | null;
@@ -1556,18 +2288,24 @@ export type HomePageQueryResult = {
   heroHeading: string | null;
   heroHeadingDesktopSize: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl" | null;
   heroHeadingMobileSize: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | null;
-  heroHeadingTracking: null;
-  heroHeadingLineHeight: null;
-  heroSubheadingTracking: null;
-  heroSubheadingLineHeight: null;
+  heroHeadingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+  heroHeadingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
+  heroSubheadingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+  heroSubheadingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
   heroSubheading: string | null;
   heroTagline: string | null;
   heroButtonText: string | null;
-  marqueeTopItems: null;
-  marqueeBottomItems: null;
+  marqueeTopItems: Array<{
+    text: string | null;
+    style: "anton" | "playfair" | null;
+  }> | null;
+  marqueeBottomItems: Array<{
+    text: string | null;
+    style: "anton" | "playfair" | null;
+  }> | null;
   aboutHeading: string | null;
   aboutText: string | null;
-  aboutVerticalLabel: null;
+  aboutVerticalLabel: string | null;
   aboutImage: {
     asset: {
       _id: string;
@@ -1575,8 +2313,8 @@ export type HomePageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   aboutButtonText: string | null;
@@ -1603,13 +2341,17 @@ export type HomePageQueryResult = {
   seeAllShowsLinkText: string | null;
   featuredVideoHeading: string | null;
   featuredVideoSubheading: string | null;
-  liveVideos: null;
+  liveVideos: Array<{
+    url: string;
+    title: string | null;
+    subtitle: string | null;
+  }> | null;
   legacyFeaturedVideoUrl: string | null;
-  legacyFeaturedVideoTitle: null;
+  legacyFeaturedVideoTitle: string | null;
   legacyStudioVideo1Url: string | null;
-  legacyStudioVideo1Title: null;
+  legacyStudioVideo1Title: string | null;
   legacyStudioVideo2Url: string | null;
-  legacyStudioVideo2Title: null;
+  legacyStudioVideo2Title: string | null;
   bookingSectionHeading: string | null;
   bookingSectionIntro: string | null;
   bookingInquiriesHeading: string | null;
@@ -1625,16 +2367,16 @@ export type HomePageQueryResult = {
   showBookingSection: boolean | null;
   showGallerySection: boolean | null;
   showNewsletterSection: boolean | null;
-  showMusicSection: null;
-  musicSectionHeading: null;
-  musicSectionSubheading: null;
-  spotifyArtistId: null;
-  spotifyPlaylistId: null;
-  spotifyEmbedType: null;
-  appleMusicUrl: null;
-  bandcampUrl: null;
-  seoTitle: null;
-  seoDescription: null;
+  showMusicSection: boolean | null;
+  musicSectionHeading: string | null;
+  musicSectionSubheading: string | null;
+  spotifyArtistId: string | null;
+  spotifyPlaylistId: string | null;
+  spotifyEmbedType: "album" | "artist" | "playlist" | null;
+  appleMusicUrl: string | null;
+  bandcampUrl: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 } | null;
 // Variable: lessonsPageQuery
 // Query: *[_type == "lessonsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  stats[]{    _key,    label,    value,    suffix  },  philosophyHeading,  philosophyText,  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  learningItemsHeading,  learningItems[]{    _key,    title,    description  },  ctaBoxHeading,  ctaBoxText,  credentials,  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  emailButtonText,  scheduleButtonText,  testimonialQuote,  testimonialAttribution,  packagesHeading,  packagesSubheading,  packagesCtaText,  seoTitle,  seoDescription}
@@ -1653,7 +2395,12 @@ export type LessonsPageQueryResult = {
     mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
-  stats: null;
+  stats: Array<{
+    _key: string;
+    label: string | null;
+    value: string | null;
+    suffix: string | null;
+  }> | null;
   philosophyHeading: string | null;
   philosophyText: string | null;
   philosophyImage: {
@@ -1663,8 +2410,8 @@ export type LessonsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   learningItemsHeading: string | null;
@@ -1683,8 +2430,8 @@ export type LessonsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   performanceImage: {
@@ -1694,19 +2441,19 @@ export type LessonsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   emailButtonText: string | null;
   scheduleButtonText: string | null;
-  testimonialQuote: null;
-  testimonialAttribution: null;
-  packagesHeading: null;
-  packagesSubheading: null;
-  packagesCtaText: null;
-  seoTitle: null;
-  seoDescription: null;
+  testimonialQuote: string | null;
+  testimonialAttribution: string | null;
+  packagesHeading: string | null;
+  packagesSubheading: string | null;
+  packagesCtaText: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 } | null;
 // Variable: contactPageQuery
 // Query: *[_type == "contactPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitGallery[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}  },  formHeading,  directContactHeading,  directContactDescription,  socialHeading,  quickLinksHeading,  aboutHeading,  quickLinkShowsText,  quickLinkLessonsText,  quickLinkSetlistText,  ctaSectionHeading,  ctaSectionText,  ctaSectionButtonText,  locationMapQuery,  connectHeading,  bookingCardTitle,  bookingCardDescription,  bookingCardLinkText,  lessonsCardTitle,  lessonsCardDescription,  lessonsCardLinkText,  locationCardTitle,  locationCardRegion,  locationCardDescription,  locationCardLinkText,  socialSubheading,  seoTitle,  seoDescription}
@@ -1721,8 +2468,8 @@ export type ContactPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   portraitImage: {
@@ -1732,8 +2479,8 @@ export type ContactPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   portraitGallery: Array<{
@@ -1745,9 +2492,9 @@ export type ContactPageQueryResult = {
       } | null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
-      desktopPosition: null;
-      mobilePosition: null;
-      alt: null;
+      desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      alt: string | null;
     } | null;
   }> | null;
   formHeading: string | null;
@@ -1762,21 +2509,21 @@ export type ContactPageQueryResult = {
   ctaSectionHeading: string | null;
   ctaSectionText: string | null;
   ctaSectionButtonText: string | null;
-  locationMapQuery: null;
-  connectHeading: null;
-  bookingCardTitle: null;
-  bookingCardDescription: null;
-  bookingCardLinkText: null;
-  lessonsCardTitle: null;
-  lessonsCardDescription: null;
-  lessonsCardLinkText: null;
-  locationCardTitle: null;
-  locationCardRegion: null;
-  locationCardDescription: null;
-  locationCardLinkText: null;
-  socialSubheading: null;
-  seoTitle: null;
-  seoDescription: null;
+  locationMapQuery: string | null;
+  connectHeading: string | null;
+  bookingCardTitle: string | null;
+  bookingCardDescription: string | null;
+  bookingCardLinkText: string | null;
+  lessonsCardTitle: string | null;
+  lessonsCardDescription: string | null;
+  lessonsCardLinkText: string | null;
+  locationCardTitle: string | null;
+  locationCardRegion: string | null;
+  locationCardDescription: string | null;
+  locationCardLinkText: string | null;
+  socialSubheading: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 } | null;
 // Variable: setlistPageQuery
 // Query: *[_type == "setlistPage"][0]{  _id,  heroHeading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  introText,  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  ctaHeading,  ctaText,  ctaBookLessonButtonText,  ctaContactButtonText,  subtitleSuffix,  repertoireHeading,  songCountSummaryText,  requestHeading,  requestText,  requestButtonText,  statsLabel1,  statsLabel2,  statsLabel3,  statsValue3,  seoTitle,  seoDescription}
@@ -1790,8 +2537,8 @@ export type SetlistPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   introText: string | null;
@@ -1802,8 +2549,8 @@ export type SetlistPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   guitarImage: {
@@ -1813,8 +2560,8 @@ export type SetlistPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   ctaHeading: string | null;
@@ -1822,17 +2569,17 @@ export type SetlistPageQueryResult = {
   ctaBookLessonButtonText: string | null;
   ctaContactButtonText: string | null;
   subtitleSuffix: string | null;
-  repertoireHeading: null;
-  songCountSummaryText: null;
-  requestHeading: null;
-  requestText: null;
-  requestButtonText: null;
-  statsLabel1: null;
-  statsLabel2: null;
-  statsLabel3: null;
-  statsValue3: null;
-  seoTitle: null;
-  seoDescription: null;
+  repertoireHeading: string | null;
+  songCountSummaryText: string | null;
+  requestHeading: string | null;
+  requestText: string | null;
+  requestButtonText: string | null;
+  statsLabel1: string | null;
+  statsLabel2: string | null;
+  statsLabel3: string | null;
+  statsValue3: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 } | null;
 // Variable: showsPageQuery
 // Query: *[_type == "showsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceGalleryHeading,  performanceGallerySubheading,  performanceImages[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},    alt,    caption  },  upcomingShowsHeading,  emptyStateHeading,  emptyStateText,  showCountPrefix,  showSingular,  showPlural,  statsLabel1,  statsLabel2,  statsLabel3,  eventDetailsLabel,  dateTimeLabel,  venueLabel,  viewOnMapText,  getTicketsText,  soldOutText,  backToShowsText,  shareEventText,  importantInfoText,  canceledBadgeText,  soldOutBadgeText,  canceledMessageText,  seoTitle,  seoDescription,  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}}
@@ -1847,8 +2594,8 @@ export type ShowsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   heroMobileImage: {
@@ -1858,8 +2605,8 @@ export type ShowsPageQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   performanceGalleryHeading: string | null;
@@ -1886,24 +2633,32 @@ export type ShowsPageQueryResult = {
   showCountPrefix: string | null;
   showSingular: string | null;
   showPlural: string | null;
-  statsLabel1: null;
-  statsLabel2: null;
-  statsLabel3: null;
-  eventDetailsLabel: null;
-  dateTimeLabel: null;
-  venueLabel: null;
-  viewOnMapText: null;
-  getTicketsText: null;
-  soldOutText: null;
-  backToShowsText: null;
-  shareEventText: null;
-  importantInfoText: null;
-  canceledBadgeText: null;
-  soldOutBadgeText: null;
-  canceledMessageText: null;
-  seoTitle: null;
-  seoDescription: null;
-  defaultEventImage: null;
+  statsLabel1: string | null;
+  statsLabel2: string | null;
+  statsLabel3: string | null;
+  eventDetailsLabel: string | null;
+  dateTimeLabel: string | null;
+  venueLabel: string | null;
+  viewOnMapText: string | null;
+  getTicketsText: string | null;
+  soldOutText: string | null;
+  backToShowsText: string | null;
+  shareEventText: string | null;
+  importantInfoText: string | null;
+  canceledBadgeText: string | null;
+  soldOutBadgeText: string | null;
+  canceledMessageText: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  defaultEventImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: string | null;
+  } | null;
 } | null;
 // Variable: merchPageQuery
 // Query: *[_type == "merchPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  emptyStateHeading,  emptyStateText,  emptyStateButton1Text,  emptyStateButton1Link,  emptyStateButton2Text,  emptyStateButton2Link,  contentHeading,  contentSubheading,  trustBadges[]{    _key,    title,    description,    icon  },  seoTitle,  seoDescription}
@@ -1930,59 +2685,472 @@ export type MerchPageQueryResult = {
   emptyStateButton2Link: string | null;
   contentHeading: string | null;
   contentSubheading: string | null;
-  trustBadges: null;
-  seoTitle: null;
-  seoDescription: null;
+  trustBadges: Array<{
+    _key: string;
+    title: string | null;
+    description: string | null;
+    icon: "guitar" | "package" | "shield" | "sparkles" | "star" | "truck" | null;
+  }> | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 } | null;
 // Variable: ampsPageQuery
 // Query: *[_type == "ampsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{    asset->,    alt  },  showcaseHeading,  showcaseText,  craftsmanshipHeading,  craftsmanshipText,  craftsmanshipImage{    asset->,    alt  },  shopHeading,  shopSubheading,  emptyStateHeading,  emptyStateText,  seoTitle,  seoDescription}
-export type AmpsPageQueryResult = null;
+export type AmpsPageQueryResult = {
+  _id: string;
+  heroHeading: string | null;
+  heroSubheading: string | null;
+  heroImage: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  showcaseHeading: string | null;
+  showcaseText: string | null;
+  craftsmanshipHeading: string | null;
+  craftsmanshipText: string | null;
+  craftsmanshipImage: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  shopHeading: string | null;
+  shopSubheading: string | null;
+  emptyStateHeading: string | null;
+  emptyStateText: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+} | null;
 // Variable: ampsProductsQuery
 // Query: *[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
-export type AmpsProductsQueryResult = Array<never>;
+export type AmpsProductsQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  image: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    alt: string | null;
+  } | null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
+  currency: "EUR" | "GBP" | "USD" | null;
+  category: "accessories" | "amps" | "apparel" | "music" | "prints";
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  featured: boolean | null;
+  badges: Array<string> | null;
+  tags: Array<string> | null;
+  inventoryQuantity: number | null;
+  trackInventory: boolean | null;
+  lowStockThreshold: number | null;
+  hasOptions: boolean | null;
+}>;
 // Variable: allLessonPackagesQuery
 // Query: *[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active}
-export type AllLessonPackagesQueryResult = Array<never>;
+export type AllLessonPackagesQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  tagline: string | null;
+  image: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  priceCents: number;
+  currency: "cad" | "eur" | "gbp" | "usd" | null;
+  compareAtPriceCents: number | null;
+  duration: string | null;
+  sessionsCount: number | null;
+  sessionLength: string | null;
+  level: "advanced" | "all" | "beginner" | "intermediate" | null;
+  format: "both" | "in_person" | "online" | null;
+  features: Array<string> | null;
+  includes: Array<string> | null;
+  featured: boolean | null;
+  badge: string | null;
+  active: boolean | null;
+}>;
 // Variable: lessonPackageBySlugQuery
 // Query: *[_type == "lessonPackage" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  description,  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active,  seoTitle,  seoDescription}
-export type LessonPackageBySlugQueryResult = null;
+export type LessonPackageBySlugQueryResult = {
+  _id: string;
+  title: string;
+  slug: string;
+  tagline: string | null;
+  image: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  description: BlockContent | null;
+  priceCents: number;
+  currency: "cad" | "eur" | "gbp" | "usd" | null;
+  compareAtPriceCents: number | null;
+  duration: string | null;
+  sessionsCount: number | null;
+  sessionLength: string | null;
+  level: "advanced" | "all" | "beginner" | "intermediate" | null;
+  format: "both" | "in_person" | "online" | null;
+  features: Array<string> | null;
+  includes: Array<string> | null;
+  featured: boolean | null;
+  badge: string | null;
+  active: boolean | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+} | null;
 // Variable: privacyPolicyQuery
 // Query: *[_type == "privacyPolicy"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
-export type PrivacyPolicyQueryResult = null;
+export type PrivacyPolicyQueryResult = {
+  _id: string;
+  pageTitle: string | null;
+  lastUpdated: string | null;
+  seoDescription: string | null;
+  content: BlockContent | null;
+} | null;
 // Variable: termsOfServiceQuery
 // Query: *[_type == "termsOfService"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
-export type TermsOfServiceQueryResult = null;
+export type TermsOfServiceQueryResult = {
+  _id: string;
+  pageTitle: string | null;
+  lastUpdated: string | null;
+  seoDescription: string | null;
+  content: BlockContent | null;
+} | null;
 // Variable: returnsPolicyQuery
 // Query: *[_type == "returnsPolicy"][0]{  _id,  pageTitle,  lastUpdated,  seoDescription,  content}
-export type ReturnsPolicyQueryResult = null;
+export type ReturnsPolicyQueryResult = {
+  _id: string;
+  pageTitle: string | null;
+  lastUpdated: string | null;
+  seoDescription: string | null;
+  content: BlockContent | null;
+} | null;
 // Variable: bioQuery
 // Query: *[_type == "bio"][0]{  _id,  pageTitle,  tagline,  lastUpdated,  seoDescription,  heroImage{asset->, hotspot, crop, alt},  content}
-export type BioQueryResult = null;
+export type BioQueryResult = {
+  _id: string;
+  pageTitle: string | null;
+  tagline: string | null;
+  lastUpdated: string | null;
+  seoDescription: string | null;
+  heroImage: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: string | null;
+  } | null;
+  content: BlockContent | null;
+} | null;
 // Variable: epkPageQuery
 // Query: *[_type == "epkPage"][0]{  _id,  heroImage{asset->, hotspot, crop, alt},  pageIntro,  genres,  influencedBy,  shortBio,  longBio,  bookingContactName,  bookingContactEmail,  bookingContactPhone,  bookingNotes,  pressPhotos[]{    _key,    asset->,    alt,    caption,    credit  },  videos[]{    _key,    title,    url,    description  },  pressQuotes[]{    _key,    quote,    source,    sourceUrl,    logo{asset->, alt}  },  notableShows[]{    _key,    venue,    city,    date,    event  },  stagePlotPdf{asset->{url, originalFilename}},  techRiderPdf{asset->{url, originalFilename}},  fullPressKitPdf{asset->{url, originalFilename}},  onesheet{asset->{url, originalFilename}},  seoTitle,  seoDescription}
-export type EpkPageQueryResult = null;
+export type EpkPageQueryResult = {
+  _id: string;
+  heroImage: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: string | null;
+  } | null;
+  pageIntro: string | null;
+  genres: Array<string> | null;
+  influencedBy: Array<string> | null;
+  shortBio: string | null;
+  longBio: BlockContent | null;
+  bookingContactName: string | null;
+  bookingContactEmail: string | null;
+  bookingContactPhone: string | null;
+  bookingNotes: string | null;
+  pressPhotos: Array<{
+    _key: string;
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+    caption: string | null;
+    credit: string | null;
+  }> | null;
+  videos: Array<{
+    _key: string;
+    title: string;
+    url: string;
+    description: string | null;
+  }> | null;
+  pressQuotes: Array<{
+    _key: string;
+    quote: string;
+    source: string;
+    sourceUrl: string | null;
+    logo: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      alt: string | null;
+    } | null;
+  }> | null;
+  notableShows: Array<{
+    _key: string;
+    venue: string;
+    city: string | null;
+    date: string | null;
+    event: string | null;
+  }> | null;
+  stagePlotPdf: {
+    asset: {
+      url: string | null;
+      originalFilename: string | null;
+    } | null;
+  } | null;
+  techRiderPdf: {
+    asset: {
+      url: string | null;
+      originalFilename: string | null;
+    } | null;
+  } | null;
+  fullPressKitPdf: {
+    asset: {
+      url: string | null;
+      originalFilename: string | null;
+    } | null;
+  } | null;
+  onesheet: {
+    asset: {
+      url: string | null;
+      originalFilename: string | null;
+    } | null;
+  } | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+} | null;
 // Variable: checkoutSettingsQuery
 // Query: *[_type == "checkoutSettings"][0]{  _id,  trustBadges[]{    _key,    title,    description,    icon  },  deliveryEstimateText,  secureCheckoutText,  cartHeading,  cartEmptyHeading,  cartEmptyText,  cartEmptyButtonText,  secureCheckoutHeading,  redirectingHeading,  redirectingText,  redirectingSubtext,  orderSummaryHeading,  returnToCartText,  sslEncryptionText,  checkoutUnavailableHeading}
-export type CheckoutSettingsQueryResult = null;
+export type CheckoutSettingsQueryResult = {
+  _id: string;
+  trustBadges: Array<{
+    _key: string;
+    title: string | null;
+    description: string | null;
+    icon: "guitar" | "lock" | "package" | "shield" | "star" | "truck" | null;
+  }> | null;
+  deliveryEstimateText: string | null;
+  secureCheckoutText: string | null;
+  cartHeading: string | null;
+  cartEmptyHeading: string | null;
+  cartEmptyText: string | null;
+  cartEmptyButtonText: string | null;
+  secureCheckoutHeading: string | null;
+  redirectingHeading: string | null;
+  redirectingText: string | null;
+  redirectingSubtext: string | null;
+  orderSummaryHeading: string | null;
+  returnToCartText: string | null;
+  sslEncryptionText: string | null;
+  checkoutUnavailableHeading: string | null;
+} | null;
 // Variable: orderConfirmationPageQuery
 // Query: *[_type == "orderConfirmationPage"][0]{  _id,  thankYouHeading,  orderConfirmedLabel,  orderReceivedText,  whatsNextHeading,  nextStepEmail,  nextStepShipping,  nextStepTracking,  continueShoppingText,  viewShowsText,  noOrderHeading,  noOrderText}
-export type OrderConfirmationPageQueryResult = null;
+export type OrderConfirmationPageQueryResult = {
+  _id: string;
+  thankYouHeading: string | null;
+  orderConfirmedLabel: string | null;
+  orderReceivedText: string | null;
+  whatsNextHeading: string | null;
+  nextStepEmail: string | null;
+  nextStepShipping: string | null;
+  nextStepTracking: string | null;
+  continueShoppingText: string | null;
+  viewShowsText: string | null;
+  noOrderHeading: string | null;
+  noOrderText: string | null;
+} | null;
 // Variable: allSongsQuery
 // Query: *[_type == "song"] | order(order asc){  _id,  title,  key,  artist,  notes,  order}
 export type AllSongsQueryResult = Array<{
   _id: string;
-  title: string | null;
+  title: string;
   key: string | null;
   artist: string | null;
   notes: string | null;
-  order: number | null;
+  order: number;
 }>;
 // Variable: pageBySlugQuery
 // Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  name,  heading,  subheading,  modules[]{      _type,  _key,  _type == "hero" => {    headline,    headlineDesktopSize,    headlineMobileSize,    headlineTracking,    headlineLineHeight,    subhead,    subheadTracking,    subheadLineHeight,    mediaType,    image{asset->, hotspot, crop, alt},    mobileImage{asset->, hotspot, crop, alt},    desktopPosition,    mobilePosition,    video,    backgroundVariant,    sectionPadding,    ctas[]{label, href, variant}  },  _type == "richText" => {    content,    backgroundVariant,    sectionPadding  },  _type == "imageGallery" => {    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt, caption},    backgroundVariant,    sectionPadding  },  _type == "featureGrid" => {    items[]{title, body, iconType, icon, image{asset->, hotspot, crop, desktopPosition, mobilePosition}},    backgroundVariant,    sectionPadding  },  _type == "ctaBanner" => {    heading,    headingTracking,    headingLineHeight,    body,    backgroundVariant,    sectionPadding,    cta{label, href}  },  _type == "videoEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "musicEmbed" => {    provider,    url,    backgroundVariant,    sectionPadding  },  _type == "testimonials" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      name,      role,      quote,      image{asset->, hotspot, crop, alt}    },    backgroundVariant,    sectionPadding  },  _type == "faq" => {    heading,    headingTracking,    headingLineHeight,    'items': coalesce(items, set->items),    items[]{      question,      answer    },    backgroundVariant,    sectionPadding  },  _type == "callToAction" => @,  _type == "infoSection" => @  },  seo{    title,    description,    ogImage{asset->}  }}
 export type PageBySlugQueryResult = {
   _id: string;
   _type: "page";
-  name: string | null;
+  name: string;
   heading: string | null;
   subheading: string | null;
   modules: Array<{
@@ -1996,15 +3164,27 @@ export type PageBySlugQueryResult = {
     _type: "ctaBanner";
     _key: string;
     heading: string | null;
-    headingTracking: null;
-    headingLineHeight: null;
+    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
     body: string | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
     cta: {
       label: string | null;
       href: string | null;
     } | null;
+  } | {
+    _type: "faq";
+    _key: string;
+    heading: string | null;
+    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
+    items: Array<{
+      question: string | null;
+      answer: string | null;
+    }> | null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   } | {
     _type: "featureGrid";
     _key: string;
@@ -2038,23 +3218,23 @@ export type PageBySlugQueryResult = {
         } | null;
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
-        desktopPosition: null;
-        mobilePosition: null;
+        desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+        mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
       } | null;
     }> | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   } | {
     _type: "hero";
     _key: string;
-    headline: string | null;
+    headline: string;
     headlineDesktopSize: "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | "text-8xl" | "text-9xl" | null;
     headlineMobileSize: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl" | "text-6xl" | "text-7xl" | null;
-    headlineTracking: null;
-    headlineLineHeight: null;
+    headlineTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+    headlineLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
     subhead: string | null;
-    subheadTracking: null;
-    subheadLineHeight: null;
+    subheadTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+    subheadLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
     mediaType: "image" | "video" | null;
     image: {
       asset: {
@@ -2113,8 +3293,8 @@ export type PageBySlugQueryResult = {
     desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     video: string | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
     ctas: Array<{
       label: string | null;
       href: string | null;
@@ -2148,13 +3328,13 @@ export type PageBySlugQueryResult = {
       } | null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
-      desktopPosition: null;
-      mobilePosition: null;
+      desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
       alt: string | null;
       caption: string | null;
     }> | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   } | {
     _type: "infoSection";
     _key: string;
@@ -2170,7 +3350,13 @@ export type PageBySlugQueryResult = {
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
       listItem?: "bullet" | "number";
       markDefs?: Array<{
-        linkType?: "href" | "page" | "post";
+        label: string;
+        variant?: "outline" | "primary" | "secondary";
+        href: string;
+        _type: "button";
+        _key: string;
+      } | {
+        linkType?: "href" | "page" | "post" | "product";
         href?: string;
         page?: {
           _ref: string;
@@ -2183,6 +3369,12 @@ export type PageBySlugQueryResult = {
           _type: "reference";
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "post";
+        };
+        product?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "product";
         };
         openInNewTab?: boolean;
         _type: "link";
@@ -2197,8 +3389,8 @@ export type PageBySlugQueryResult = {
     _key: string;
     provider: "bandcamp" | "spotify" | "youtube" | null;
     url: string | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   } | {
     _type: "richText";
     _key: string;
@@ -2212,7 +3404,13 @@ export type PageBySlugQueryResult = {
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
       listItem?: "bullet" | "number";
       markDefs?: Array<{
-        linkType?: "href" | "page" | "post";
+        label: string;
+        variant?: "outline" | "primary" | "secondary";
+        href: string;
+        _type: "button";
+        _key: string;
+      } | {
+        linkType?: "href" | "page" | "post" | "product";
         href?: string;
         page?: {
           _ref: string;
@@ -2226,6 +3424,12 @@ export type PageBySlugQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "post";
         };
+        product?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "product";
+        };
         openInNewTab?: boolean;
         _type: "link";
         _key: string;
@@ -2234,15 +3438,55 @@ export type PageBySlugQueryResult = {
       _type: "block";
       _key: string;
     }> | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
+  } | {
+    _type: "testimonials";
+    _key: string;
+    heading: string | null;
+    headingTracking: "tracking-normal" | "tracking-tight" | "tracking-tighter" | "tracking-wide" | "tracking-wider" | "tracking-widest" | null;
+    headingLineHeight: "leading-none" | "leading-normal" | "leading-relaxed" | "leading-snug" | "leading-tight" | null;
+    items: Array<{
+      name: string | null;
+      role: string | null;
+      quote: string | null;
+      image: {
+        asset: {
+          _id: string;
+          _type: "sanity.imageAsset";
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          originalFilename?: string;
+          label?: string;
+          title?: string;
+          description?: string;
+          altText?: string;
+          sha1hash?: string;
+          extension?: string;
+          mimeType?: string;
+          size?: number;
+          assetId?: string;
+          uploadId?: string;
+          path?: string;
+          url?: string;
+          metadata?: SanityImageMetadata;
+          source?: SanityAssetSourceData;
+        } | null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+        alt: null;
+      } | null;
+    }> | null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   } | {
     _type: "videoEmbed";
     _key: string;
     provider: "vimeo" | "youtube" | null;
     url: string | null;
-    backgroundVariant: null;
-    sectionPadding: null;
+    backgroundVariant: "dark-gradient" | "default" | "surface-elevated" | "surface" | null;
+    sectionPadding: "lg" | "md" | "none" | "sm" | "xl" | null;
   }> | null;
   seo: {
     title: string | null;
@@ -2282,15 +3526,15 @@ export type PagesSlugsResult = Array<{
 // Query: *[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  isCanceled,  isSoldOut}
 export type UpcomingEventsQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   excerpt: string | null;
-  startDateTime: string | null;
+  startDateTime: string;
   endDateTime: string | null;
-  timezone: string | null;
-  venue: string | null;
+  timezone: "America/Anchorage" | "America/Chicago" | "America/Denver" | "America/Los_Angeles" | "America/New_York" | "America/Phoenix" | "Europe/London" | "Europe/Paris" | "Pacific/Honolulu" | "UTC" | null;
+  venue: string;
   address: string | null;
-  city: string | null;
+  city: string;
   state: string | null;
   country: string | null;
   ticketUrl: string | null;
@@ -2320,8 +3564,8 @@ export type UpcomingEventsQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
-    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   isCanceled: boolean | null;
@@ -2331,11 +3575,11 @@ export type UpcomingEventsQueryResult = Array<{
 // Query: *[_type == "event" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{  _id,  title,  startDateTime,  timezone,  venue,  city,  state,  country,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}}
 export type PastEventsQueryResult = Array<{
   _id: string;
-  title: string | null;
-  startDateTime: string | null;
-  timezone: string | null;
-  venue: string | null;
-  city: string | null;
+  title: string;
+  startDateTime: string;
+  timezone: "America/Anchorage" | "America/Chicago" | "America/Denver" | "America/Los_Angeles" | "America/New_York" | "America/Phoenix" | "Europe/London" | "Europe/Paris" | "Pacific/Honolulu" | "UTC" | null;
+  venue: string;
+  city: string;
   state: string | null;
   country: string | null;
   coverImage: {
@@ -2363,8 +3607,8 @@ export type PastEventsQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
-    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
 }>;
@@ -2372,11 +3616,11 @@ export type PastEventsQueryResult = Array<{
 // Query: *[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){  _id,  title,  startDateTime,  timezone,  venue,  city,  ticketUrl,  isCanceled,  isSoldOut}
 export type EventsByMonthQueryResult = Array<{
   _id: string;
-  title: string | null;
-  startDateTime: string | null;
-  timezone: string | null;
-  venue: string | null;
-  city: string | null;
+  title: string;
+  startDateTime: string;
+  timezone: "America/Anchorage" | "America/Chicago" | "America/Denver" | "America/Los_Angeles" | "America/New_York" | "America/Phoenix" | "Europe/London" | "Europe/Paris" | "Pacific/Honolulu" | "UTC" | null;
+  venue: string;
+  city: string;
   ticketUrl: string | null;
   isCanceled: boolean | null;
   isSoldOut: boolean | null;
@@ -2385,15 +3629,15 @@ export type EventsByMonthQueryResult = Array<{
 // Query: *[_type == "event" && (slug.current == $slug || _id == $slug)][0]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  heroImage{asset->, hotspot, crop, desktopPosition, alt},  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},  lineup[]{name, role, bio},  specialNotes,  isCanceled,  isSoldOut}
 export type EventBySlugQueryResult = {
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   excerpt: string | null;
-  startDateTime: string | null;
+  startDateTime: string;
   endDateTime: string | null;
-  timezone: string | null;
-  venue: string | null;
+  timezone: "America/Anchorage" | "America/Chicago" | "America/Denver" | "America/Los_Angeles" | "America/New_York" | "America/Phoenix" | "Europe/London" | "Europe/Paris" | "Pacific/Honolulu" | "UTC" | null;
+  venue: string;
   address: string | null;
-  city: string | null;
+  city: string;
   state: string | null;
   country: string | null;
   ticketUrl: string | null;
@@ -2423,8 +3667,8 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
-    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   heroImage: {
@@ -2452,7 +3696,7 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   heroImageMobile: {
@@ -2480,7 +3724,7 @@ export type EventBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    mobilePosition: "bottom center" | "bottom left" | "bottom right" | "center center" | "center left" | "center right" | "top center" | "top left" | "top right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
   lineup: Array<{
@@ -2501,8 +3745,8 @@ export type EventsSlugsResult = Array<{
 // Query: *[_type == "product"] | order(featured desc, _createdAt desc){  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type AllProductsQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   image: {
     asset: {
       _id: string;
@@ -2514,30 +3758,30 @@ export type AllProductsQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
-  priceCents: number | null;
-  compareAtPriceCents: null;
-  onSale: null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
   currency: "EUR" | "GBP" | "USD" | null;
-  category: null;
-  stockStatus: null;
-  featured: null;
-  badges: null;
-  tags: null;
-  inventoryQuantity: null;
-  trackInventory: null;
-  lowStockThreshold: null;
+  category: "accessories" | "amps" | "apparel" | "music" | "prints";
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  featured: boolean | null;
+  badges: Array<string> | null;
+  tags: Array<string> | null;
+  inventoryQuantity: number | null;
+  trackInventory: boolean | null;
+  lowStockThreshold: number | null;
   hasOptions: boolean | null;
 }>;
 // Variable: productBySlugQuery
 // Query: *[_type == "product" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  description,  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  availableDate,  materials,  careInstructions,  dimensions,  options[]{name, values},  variants[]{optionValues, priceCents, sku},  gelatoProductUid,  printAreas[]{areaName, artwork{asset->}},  shippingNotes,  relatedProducts[]->{    _id,    title,    "slug": slug.current,    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    badges  },  seo{title, description, ogImage{asset->}}}
 export type ProductBySlugQueryResult = {
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   description: BlockContent | null;
   images: Array<{
     asset: {
@@ -2564,26 +3808,31 @@ export type ProductBySlugQueryResult = {
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   }> | null;
-  priceCents: number | null;
-  compareAtPriceCents: null;
-  onSale: null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
   currency: "EUR" | "GBP" | "USD" | null;
-  category: null;
-  stockStatus: null;
-  featured: null;
-  badges: null;
-  tags: null;
-  inventoryQuantity: null;
-  trackInventory: null;
-  lowStockThreshold: null;
-  availableDate: null;
-  materials: null;
-  careInstructions: null;
-  dimensions: null;
+  category: "accessories" | "amps" | "apparel" | "music" | "prints";
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  featured: boolean | null;
+  badges: Array<string> | null;
+  tags: Array<string> | null;
+  inventoryQuantity: number | null;
+  trackInventory: boolean | null;
+  lowStockThreshold: number | null;
+  availableDate: string | null;
+  materials: string | null;
+  careInstructions: string | null;
+  dimensions: {
+    length?: number;
+    width?: number;
+    height?: number;
+    weight?: number;
+  } | null;
   options: Array<{
     name: string | null;
     values: Array<string> | null;
@@ -2626,7 +3875,46 @@ export type ProductBySlugQueryResult = {
     } | null;
   }> | null;
   shippingNotes: string | null;
-  relatedProducts: null;
+  relatedProducts: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    images: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      alt: string | null;
+    } | null;
+    priceCents: number;
+    compareAtPriceCents: number | null;
+    onSale: boolean | null;
+    currency: "EUR" | "GBP" | "USD" | null;
+    category: "accessories" | "amps" | "apparel" | "music" | "prints";
+    badges: Array<string> | null;
+  }> | null;
   seo: {
     title: string | null;
     description: string | null;
@@ -2659,14 +3947,14 @@ export type ProductBySlugQueryResult = {
 // Variable: productSlugsQuery
 // Query: *[_type == "product" && defined(slug.current)]{  "slug": slug.current}
 export type ProductSlugsQueryResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 // Variable: relatedProductsByCategoryQuery
 // Query: *[_type == "product" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  stockStatus,  badges,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type RelatedProductsByCategoryQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   image: {
     asset: {
       _id: string;
@@ -2678,30 +3966,62 @@ export type RelatedProductsByCategoryQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
-  priceCents: number | null;
-  compareAtPriceCents: null;
-  onSale: null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
   currency: "EUR" | "GBP" | "USD" | null;
-  stockStatus: null;
-  badges: null;
-  inventoryQuantity: null;
-  trackInventory: null;
-  lowStockThreshold: null;
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  badges: Array<string> | null;
+  inventoryQuantity: number | null;
+  trackInventory: boolean | null;
+  lowStockThreshold: number | null;
   hasOptions: boolean | null;
 }>;
 // Variable: featuredProductsQuery
 // Query: *[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
-export type FeaturedProductsQueryResult = Array<never>;
+export type FeaturedProductsQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  image: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    alt: string | null;
+  } | null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
+  currency: "EUR" | "GBP" | "USD" | null;
+  category: "accessories" | "amps" | "apparel" | "music" | "prints";
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  featured: boolean | null;
+  badges: Array<string> | null;
+  tags: Array<string> | null;
+  inventoryQuantity: number | null;
+  trackInventory: boolean | null;
+  lowStockThreshold: number | null;
+  hasOptions: boolean | null;
+}>;
 // Variable: productSearchQuery
 // Query: *[_type == "product" && (  title match $searchTerm  || category match $searchTerm  || tags[] match $searchTerm)] | order(_score desc, _createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  badges,  tags}
 export type ProductSearchQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   images: {
     asset: {
       _id: string;
@@ -2727,28 +4047,153 @@ export type ProductSearchQueryResult = Array<{
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-    desktopPosition: null;
-    mobilePosition: null;
+    desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+    mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
     alt: string | null;
   } | null;
-  priceCents: number | null;
-  compareAtPriceCents: null;
-  onSale: null;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  onSale: boolean | null;
   currency: "EUR" | "GBP" | "USD" | null;
-  category: null;
-  stockStatus: null;
-  badges: null;
-  tags: null;
+  category: "accessories" | "amps" | "apparel" | "music" | "prints";
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+  badges: Array<string> | null;
+  tags: Array<string> | null;
 }>;
 // Variable: allCollectionsQuery
 // Query: *[_type == "productCollection"] | order(displayOrder asc, _createdAt desc){  _id,  title,  "slug": slug.current,  description,  image{asset->, alt},  featured,  displayOrder,  "productSlugs": products[]->slug.current}
-export type AllCollectionsQueryResult = Array<never>;
+export type AllCollectionsQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  image: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  featured: boolean | null;
+  displayOrder: number | null;
+  productSlugs: Array<string> | null;
+}>;
 // Variable: collectionBySlugQuery
 // Query: *[_type == "productCollection" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  description,  image{asset->, alt},  "products": products[]->{    _id,    title,    "slug": slug.current,    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    stockStatus,    featured,    badges,    tags,    inventoryQuantity,    trackInventory,    lowStockThreshold  }}
-export type CollectionBySlugQueryResult = null;
+export type CollectionBySlugQueryResult = {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  image: {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    alt: string | null;
+  } | null;
+  products: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    images: Array<{
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      desktopPosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      mobilePosition: "bottom-center" | "bottom-left" | "bottom-right" | "center-left" | "center-right" | "center" | "top-center" | "top-left" | "top-right" | null;
+      alt: string | null;
+    }> | null;
+    priceCents: number;
+    compareAtPriceCents: number | null;
+    onSale: boolean | null;
+    currency: "EUR" | "GBP" | "USD" | null;
+    category: "accessories" | "amps" | "apparel" | "music" | "prints";
+    stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "pre_order" | null;
+    featured: boolean | null;
+    badges: Array<string> | null;
+    tags: Array<string> | null;
+    inventoryQuantity: number | null;
+    trackInventory: boolean | null;
+    lowStockThreshold: number | null;
+  }> | null;
+} | null;
 // Variable: promoCodeByCodeQuery
 // Query: *[_type == "promoCode" && code == $code && active == true][0]{  _id,  code,  description,  discountType,  discountValue,  minimumPurchaseCents,  maxUses,  currentUses,  validFrom,  validUntil,  applicableProducts[]->{_id, title},  applicableCategories}
-export type PromoCodeByCodeQueryResult = null;
+export type PromoCodeByCodeQueryResult = {
+  _id: string;
+  code: string;
+  description: string | null;
+  discountType: "fixed" | "percentage";
+  discountValue: number;
+  minimumPurchaseCents: number | null;
+  maxUses: number | null;
+  currentUses: number | null;
+  validFrom: string | null;
+  validUntil: string | null;
+  applicableProducts: Array<{
+    _id: string;
+    title: string;
+  }> | null;
+  applicableCategories: Array<string> | null;
+} | null;
 // Variable: postQuery
 // Query: *[_type == "post" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  excerpt,  content,  date,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  author->{firstName, lastName, picture{asset->}}}
 export type PostQueryResult = {
@@ -2788,7 +4233,7 @@ export type PostQueryResult = {
     alt: string | null;
   } | null;
   author: {
-    firstName: string | null;
+    firstName: string;
     lastName: string | null;
     picture: {
       asset: {
@@ -2830,7 +4275,7 @@ export type AllPostsQueryResult = Array<{
   excerpt: string | null;
   date: string | null;
   author: {
-    firstName: string | null;
+    firstName: string;
     lastName: string | null;
   } | null;
 }>;
@@ -2843,17 +4288,17 @@ export type MorePostsQueryResult = Array<{
   excerpt: string | null;
   date: string | null;
   author: {
-    firstName: string | null;
+    firstName: string;
     lastName: string | null;
   } | null;
 }>;
 // Variable: sitemapQuery
 // Query: *[_type in ["page", "product", "post", "event"] && defined(slug.current)] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
 export type SitemapQueryResult = Array<{
-  slug: string | null;
+  slug: string;
   _type: "event";
   _updatedAt: string;
-  startDateTime: string | null;
+  startDateTime: string;
   isCanceled: boolean | null;
 } | {
   slug: string | null;
@@ -2864,7 +4309,7 @@ export type SitemapQueryResult = Array<{
   _type: "post";
   _updatedAt: string;
 } | {
-  slug: string | null;
+  slug: string;
   _type: "product";
   _updatedAt: string;
 }>;
@@ -2873,7 +4318,7 @@ export type SitemapQueryResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt,\n    metadataBase\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showAmpsPage,\n  showMerchPage,\n  showBioPage,\n  showEpkPage,\n  showContactPage\n}": SettingsQueryResult;
+    "*[_type == \"settings\"][0]{\n  _id,\n  title,\n  description,\n  ogImage{\n    asset->,\n    alt\n  },\n  contactEmail,\n  bookingUrl,\n  socialLinks[]{\n    platform,\n    url\n  },\n  showShowsPage,\n  showLessonsPage,\n  showSetlistPage,\n  showAmpsPage,\n  showMerchPage,\n  showBioPage,\n  showEpkPage,\n  showContactPage\n}": SettingsQueryResult;
     "*[_type == \"storeSettings\"][0]{\n  storeEnabled,\n  storeName,\n  siteUrl,\n  currency,\n  adminEmail,\n  emailFromName,\n  emailFromAddress,\n  orderConfirmationSubject,\n  shippingUpdateSubject,\n  shippingCountries,\n  processingTime,\n  returnPolicyDays,\n  returnPolicyNotes,\n  contactFormSubject,\n  fulfillmentFailureSubject,\n  newOrderSubject,\n  emailSignature\n}": StoreSettingsQueryResult;
     "*[_type == \"uiText\"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navAmps,\n  navMerch,\n  navContact,\n  navBio,\n  navEpk,\n  footerBioLabel,\n  footerEpkLabel,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessHeading,\n  formSuccessMessage,\n  formSendAnotherText,\n  formPlaceholderName,\n  formPlaceholderEmail,\n  formPlaceholderSubject,\n  formPlaceholderMessage,\n  newsletterButtonText,\n  newsletterSuccessText,\n  newsletterPlaceholder,\n  newsletterDisclaimer,\n  footerBookingText,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}": UiTextQueryResult;
     "*[_type == \"navigation\"][0]{\n  _id,\n  main[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  },\n  footer[]{\n    title,\n    href,\n    docRef->{\n      _type,\n      \"slug\": slug.current\n    }\n  }\n}": NavigationQueryResult;

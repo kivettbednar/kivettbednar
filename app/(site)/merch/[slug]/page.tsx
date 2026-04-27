@@ -157,7 +157,15 @@ export default async function ProductPage({params}: Props) {
         thumbnailImages={thumbnailImages}
         allImages={allImages}
         relatedProducts={relatedProducts as import('@/types/product').ProductListItem[]}
-        trustBadges={merchPage?.trustBadges || undefined}
+        trustBadges={
+          merchPage?.trustBadges
+            ?.filter((b) => !!b.title && !!b.description && !!b.icon)
+            .map((b) => ({
+              title: b.title as string,
+              description: b.description as string,
+              icon: b.icon as string,
+            })) || undefined
+        }
       />
     </>
   )

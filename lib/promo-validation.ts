@@ -10,11 +10,11 @@ export type PromoValidationResult =
   | {valid: false; reason: string}
 
 interface PromoCode {
-  validFrom?: string
-  validUntil?: string
-  maxUses: number
-  currentUses: number
-  minimumPurchaseCents?: number
+  validFrom?: string | null
+  validUntil?: string | null
+  maxUses: number | null
+  currentUses: number | null
+  minimumPurchaseCents?: number | null
   discountType: 'percentage' | 'fixed'
   discountValue: number
 }
@@ -32,7 +32,9 @@ export function validatePromoCode(
   if (promoCode.validUntil && new Date(promoCode.validUntil) < now)
     return {valid: false, reason: 'This promo code has expired'}
 
-  if (promoCode.maxUses !== -1 && promoCode.currentUses >= promoCode.maxUses)
+  const maxUses = promoCode.maxUses ?? -1
+  const currentUses = promoCode.currentUses ?? 0
+  if (maxUses !== -1 && currentUses >= maxUses)
     return {valid: false, reason: 'This promo code has reached its usage limit'}
 
   if (promoCode.minimumPurchaseCents && cartTotalCents < promoCode.minimumPurchaseCents)

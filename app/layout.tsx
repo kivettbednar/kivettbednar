@@ -4,7 +4,8 @@ import {Inter, Playfair_Display, Anton} from 'next/font/google'
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
 import {draftMode} from 'next/headers'
-import {VisualEditing, toPlainText} from 'next-sanity'
+import {toPlainText} from 'next-sanity'
+import {VisualEditing} from 'next-sanity/visual-editing'
 import {Toaster} from 'sonner'
 
 import DraftModeToast from '@/app/components/DraftModeToast'
@@ -44,24 +45,19 @@ const anton = Anton({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
   const title = settings?.title || demo.title
-  const description = settings?.description || demo.description
+  const descriptionBlocks = settings?.description
+  const description =
+    descriptionBlocks && descriptionBlocks.length
+      ? toPlainText(descriptionBlocks as any)
+      : demo.descriptionPlain
 
   const ogImage = resolveOpenGraphImage(settings?.ogImage)
-  let metadataBase: URL | undefined = undefined
-  try {
-    metadataBase = settings?.ogImage?.metadataBase
-      ? new URL(settings.ogImage.metadataBase)
-      : undefined
-  } catch {
-    // ignore
-  }
   return {
-    metadataBase,
     title: {
       template: `%s | ${title}`,
       default: title,
     },
-    description: toPlainText(description),
+    description,
     openGraph: {
       images: ogImage ? [ogImage] : [],
     },

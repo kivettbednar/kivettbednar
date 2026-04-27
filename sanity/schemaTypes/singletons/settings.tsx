@@ -1,183 +1,117 @@
 import {CogIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
-import * as demo from '../../lib/initialValues'
+import * as demo from '../../lib/demo'
 
 /**
- * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.
- * Learn more: https://www.sanity.io/docs/create-a-link-to-a-single-edit-page-in-your-main-document-type-list
+ * Site Settings — global, site-wide configuration.
+ * One singleton document at _id: "settings".
  */
-
 export const settings = defineType({
   name: 'settings',
-  title: 'Settings',
+  title: 'Site Settings',
   type: 'document',
   icon: CogIcon,
   groups: [
-    {name: 'general', title: 'General', default: true},
+    {name: 'identity', title: 'Identity & SEO', default: true},
+    {name: 'contact', title: 'Contact & Booking'},
+    {name: 'social', title: 'Social Links'},
     {name: 'pageVisibility', title: 'Page Visibility'},
   ],
   fields: [
+    // === IDENTITY & SEO ===
     defineField({
       name: 'title',
-      description: 'This field is the title of your blog.',
-      title: 'Title',
+      title: 'Site Title',
       type: 'string',
+      description:
+        'Used in the browser tab and as the default site title in search results and social shares.',
       initialValue: demo.title,
-      group: 'general',
+      group: 'identity',
+      validation: (Rule) => Rule.required().max(70).warning('Keep under 70 characters for search results'),
     }),
     defineField({
       name: 'description',
-      description: 'Used on the Homepage',
-      title: 'Description',
+      title: 'Site Description',
       type: 'array',
-      initialValue: demo.description,
-      group: 'general',
+      description:
+        'One-to-two sentence description of the site. Used as the default meta description for SEO and social cards. Keep under ~160 characters.',
+      initialValue: [
+        {
+          _key: 'descBlock',
+          _type: 'block',
+          children: [{_key: 'descSpan', _type: 'span', text: demo.descriptionPlain}],
+          markDefs: [],
+          style: 'normal',
+        },
+      ],
+      group: 'identity',
       of: [
-        // Define a minified block content field for the description. https://www.sanity.io/docs/block-content
         defineArrayMember({
           type: 'block',
           options: {},
-          styles: [],
+          // Plain text only — no headings, no rich-text formatting.
+          styles: [{title: 'Normal', value: 'normal'}],
           lists: [],
-          marks: {
-            decorators: [],
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  defineField({
-                    name: 'linkType',
-                    title: 'Link Type',
-                    type: 'string',
-                    initialValue: 'href',
-                    options: {
-                      list: [
-                        {title: 'URL', value: 'href'},
-                        {title: 'Page', value: 'page'},
-                        {title: 'Post', value: 'post'},
-                      ],
-                      layout: 'radio',
-                    },
-                  }),
-                  defineField({
-                    name: 'href',
-                    title: 'URL',
-                    type: 'url',
-                    hidden: ({parent}) => parent?.linkType !== 'href' && parent?.linkType != null,
-                    validation: (Rule) =>
-                      Rule.custom((value, context: any) => {
-                        if (context.parent?.linkType === 'href' && !value) {
-                          return 'URL is required when Link Type is URL'
-                        }
-                        return true
-                      }),
-                  }),
-                  defineField({
-                    name: 'page',
-                    title: 'Page',
-                    type: 'reference',
-                    to: [{type: 'page'}],
-                    hidden: ({parent}) => parent?.linkType !== 'page',
-                    validation: (Rule) =>
-                      Rule.custom((value, context: any) => {
-                        if (context.parent?.linkType === 'page' && !value) {
-                          return 'Page reference is required when Link Type is Page'
-                        }
-                        return true
-                      }),
-                  }),
-                  defineField({
-                    name: 'post',
-                    title: 'Post',
-                    type: 'reference',
-                    to: [{type: 'post'}],
-                    hidden: ({parent}) => parent?.linkType !== 'post',
-                    validation: (Rule) =>
-                      Rule.custom((value, context: any) => {
-                        if (context.parent?.linkType === 'post' && !value) {
-                          return 'Post reference is required when Link Type is Post'
-                        }
-                        return true
-                      }),
-                  }),
-                  defineField({
-                    name: 'openInNewTab',
-                    title: 'Open in new tab',
-                    type: 'boolean',
-                    initialValue: false,
-                  }),
-                ],
-              },
-            ],
-          },
+          marks: {decorators: [], annotations: []},
         }),
       ],
     }),
     defineField({
       name: 'ogImage',
-      title: 'Open Graph Image',
+      title: 'Social Share Image',
       type: 'image',
-      group: 'general',
-      description: 'Displayed on social cards and search engine results.',
+      group: 'identity',
+      description:
+        'Image shown when the site is shared on Facebook, Twitter, iMessage, etc. Recommended size: 1200×630.',
       options: {
         hotspot: true,
-        aiAssist: {
-          imageDescriptionField: 'alt',
-        },
+        aiAssist: {imageDescriptionField: 'alt'},
       },
       fields: [
         defineField({
           name: 'alt',
-          description: 'Important for accessibility and SEO.',
           title: 'Alternative text',
           type: 'string',
-          validation: (rule) => {
-            return rule.custom((alt, context) => {
+          description: 'Short description of the image for accessibility and SEO.',
+          validation: (rule) =>
+            rule.custom((alt, context) => {
               if ((context.document?.ogImage as any)?.asset?._ref && !alt) {
-                return 'Required'
+                return 'Required when an image is set'
               }
               return true
-            })
-          },
-        }),
-        defineField({
-          name: 'metadataBase',
-          type: 'url',
-          description: (
-            <a
-              href="https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase"
-              rel="noreferrer noopener"
-            >
-              More information
-            </a>
-          ),
+            }),
         }),
       ],
     }),
+
+    // === CONTACT & BOOKING ===
     defineField({
       name: 'contactEmail',
       title: 'Contact Email',
       type: 'string',
-      description: 'Primary contact email address',
-      group: 'general',
+      description:
+        'Public-facing contact email. Shown on the Contact and Lessons pages, and used as the default mailto link in the footer.',
+      group: 'contact',
       validation: (Rule) => Rule.email(),
     }),
     defineField({
       name: 'bookingUrl',
-      title: 'Booking/Scheduling URL',
+      title: 'Lesson Booking URL',
       type: 'url',
-      description: 'Optional URL for lesson booking or scheduling',
-      group: 'general',
+      description:
+        'Optional. If you use a scheduling service (e.g., Calendly), paste the link here to add a "Book a Lesson" button on the Lessons page. Leave blank to hide.',
+      group: 'contact',
     }),
+
+    // === SOCIAL ===
     defineField({
       name: 'socialLinks',
       title: 'Social Media Links',
       type: 'array',
-      description: 'Add social media links for the site',
-      group: 'general',
+      description:
+        'Add a row for each social profile. These appear in the footer and as social meta tags.',
+      group: 'social',
       of: [
         defineArrayMember({
           type: 'object',
@@ -189,109 +123,108 @@ export const settings = defineType({
               type: 'string',
               options: {
                 list: [
-                  {title: 'Facebook', value: 'facebook'},
                   {title: 'Instagram', value: 'instagram'},
+                  {title: 'Facebook', value: 'facebook'},
                   {title: 'YouTube', value: 'youtube'},
-                  {title: 'Twitter/X', value: 'twitter'},
+                  {title: 'TikTok', value: 'tiktok'},
+                  {title: 'Twitter / X', value: 'twitter'},
+                  {title: 'Threads', value: 'threads'},
                   {title: 'Spotify', value: 'spotify'},
-                  {title: 'SoundCloud', value: 'soundcloud'},
+                  {title: 'Apple Music', value: 'applemusic'},
                   {title: 'Bandcamp', value: 'bandcamp'},
+                  {title: 'SoundCloud', value: 'soundcloud'},
                 ],
                 layout: 'dropdown',
-              },            }),
+              },
+              validation: (Rule) => Rule.required(),
+            }),
             defineField({
               name: 'url',
               title: 'URL',
               type: 'url',
-              validation: (rule) => rule.required().uri({scheme: ['http', 'https']}),
+              validation: (Rule) => Rule.required().uri({scheme: ['http', 'https']}),
             }),
           ],
           preview: {
-            select: {
-              platform: 'platform',
-              url: 'url',
-            },
+            select: {platform: 'platform', url: 'url'},
             prepare({platform, url}) {
-              return {
-                title: platform,
-                subtitle: url,
-              }
+              return {title: platform || 'Untitled', subtitle: url}
             },
           },
         }),
       ],
     }),
+
     // === PAGE VISIBILITY ===
     defineField({
       name: 'showShowsPage',
-      title: 'Show "Shows" Page',
+      title: 'Shows page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Shows page and its navigation link',
+      description: 'Show the Shows page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showLessonsPage',
-      title: 'Show "Lessons" Page',
+      title: 'Lessons page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Lessons page and its navigation link',
+      description: 'Show the Lessons page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showSetlistPage',
-      title: 'Show "Setlist" Page',
+      title: 'Setlist page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Setlist page and its navigation link',
+      description: 'Show the Setlist page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showAmpsPage',
-      title: 'Show "Amps" Page',
+      title: 'Amps page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Amps page and its navigation link',
+      description: 'Show the Amps page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showMerchPage',
-      title: 'Show "Merch" Page',
+      title: 'Merch page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Merch page and its navigation link. This is separate from Store Enabled in Store Settings, which controls checkout only.',
+      description:
+        'Show the Merch page in the navigation. Note: this is separate from "Store Enabled" in Store Settings, which controls whether checkout is allowed.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showBioPage',
-      title: 'Show "Bio" Page',
+      title: 'Bio page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Bio page (footer link + page access)',
+      description: 'Show the Bio page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showEpkPage',
-      title: 'Show "EPK (Press Kit)" Page',
+      title: 'Press Kit (EPK) page',
       type: 'boolean',
-      description: 'Toggle to show/hide the EPK page (footer link + page access)',
+      description: 'Show the EPK / Press Kit page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
     defineField({
       name: 'showContactPage',
-      title: 'Show "Contact" Page',
+      title: 'Contact page',
       type: 'boolean',
-      description: 'Toggle to show/hide the Contact page and its navigation link',
+      description: 'Show the Contact page in the navigation and footer.',
       initialValue: true,
       group: 'pageVisibility',
     }),
   ],
   preview: {
     prepare() {
-      return {
-        title: 'Settings',
-      }
+      return {title: 'Site Settings'}
     },
   },
 })

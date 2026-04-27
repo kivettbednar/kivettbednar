@@ -57,7 +57,17 @@ function OrderConfirmationContent() {
 
     async function loadOrder() {
       // Fetch CMS content for labels
-      clientBrowser.fetch(orderConfirmationPageQuery).then(setPageContent).catch(() => {})
+      clientBrowser
+        .fetch(orderConfirmationPageQuery)
+        .then((res) => {
+          if (!res) return
+          const stringFields: Record<string, string> = {}
+          for (const [k, v] of Object.entries(res)) {
+            if (typeof v === 'string') stringFields[k] = v
+          }
+          setPageContent(stringFields)
+        })
+        .catch(() => {})
 
       // Try Stripe session lookup first with retry logic for webhook race condition
       // Webhooks can take 2-45s; use escalating backoff: total ~60s

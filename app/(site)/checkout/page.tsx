@@ -22,7 +22,25 @@ export default function CheckoutPage() {
   const currency = items[0]?.currency || 'USD'
 
   useEffect(() => {
-    clientBrowser.fetch(checkoutSettingsQuery).then(setCheckoutSettings).catch(() => {})
+    clientBrowser
+      .fetch(checkoutSettingsQuery)
+      .then((res) => {
+        if (!res) return
+        const badges = (res.trustBadges || [])
+          .filter((b: any) => b?.title && b?.description && b?.icon)
+          .map((b: any) => ({
+            _key: b._key,
+            title: b.title as string,
+            description: b.description as string,
+            icon: b.icon as string,
+          }))
+        setCheckoutSettings({
+          ...res,
+          trustBadges: badges,
+          deliveryEstimateText: res.deliveryEstimateText || undefined,
+        })
+      })
+      .catch(() => {})
   }, [])
 
   // On mount, check if Stripe is enabled and redirect to Stripe checkout

@@ -11,8 +11,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   description,
   ogImage{
     asset->,
-    alt,
-    metadataBase
+    alt
   },
   contactEmail,
   bookingUrl,

@@ -468,8 +468,8 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
 
               S.listItem()
                 .title('Site Settings')
-                .id('siteSettings')
-                .child(S.document().schemaType('settings').documentId('siteSettings'))
+                .id('settings')
+                .child(S.document().schemaType('settings').documentId('settings'))
                 .icon(CogIcon),
 
               S.listItem()
