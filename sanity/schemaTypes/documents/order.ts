@@ -100,28 +100,30 @@ export const order = defineType({
     }),
     defineField({
       name: 'gelatoStatus',
-      title: 'Gelato Status',
+      title: 'Gelato Status (auto-updated)',
       type: 'string',
-      description: 'Raw status string from Gelato — updated automatically by their webhook. Do not edit manually.',
+      description:
+        'Raw status from Gelato. Updates automatically when their webhook fires. Read-only — to change overall status, use "Order Status" below.',
       readOnly: true,
     }),
     defineField({
       name: 'status',
       title: 'Order Status',
       type: 'string',
-      description: 'Overall order status. Updated automatically but can be changed manually if needed.',
+      description:
+        'Tracks the order from checkout to delivery. Stays in sync with Gelato automatically — only change manually if you\'re fulfilling outside Gelato or need to mark a refund/dispute. Pending = paid, awaiting Gelato. Submitted = sent to Gelato. In Production / Shipped / Delivered = Gelato updates. Failed / Gelato Failed = something broke (see "Gelato Error").',
       options: {
         list: [
-          {title: 'Pending', value: 'pending'},
+          {title: 'Pending — paid, awaiting Gelato submission', value: 'pending'},
           {title: 'Submitted to Gelato', value: 'submitted'},
           {title: 'In Production', value: 'in_production'},
           {title: 'Shipped', value: 'shipped'},
           {title: 'Delivered', value: 'delivered'},
           {title: 'Canceled', value: 'canceled'},
           {title: 'Refunded', value: 'refunded'},
-          {title: 'Disputed', value: 'disputed'},
-          {title: 'Failed', value: 'failed'},
-          {title: 'Gelato Failed', value: 'gelato_failed'},
+          {title: 'Disputed (Stripe)', value: 'disputed'},
+          {title: 'Failed (payment or system error)', value: 'failed'},
+          {title: 'Gelato Failed (retry available)', value: 'gelato_failed'},
         ],
         layout: 'dropdown',
       },

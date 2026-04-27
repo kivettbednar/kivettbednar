@@ -37,10 +37,11 @@ export const product = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL Slug',
       type: 'slug',
       group: 'basics',
-      description: 'Auto-fills from the product title. Clear this field to reset it.',
+      description:
+        'The URL part for this product. Auto-fills from the title (e.g., "Tour Tee" → /merch/tour-tee). Only edit if you need a custom URL.',
       options: {
         source: 'title',
         maxLength: 96,
@@ -89,12 +90,21 @@ export const product = defineType({
           type: 'image',
           options: {
             hotspot: true,
+            aiAssist: {imageDescriptionField: 'alt'},
           },
           fields: [
             defineField({
               name: 'alt',
               title: 'Alt Text',
               type: 'string',
+              description:
+                'Describe the image for screen readers and search engines (e.g., "Black tee with Kivett Bednar wordmark on the front"). Required when an image is set.',
+              validation: (rule) =>
+                rule.custom((alt, context) => {
+                  const parent = context.parent as {asset?: {_ref?: string}} | undefined
+                  if (parent?.asset?._ref && !alt) return 'Alt text is required'
+                  return true
+                }),
             }),
             ...imagePositionFields,
           ],
@@ -113,10 +123,11 @@ export const product = defineType({
     }),
     defineField({
       name: 'compareAtPriceCents',
-      title: 'Compare At Price (original)',
+      title: 'Original Price',
       type: 'number',
       group: 'pricing',
-      description: 'If set and higher than Price, shows "Was $X, Now $Y" on the product page.',
+      description:
+        'When set and higher than Price, the product page shows "Was $X, Now $Y". Leave blank if not on sale.',
       components: {input: PriceInput},
       validation: (Rule) =>
         Rule.integer().positive().custom((value, context) => {
@@ -262,18 +273,20 @@ export const product = defineType({
     }),
     defineField({
       name: 'gelatoProductUid',
-      title: 'Gelato Product UID',
+      title: 'Gelato Product ID',
       type: 'string',
       group: 'production',
-      description: 'Leave blank for non-print-on-demand items. Find this in your Gelato dashboard under Products → Product details.',
+      description:
+        'For print-on-demand items only. Find this in your Gelato dashboard under Products → [your product] → Details (it\'s the long ID near the top). Leave blank for self-fulfilled items.',
       components: {input: GelatoProductUidInput},
     }),
     defineField({
       name: 'gelatoCostCents',
-      title: 'Gelato Cost',
+      title: 'Production Cost (from Gelato)',
       type: 'number',
       group: 'production',
-      description: 'Production cost from Gelato, in dollars. Margin = Price - Cost.',
+      description:
+        'How much Gelato charges to produce one unit. Enter in dollars. Used to show your margin (Price minus Cost) below.',
       components: {input: MarginDisplay},
     }),
     defineField({

@@ -30,9 +30,10 @@ export const event = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL Slug',
       type: 'slug',
-      description: 'URL-friendly identifier for the event page (auto-generated from title)',
+      description:
+        'The URL part for this event. Auto-fills from the title (e.g., "Aladdin Theater" → /shows/aladdin-theater). Only edit if you need a custom URL.',
       group: 'details',
       options: {
         source: 'title',

@@ -1,5 +1,6 @@
 import {BookIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
+import {PriceInput} from '@/sanity/components/PriceInput'
 
 export const lessonPackage = defineType({
   name: 'lessonPackage',
@@ -24,8 +25,10 @@ export const lessonPackage = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL Slug',
       type: 'slug',
+      description:
+        'The URL part for this package. Auto-fills from the title (e.g., "Blues Fundamentals" → /lessons/blues-fundamentals). Only edit if you need a custom URL.',
       options: {source: 'title'},
       validation: (Rule) => Rule.required(),
       group: 'details',
@@ -102,10 +105,11 @@ export const lessonPackage = defineType({
     // === PRICING ===
     defineField({
       name: 'priceCents',
-      title: 'Price (cents)',
+      title: 'Price',
       type: 'number',
-      description: 'Price in cents. Enter 5000 for $50.00, 15000 for $150.00.',
+      description: 'Enter in dollars (e.g., 50 = $50, 149.99 = $149.99). Stored as cents under the hood.',
       validation: (Rule) => Rule.required().min(0).integer(),
+      components: {input: PriceInput},
       group: 'pricing',
     }),
     defineField({
@@ -125,9 +129,11 @@ export const lessonPackage = defineType({
     }),
     defineField({
       name: 'compareAtPriceCents',
-      title: 'Compare At Price (cents)',
+      title: 'Original Price',
       type: 'number',
-      description: 'Original price for showing discounts. Leave empty if not on sale.',
+      description:
+        'When set and higher than Price, the package shows "Was $X, Now $Y". Leave blank if not on sale.',
+      components: {input: PriceInput},
       group: 'pricing',
     }),
 
