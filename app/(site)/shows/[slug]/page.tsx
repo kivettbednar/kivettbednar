@@ -2,7 +2,6 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
 import {eventBySlugQuery, showsPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
@@ -39,7 +38,7 @@ export const revalidate = 60
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
   const [event, siteSettings] = await Promise.all([
-    client.fetch(eventBySlugQuery, {slug}, {next: {revalidate: 60}}),
+    sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data),
     getSiteSettings(),
   ])
 
@@ -84,8 +83,8 @@ export default async function EventPage({params}: Props) {
   // ISR via `revalidate: 60`. Webhook (/api/revalidate) busts the cache
   // immediately on Sanity edits, so 60s is just the fallback.
   const [event, showsPage, siteSettings] = await Promise.all([
-    client.fetch(eventBySlugQuery, {slug}, {next: {revalidate: 60, tags: [`event:${slug}`]}}),
-    client.fetch(showsPageQuery, {}, {next: {revalidate: 60}}).catch(() => null),
+    sanityFetch({query: eventBySlugQuery, params: {slug}}).then((r) => r.data),
+    sanityFetch({query: showsPageQuery}).then((r) => r.data).catch(() => null),
     getSiteSettings(),
   ])
 

@@ -1,7 +1,7 @@
 import {Metadata} from 'next'
 import Image from 'next/image'
 import type {PortableTextBlock} from 'next-sanity'
-import {client} from '@/sanity/lib/client'
+import {sanityFetch} from '@/sanity/lib/live'
 import {epkPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {LegalPortableText} from '@/components/ui/LegalPortableText'
@@ -66,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kivettbednar.com'
   try {
     const [rawData, siteSettings] = await Promise.all([
-      client.fetch(epkPageQuery, {}, {next: {revalidate: 60}}),
+      sanityFetch({query: epkPageQuery}).then((r) => r.data),
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'epk')) {
@@ -121,7 +121,7 @@ function downloadFilename(url: string, filename?: string): string {
 
 export default async function EpkPage() {
   const [rawData, siteSettings] = await Promise.all([
-    client.fetch(epkPageQuery, {}, {next: {revalidate: 60}}),
+    sanityFetch({query: epkPageQuery}).then((r) => r.data),
     getSiteSettings(),
   ])
 

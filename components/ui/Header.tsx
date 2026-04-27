@@ -168,7 +168,7 @@ export function Header({siteName, navigation}: HeaderProps) {
           </Link>
 
           {/* Desktop Navigation - Dark cinematic theme */}
-          <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-5 lg:gap-8 flex-nowrap" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => {
               const isActive = isActiveLink(item.href)
               return (
@@ -176,7 +176,7 @@ export function Header({siteName, navigation}: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`nav-link-animated font-medium uppercase tracking-wider text-sm transition-all duration-300 ${
+                  className={`nav-link-animated whitespace-nowrap font-medium uppercase tracking-wider text-sm transition-all duration-300 ${
                     isActive
                       ? 'text-accent-primary'
                       : isScrolled

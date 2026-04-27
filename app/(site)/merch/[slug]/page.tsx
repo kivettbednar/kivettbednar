@@ -1,6 +1,5 @@
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
-import {client} from '@/sanity/lib/client'
 import {sanityFetch} from '@/sanity/lib/live'
 import {productBySlugQuery, relatedProductsByCategoryQuery, merchPageQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
@@ -22,7 +21,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
   try {
     const [productData, siteSettings] = await Promise.all([
-      client.fetch(productBySlugQuery, {slug}, {next: {revalidate: 60}}),
+      sanityFetch({query: productBySlugQuery, params: {slug}}).then((r) => r.data),
       getSiteSettings(),
     ])
     product = productData

@@ -1,7 +1,7 @@
 import 'server-only'
 
 import type {SettingsQueryResult} from '@/sanity.types'
-import {client} from '@/sanity/lib/client'
+import {sanityFetch} from '@/sanity/lib/live'
 import {settingsQuery} from '@/sanity/lib/queries'
 
 export type SiteSettings = SettingsQueryResult
@@ -20,6 +20,10 @@ const PAGE_FLAG_FIELDS = {
 export type PageVisibilityKey = keyof typeof PAGE_FLAG_FIELDS
 export const PAGE_VISIBILITY_KEYS = Object.keys(PAGE_FLAG_FIELDS) as PageVisibilityKey[]
 
+// In-memory cache for non-draft renders. The TTL matches Next.js fetch
+// revalidate so we don't double-cache. Draft mode bypasses this entirely
+// (sanityFetch handles live updates itself) and falls back to the empty
+// settings object on error so visibility flags default to "show".
 let cachedSettings: SiteSettings | null = null
 let cachedAt = 0
 const SETTINGS_TTL = 60_000
@@ -30,7 +34,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     return cachedSettings
   }
   try {
-    const data = await client.fetch(settingsQuery, {}, {next: {revalidate: 60}})
+    const {data} = await sanityFetch({query: settingsQuery})
     cachedSettings = data || ({} as SiteSettings)
     cachedAt = now
     return cachedSettings

@@ -1,4 +1,5 @@
 import {type ReactNode} from 'react'
+import {stegaClean} from 'next-sanity'
 import {sanityFetch} from '@/sanity/lib/live'
 import {uiTextQuery} from '@/sanity/lib/queries'
 import {Header} from '@/components/ui/Header'
@@ -24,15 +25,22 @@ export default async function SiteLayout({
     console.warn('Failed to fetch layout data, using fallback content:', error)
   }
 
+  // Strip stega encoding from short, layout-sensitive strings (nav, footer
+  // labels, copyright). Stega adds invisible Unicode variation selectors
+  // for click-to-edit, but they bloat the rendered text width and cause
+  // single-word nav links to wrap mid-row in narrow viewports (notably the
+  // Studio Presentation iframe). Long-form content (PortableText, body
+  // copy, page hero text) keeps stega so the click-to-edit overlay still
+  // works there.
   const navConfig: Array<{key: PageVisibilityKey; title: string; href: string}> = [
-    {key: 'shows', title: uiText?.navShows || 'Shows', href: '/shows'},
-    {key: 'lessons', title: uiText?.navLessons || 'Lessons', href: '/lessons'},
-    {key: 'setlist', title: uiText?.navSetlist || 'Setlist', href: '/setlist'},
-    {key: 'amps', title: uiText?.navAmps || 'Amps', href: '/amps'},
-    {key: 'merch', title: uiText?.navMerch || 'Merch', href: '/merch'},
-    {key: 'bio', title: uiText?.navBio || 'Bio', href: '/bio'},
-    {key: 'epk', title: uiText?.navEpk || 'Press Kit', href: '/epk'},
-    {key: 'contact', title: uiText?.navContact || 'Contact', href: '/contact'},
+    {key: 'shows', title: stegaClean(uiText?.navShows) || 'Shows', href: '/shows'},
+    {key: 'lessons', title: stegaClean(uiText?.navLessons) || 'Lessons', href: '/lessons'},
+    {key: 'setlist', title: stegaClean(uiText?.navSetlist) || 'Setlist', href: '/setlist'},
+    {key: 'amps', title: stegaClean(uiText?.navAmps) || 'Amps', href: '/amps'},
+    {key: 'merch', title: stegaClean(uiText?.navMerch) || 'Merch', href: '/merch'},
+    {key: 'bio', title: stegaClean(uiText?.navBio) || 'Bio', href: '/bio'},
+    {key: 'epk', title: stegaClean(uiText?.navEpk) || 'Press Kit', href: '/epk'},
+    {key: 'contact', title: stegaClean(uiText?.navContact) || 'Contact', href: '/contact'},
   ]
 
   const navigation = navConfig
@@ -42,23 +50,23 @@ export default async function SiteLayout({
   return (
     <ToastProvider>
       <CartProvider>
-        <Header siteName={uiText?.siteName || undefined} navigation={navigation} />
+        <Header siteName={stegaClean(uiText?.siteName) || undefined} navigation={navigation} />
         <main id="main-content">{children}</main>
         <Footer
           navigation={navigation}
-          siteName={uiText?.siteName || undefined}
+          siteName={stegaClean(uiText?.siteName) || undefined}
           siteTagline={uiText?.siteTagline || undefined}
-          navigationHeading={uiText?.footerNavigationHeading || undefined}
-          connectHeading={uiText?.footerConnectHeading || undefined}
+          navigationHeading={stegaClean(uiText?.footerNavigationHeading) || undefined}
+          connectHeading={stegaClean(uiText?.footerConnectHeading) || undefined}
           socialLinks={(siteSettings?.socialLinks?.filter((link) =>
             link.platform !== null && link.url !== null
           ) as Array<{platform: string; url: string}> | undefined) || undefined}
-          socialFacebookLabel={uiText?.socialFacebook || undefined}
-          socialInstagramLabel={uiText?.socialInstagram || undefined}
-          copyrightText={uiText?.footerCopyrightText || undefined}
+          socialFacebookLabel={stegaClean(uiText?.socialFacebook) || undefined}
+          socialInstagramLabel={stegaClean(uiText?.socialInstagram) || undefined}
+          copyrightText={stegaClean(uiText?.footerCopyrightText) || undefined}
           bookingText={uiText?.footerBookingText || undefined}
-          bioLabel={uiText?.footerBioLabel || undefined}
-          epkLabel={uiText?.footerEpkLabel || undefined}
+          bioLabel={stegaClean(uiText?.footerBioLabel) || undefined}
+          epkLabel={stegaClean(uiText?.footerEpkLabel) || undefined}
           showBio={isPageEnabled(siteSettings, 'bio')}
           showEpk={isPageEnabled(siteSettings, 'epk')}
         />
