@@ -89,7 +89,7 @@ export function NewsletterForm({
               </button>
             </div>
 
-            <div className="mt-4 text-xs text-white/50 tracking-wide">
+            <div className="mt-4 text-xs text-white/70 tracking-wide">
               {status === 'error' && message ? (
                 <span className="text-red-400">{message}</span>
               ) : (

@@ -15,14 +15,23 @@ import {
   InfoOutlineIcon,
   CreditCardIcon,
   CheckmarkCircleIcon,
+  RocketIcon,
+  PlugIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
+import {IntegrationsInfo} from '@/sanity/components/IntegrationsInfo'
 
 /**
- * Custom Studio structure organized by editorial focus:
- * Site Pages · Store · Orders · Events & Content · Subscribers · Settings.
+ * Custom Studio structure. Designed for a non-technical site owner —
+ * everything is grouped by editorial focus, with no document-list dumping
+ * grounds. Top-level sections:
+ *
+ *   📄  Site Pages       Singletons that drive each route
+ *   🛍️  Store            All ecommerce: products, orders, store config
+ *   🎸  Events & Content Calendar items, lesson packages, songs
+ *   👥  Subscribers      Newsletter list
+ *   ⚙️  Settings         Site-wide settings, UI text, integrations info
  */
-
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
     .title('Content Management')
@@ -40,75 +49,57 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('homePage')
                 .child(S.document().schemaType('homePage').documentId('homePage'))
                 .icon(HomeIcon),
-
               S.listItem()
                 .title('Shows Page')
                 .id('showsPage')
                 .child(S.document().schemaType('showsPage').documentId('showsPage'))
                 .icon(CalendarIcon),
-
               S.listItem()
                 .title('Lessons Page')
                 .id('lessonsPage')
                 .child(S.document().schemaType('lessonsPage').documentId('lessonsPage'))
                 .icon(BookIcon),
-
-              S.listItem()
-                .title('Contact Page')
-                .id('contactPage')
-                .child(S.document().schemaType('contactPage').documentId('contactPage'))
-                .icon(EnvelopeIcon),
-
               S.listItem()
                 .title('Setlist Page')
                 .id('setlistPage')
                 .child(S.document().schemaType('setlistPage').documentId('setlistPage'))
                 .icon(DocumentIcon),
-
               S.listItem()
                 .title('Merch Page')
                 .id('merchPage')
                 .child(S.document().schemaType('merchPage').documentId('merchPage'))
                 .icon(BasketIcon),
-
               S.listItem()
                 .title('Amps Page')
                 .id('ampsPage')
                 .child(S.document().schemaType('ampsPage').documentId('ampsPage'))
                 .icon(ComponentIcon),
-
               S.listItem()
                 .title('Bio')
                 .id('bio')
                 .child(S.document().schemaType('bio').documentId('bio'))
                 .icon(UserIcon),
-
               S.listItem()
                 .title('EPK (Press Kit)')
                 .id('epkPage')
                 .child(S.document().schemaType('epkPage').documentId('epkPage'))
                 .icon(DocumentIcon),
-
               S.listItem()
-                .title('Order Confirmation Page')
-                .id('orderConfirmationPage')
-                .child(S.document().schemaType('orderConfirmationPage').documentId('orderConfirmationPage'))
-                .icon(CheckmarkCircleIcon),
-
+                .title('Contact Page')
+                .id('contactPage')
+                .child(S.document().schemaType('contactPage').documentId('contactPage'))
+                .icon(EnvelopeIcon),
               S.divider(),
-
               S.listItem()
                 .title('Privacy Policy')
                 .id('privacyPolicy')
                 .child(S.document().schemaType('privacyPolicy').documentId('privacyPolicy'))
                 .icon(DocumentIcon),
-
               S.listItem()
                 .title('Terms of Service')
                 .id('termsOfService')
                 .child(S.document().schemaType('termsOfService').documentId('termsOfService'))
                 .icon(DocumentIcon),
-
               S.listItem()
                 .title('Returns & Refunds')
                 .id('returnsPolicy')
@@ -119,15 +110,15 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
 
       S.divider(),
 
-      // === ECOMMERCE SECTION ===
+      // === STORE — everything ecommerce in one place ===
       S.listItem()
-        .title('🛍️ Store Management')
+        .title('🛍️ Store')
         .icon(BasketIcon)
         .child(
           S.list()
-            .title('Store Management')
+            .title('Store')
             .items([
-              // Products by category
+              // --- PRODUCTS ---
               S.listItem()
                 .title('All Products')
                 .icon(PackageIcon)
@@ -137,7 +128,6 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .filter('_type == "product"')
                     .defaultOrdering([{field: '_createdAt', direction: 'desc'}])
                 ),
-
               S.listItem()
                 .title('Products by Category')
                 .icon(TagsIcon)
@@ -187,7 +177,6 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         ),
                     ])
                 ),
-
               S.listItem()
                 .title('Featured Products')
                 .icon(StarIcon)
@@ -196,7 +185,6 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .title('Featured Products')
                     .filter('_type == "product" && featured == true')
                 ),
-
               S.listItem()
                 .title('Products on Sale')
                 .icon(TagIcon)
@@ -205,9 +193,8 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .title('Products on Sale')
                     .filter('_type == "product" && onSale == true')
                 ),
-
               S.listItem()
-                .title('Low Stock Items')
+                .title('Low Stock')
                 .icon(InfoOutlineIcon)
                 .child(
                   S.documentList()
@@ -216,20 +203,17 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                       '_type == "product" && trackInventory == true && inventoryQuantity <= lowStockThreshold && inventoryQuantity > 0'
                     )
                 ),
-
               S.listItem()
                 .title('Out of Stock')
                 .icon(InfoOutlineIcon)
                 .child(
                   S.documentList()
                     .title('Out of Stock')
-                    .filter(
-                      '_type == "product" && trackInventory == true && inventoryQuantity == 0'
-                    )
+                    .filter('_type == "product" && trackInventory == true && inventoryQuantity == 0')
                 ),
-
               S.divider(),
 
+              // --- COLLECTIONS & PROMO ---
               S.listItem()
                 .title('Product Collections')
                 .icon(TagsIcon)
@@ -239,7 +223,6 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .filter('_type == "productCollection"')
                     .defaultOrdering([{field: 'displayOrder', direction: 'asc'}])
                 ),
-
               S.listItem()
                 .title('Promo Codes')
                 .icon(TagIcon)
@@ -248,21 +231,21 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                     .title('Promo Codes')
                     .items([
                       S.listItem()
-                        .title('Active Codes')
+                        .title('Active')
                         .child(
                           S.documentList()
                             .title('Active Promo Codes')
                             .filter('_type == "promoCode" && active == true')
                         ),
                       S.listItem()
-                        .title('Inactive Codes')
+                        .title('Inactive')
                         .child(
                           S.documentList()
                             .title('Inactive Promo Codes')
                             .filter('_type == "promoCode" && active == false')
                         ),
                       S.listItem()
-                        .title('All Codes')
+                        .title('All')
                         .child(
                           S.documentList()
                             .title('All Promo Codes')
@@ -270,59 +253,82 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         ),
                     ])
                 ),
-
               S.divider(),
 
+              // --- ORDERS ---
               S.listItem()
-                .title('Checkout Settings')
+                .title('Orders')
+                .icon(RocketIcon)
+                .child(
+                  S.list()
+                    .title('Orders by Status')
+                    .items([
+                      S.listItem()
+                        .title('All Orders')
+                        .child(
+                          S.documentList()
+                            .title('All Orders')
+                            .filter('_type == "order"')
+                            .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
+                        ),
+                      S.divider(),
+                      ...[
+                        'pending',
+                        'submitted',
+                        'in_production',
+                        'shipped',
+                        'delivered',
+                        'canceled',
+                        'refunded',
+                        'disputed',
+                        'failed',
+                        'gelato_failed',
+                      ].map((status) =>
+                        S.listItem()
+                          .title(
+                            status
+                              .split('_')
+                              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                              .join(' ')
+                          )
+                          .child(
+                            S.documentList()
+                              .title(`Orders: ${status}`)
+                              .filter('_type == "order" && status == $status')
+                              .params({status})
+                              .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
+                          )
+                      ),
+                    ])
+                ),
+              S.divider(),
+
+              // --- STORE CONFIG ---
+              S.listItem()
+                .title('Store Settings')
+                .id('storeSettings')
+                .child(S.document().schemaType('storeSettings').documentId('storeSettings'))
+                .icon(CogIcon),
+              S.listItem()
+                .title('Checkout & Cart Copy')
                 .id('checkoutSettings')
                 .child(S.document().schemaType('checkoutSettings').documentId('checkoutSettings'))
                 .icon(CreditCardIcon),
-            ])
-        ),
-
-      S.divider(),
-
-      // === ORDERS ===
-      S.listItem()
-        .title('📦 Orders')
-        .icon(BasketIcon)
-        .child(
-          S.list()
-            .title('Orders by Status')
-            .items([
               S.listItem()
-                .title('All Orders')
+                .title('Order Confirmation Page')
+                .id('orderConfirmationPage')
                 .child(
-                  S.documentList()
-                    .title('All Orders')
-                    .filter('_type == "order"')
-                    .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
-                ),
-              S.divider(),
-              ...['pending', 'submitted', 'in_production', 'shipped', 'delivered', 'canceled', 'refunded', 'disputed', 'failed', 'gelato_failed'].map(
-                (status) =>
-                  S.listItem()
-                    .title(
-                      status
-                        .split('_')
-                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(' ')
-                    )
-                    .child(
-                      S.documentList()
-                        .title(`Orders: ${status}`)
-                        .filter('_type == "order" && status == $status')
-                        .params({status})
-                        .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
-                    )
-              ),
+                  S.document()
+                    .schemaType('orderConfirmationPage')
+                    .documentId('orderConfirmationPage')
+                )
+                .icon(CheckmarkCircleIcon),
             ])
         ),
 
       S.divider(),
 
-      // === CONTENT ===
+      // === EVENTS & CONTENT ===
       S.listItem()
         .title('🎸 Events & Content')
         .icon(CalendarIcon)
@@ -396,10 +402,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
       S.listItem()
         .title('👥 Subscribers')
         .icon(UserIcon)
-        .child(
-          S.documentTypeList('newsletterSubscriber')
-            .title('Newsletter Subscribers')
-        ),
+        .child(S.documentTypeList('newsletterSubscriber').title('Newsletter Subscribers')),
 
       S.divider(),
 
@@ -412,22 +415,24 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
             .title('Settings')
             .items([
               S.listItem()
-                .title('Store Settings')
-                .id('storeSettings')
-                .child(S.document().schemaType('storeSettings').documentId('storeSettings'))
-                .icon(BasketIcon),
-
-              S.listItem()
                 .title('Site Settings')
                 .id('settings')
                 .child(S.document().schemaType('settings').documentId('settings'))
                 .icon(CogIcon),
-
               S.listItem()
                 .title('UI Text & Labels')
                 .id('uiText')
                 .child(S.document().schemaType('uiText').documentId('uiText'))
                 .icon(DocumentIcon),
+              S.divider(),
+              S.listItem()
+                .title('External Integrations')
+                .icon(PlugIcon)
+                .child(
+                  S.component(IntegrationsInfo)
+                    .title('External Integrations')
+                    .id('integrations-info')
+                ),
             ])
         ),
     ])

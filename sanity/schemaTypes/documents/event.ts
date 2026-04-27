@@ -1,5 +1,5 @@
 import {CalendarIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 import {imagePositionFields} from '@/sanity/lib/image-fields'
 
 /**
@@ -211,13 +211,15 @@ export const event = defineType({
       group: 'content',
       description: 'Featured performers and special guests',
       of: [
-        {
+        defineArrayMember({
           type: 'object',
+          name: 'lineupEntry',
           fields: [
             defineField({
               name: 'name',
               title: 'Name',
-              type: 'string',            }),
+              type: 'string',
+            }),
             defineField({
               name: 'role',
               title: 'Role',
@@ -232,18 +234,12 @@ export const event = defineType({
             }),
           ],
           preview: {
-            select: {
-              name: 'name',
-              role: 'role',
-            },
+            select: {name: 'name', role: 'role'},
             prepare({name, role}) {
-              return {
-                title: name,
-                subtitle: role,
-              }
+              return {title: name, subtitle: role}
             },
           },
-        },
+        }),
       ],
     }),
     defineField({

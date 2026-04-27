@@ -98,7 +98,7 @@ export function LiveVideoSlider({videos, eyebrow = 'Live', heading = 'Live Perfo
                 <span className="font-bebas text-3xl md:text-4xl text-accent-primary tracking-wide">
                   {pad2(index + 1)}
                 </span>
-                <span className="text-white/30">/</span>
+                <span aria-hidden="true" className="text-white/50">/</span>
                 <span className="text-white/60 text-sm tracking-widest">
                   {pad2(total)}
                 </span>

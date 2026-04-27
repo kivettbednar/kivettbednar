@@ -287,6 +287,7 @@ export type Event = {
     name?: string;
     role?: string;
     bio?: string;
+    _type: "lineupEntry";
     _key: string;
   }>;
   specialNotes?: string;

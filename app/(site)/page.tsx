@@ -1,6 +1,7 @@
 import {Metadata} from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import {stegaClean} from 'next-sanity'
 import {sanityFetch} from '@/sanity/lib/live'
 import {upcomingEventsQuery, homePageQuery, uiTextQuery} from '@/sanity/lib/queries'
 import {EventCard} from '@/components/ui/EventCard'
@@ -114,7 +115,7 @@ export default async function HomePage() {
         headingTracking={homePage.heroHeadingTracking || undefined}
         headingLineHeight={homePage.heroHeadingLineHeight || undefined}
         tagline={homePage.heroTagline || 'Gritty Texas Blues meets the heart of the Pacific Northwest'}
-        buttonText={homePage.heroButtonText || undefined}
+        buttonText={stegaClean(homePage.heroButtonText) || undefined}
         headingDesktopSize={homePage.heroHeadingDesktopSize || undefined}
         headingMobileSize={homePage.heroHeadingMobileSize || undefined}
         subheadingTracking={homePage.heroSubheadingTracking ?? undefined}
@@ -127,10 +128,11 @@ export default async function HomePage() {
         } : null}
       />
 
-      {/* Marquee Ticker Band */}
+      {/* Marquee Ticker Band — strip stega from short repeated items so the
+          rendered marquee width stays predictable. */}
       <MarqueeTicker
-        topItems={(homePage.marqueeTopItems as any)?.length ? (homePage.marqueeTopItems as any) : undefined}
-        bottomItems={(homePage.marqueeBottomItems as any)?.length ? (homePage.marqueeBottomItems as any) : undefined}
+        topItems={(homePage.marqueeTopItems as any)?.length ? stegaClean(homePage.marqueeTopItems as any) : undefined}
+        bottomItems={(homePage.marqueeBottomItems as any)?.length ? stegaClean(homePage.marqueeBottomItems as any) : undefined}
       />
 
       {/* Listen / Music Section — intentional listening moment, narrow & editorial */}
@@ -233,7 +235,7 @@ export default async function HomePage() {
           imageSrc={homePage.aboutImage.asset.url}
           imageAlt={homePage.aboutImage?.alt || "Kivett Bednar with guitar - blues musician and performer"}
           imagePosition="left"
-          verticalLabel={homePage.aboutVerticalLabel || 'ABOUT THE ARTIST'}
+          verticalLabel={stegaClean(homePage.aboutVerticalLabel) || 'ABOUT THE ARTIST'}
         >
         <AnimatedSection animation="fadeUp">
           <span className="inline-flex items-center gap-3 mb-5">
@@ -259,7 +261,7 @@ export default async function HomePage() {
               href="/bio"
               className="btn-primary"
             >
-              {homePage.aboutButtonText || 'Read Full Bio'}
+              {stegaClean(homePage.aboutButtonText) || 'Read Full Bio'}
               <span>→</span>
             </Link>
           </div>
@@ -323,7 +325,7 @@ export default async function HomePage() {
                     href="/shows"
                     className="group inline-flex items-center gap-2 text-accent-primary text-sm uppercase tracking-[0.25em] font-semibold border-b border-accent-primary/40 hover:border-accent-primary pb-1 transition-colors"
                   >
-                    <span>{homePage.seeAllShowsLinkText || 'View all shows'}</span>
+                    <span>{stegaClean(homePage.seeAllShowsLinkText) || 'View all shows'}</span>
                     <span className="arrow-slide">→</span>
                   </Link>
                 </div>
@@ -503,10 +505,10 @@ export default async function HomePage() {
             </AnimatedSection>
             <AnimatedSection animation="fadeUp" delay={0.2}>
               <NewsletterForm
-                buttonText={uiText?.newsletterButtonText || undefined}
-                successText={uiText?.newsletterSuccessText || undefined}
-                placeholder={uiText?.newsletterPlaceholder || undefined}
-                disclaimer={uiText?.newsletterDisclaimer || undefined}
+                buttonText={stegaClean(uiText?.newsletterButtonText) || undefined}
+                successText={stegaClean(uiText?.newsletterSuccessText) || undefined}
+                placeholder={stegaClean(uiText?.newsletterPlaceholder) || undefined}
+                disclaimer={stegaClean(uiText?.newsletterDisclaimer) || undefined}
               />
             </AnimatedSection>
           </div>

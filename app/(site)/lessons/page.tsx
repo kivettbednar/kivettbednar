@@ -18,17 +18,26 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'lessons')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const lessonsPage = lessonsResult?.data
+    const description = lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome'
+    const title = lessonsPage?.seoTitle || 'Lessons'
+    const ogImage = siteSettings?.ogImage?.asset?.url
     return {
-      title: lessonsPage?.seoTitle || 'Lessons ',
-      description: lessonsPage?.seoDescription || 'Guitar and blues music lessons with Kivett Bednar - all skill levels welcome',
-      alternates: { canonical: `${baseUrl}/lessons` },
+      title,
+      description,
+      alternates: {canonical: `${baseUrl}/lessons`},
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/lessons`,
+        images: ogImage ? [{url: ogImage, width: 1200, height: 630}] : [],
+      },
     }
   } catch {
     return {
-      title: 'Lessons ',
+      title: 'Lessons',
       description: 'Guitar and blues music lessons',
     }
   }

@@ -25,10 +25,19 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
       return {title: 'Page Unavailable', robots: {index: false}}
     }
     const p = pkg as any
+    const title = p?.seoTitle || (p?.title ? `${p.title} | Lessons` : 'Lesson Package')
+    const description = p?.seoDescription || p?.tagline || 'Guitar lesson package details'
+    const ogImage = siteSettings?.ogImage?.asset?.url
     return {
-      title: p?.seoTitle || (p?.title ? `${p.title} | Lessons` : 'Lesson Package'),
-      description: p?.seoDescription || p?.tagline || 'Guitar lesson package details',
+      title,
+      description,
       alternates: {canonical: `${baseUrl}/lessons/${slug}`},
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/lessons/${slug}`,
+        images: ogImage ? [{url: ogImage, width: 1200, height: 630}] : [],
+      },
     }
   } catch {
     return {

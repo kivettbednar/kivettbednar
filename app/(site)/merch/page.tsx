@@ -14,17 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'merch')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const merchPage = merchResult?.data
     return {
-      title: merchPage?.seoTitle || 'Merch ',
+      title: merchPage?.seoTitle || 'Merch',
       description: merchPage?.seoDescription || 'Official Kivett Bednar merchandise and music',
       alternates: { canonical: `${baseUrl}/merch` },
     }
   } catch {
     return {
-      title: 'Merch ',
+      title: 'Merch',
       description: 'Official merchandise and music',
     }
   }

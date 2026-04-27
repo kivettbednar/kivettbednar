@@ -18,17 +18,26 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'contact')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const contactPage = contactResult?.data
+    const title = contactPage?.seoTitle || 'Contact'
+    const description = contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries'
+    const ogImage = siteSettings?.ogImage?.asset?.url
     return {
-      title: contactPage?.seoTitle || 'Contact ',
-      description: contactPage?.seoDescription || 'Get in touch with Kivett Bednar for bookings, lessons, and inquiries',
-      alternates: { canonical: `${baseUrl}/contact` },
+      title,
+      description,
+      alternates: {canonical: `${baseUrl}/contact`},
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/contact`,
+        images: ogImage ? [{url: ogImage, width: 1200, height: 630}] : [],
+      },
     }
   } catch {
     return {
-      title: 'Contact ',
+      title: 'Contact',
       description: 'Get in touch',
     }
   }

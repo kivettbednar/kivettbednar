@@ -18,17 +18,26 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'setlist')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const setlistPage = setlistResult?.data
+    const title = setlistPage?.seoTitle || 'Blues Set List'
+    const description = setlistPage?.seoDescription || 'A collection of classic blues songs performed by Kivett Bednar'
+    const ogImage = siteSettings?.ogImage?.asset?.url
     return {
-      title: setlistPage?.seoTitle || 'Blues Set List ',
-      description: setlistPage?.seoDescription || 'A collection of classic blues songs performed by Kivett Bednar',
-      alternates: { canonical: `${baseUrl}/setlist` },
+      title,
+      description,
+      alternates: {canonical: `${baseUrl}/setlist`},
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/setlist`,
+        images: ogImage ? [{url: ogImage, width: 1200, height: 630}] : [],
+      },
     }
   } catch {
     return {
-      title: 'Blues Set List ',
+      title: 'Blues Set List',
       description: 'A collection of classic blues songs',
     }
   }

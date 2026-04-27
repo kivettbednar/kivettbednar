@@ -17,17 +17,26 @@ export async function generateMetadata(): Promise<Metadata> {
       getSiteSettings(),
     ])
     if (!isPageEnabled(siteSettings, 'shows')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
     const showsPage = showsResult?.data
+    const title = showsPage?.seoTitle || 'Shows'
+    const description = showsPage?.seoDescription || 'Upcoming concerts and performances by Kivett Bednar - authentic blues in the Pacific Northwest'
+    const ogImage = siteSettings?.ogImage?.asset?.url
     return {
-      title: showsPage?.seoTitle || 'Shows ',
-      description: showsPage?.seoDescription || 'Upcoming concerts and performances by Kivett Bednar - authentic blues in the Pacific Northwest',
-      alternates: { canonical: `${baseUrl}/shows` },
+      title,
+      description,
+      alternates: {canonical: `${baseUrl}/shows`},
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/shows`,
+        images: ogImage ? [{url: ogImage, width: 1200, height: 630}] : [],
+      },
     }
   } catch {
     return {
-      title: 'Shows ',
+      title: 'Shows',
       description: 'Upcoming concerts and performances',
     }
   }

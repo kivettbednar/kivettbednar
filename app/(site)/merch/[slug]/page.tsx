@@ -26,7 +26,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     ])
     product = productData
     if (!isPageEnabled(siteSettings, 'merch')) {
-      return {title: 'Page Unavailable ', robots: {index: false}}
+      return {title: 'Page Unavailable', robots: {index: false}}
     }
   } catch (error) {
     console.warn(`Failed to fetch product metadata for slug: ${slug}`, error)
@@ -38,13 +38,13 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     || (product?.images?.[0]?.asset?.url ? urlFor(product.images[0].asset).width(1200).height(630).url() : undefined)
 
   return {
-    title: product?.seo?.title || (product?.title ? `${product.title} ` : 'Product '),
+    title: product?.seo?.title || (product?.title ? `${product.title}` : 'Product'),
     description: product?.seo?.description || 'Product details',
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: product?.seo?.title || product?.title || 'Product ',
+      title: product?.seo?.title || product?.title || 'Product',
       description: product?.seo?.description || 'Product details',
       url: canonicalUrl,
       type: 'website',
@@ -54,7 +54,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     },
     twitter: {
       card: ogImageUrl ? 'summary_large_image' : 'summary',
-      title: product?.seo?.title || product?.title || 'Product ',
+      title: product?.seo?.title || product?.title || 'Product',
       description: product?.seo?.description || 'Product details',
       ...(ogImageUrl && {images: [ogImageUrl]}),
     },
