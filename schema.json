@@ -4820,6 +4820,13 @@
         },
         "optional": true
       },
+      "sslEncryptionText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "cartHeading": {
         "type": "objectAttribute",
         "value": {
@@ -4855,6 +4862,27 @@
         },
         "optional": true
       },
+      "orderSummaryHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "returnToCartText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "checkoutUnavailableHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "redirectingHeading": {
         "type": "objectAttribute",
         "value": {
@@ -4870,34 +4898,6 @@
         "optional": true
       },
       "redirectingSubtext": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "orderSummaryHeading": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "returnToCartText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "sslEncryptionText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "checkoutUnavailableHeading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -5312,6 +5312,20 @@
         },
         "optional": true
       },
+      "introText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "subtitleSuffix": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "heroImage": {
         "type": "objectAttribute",
         "value": {
@@ -5478,7 +5492,28 @@
         },
         "optional": true
       },
-      "introText": {
+      "statsLabel1": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "statsLabel2": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "statsValue3": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "statsLabel3": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -5817,62 +5852,6 @@
         },
         "optional": true
       },
-      "ctaHeading": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "ctaText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "ctaBookLessonButtonText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "ctaContactButtonText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "statsLabel1": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "statsLabel2": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "statsValue3": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "statsLabel3": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "repertoireHeading": {
         "type": "objectAttribute",
         "value": {
@@ -5908,7 +5887,28 @@
         },
         "optional": true
       },
-      "subtitleSuffix": {
+      "ctaHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ctaText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ctaBookLessonButtonText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ctaContactButtonText": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -7145,6 +7145,13 @@
         },
         "optional": true
       },
+      "credentials": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "learningItemsHeading": {
         "type": "objectAttribute",
         "value": {
@@ -7210,7 +7217,14 @@
         },
         "optional": true
       },
-      "credentials": {
+      "emailButtonText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "scheduleButtonText": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -7546,20 +7560,6 @@
               }
             }
           }
-        },
-        "optional": true
-      },
-      "emailButtonText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "scheduleButtonText": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
         },
         "optional": true
       },

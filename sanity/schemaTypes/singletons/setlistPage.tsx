@@ -1,31 +1,57 @@
 import {DocumentIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 import {imagePositionFields} from '@/sanity/lib/image-fields'
-import {seoFields} from '@/sanity/lib/schema-fields'
+import {seoFieldsInGroup} from '@/sanity/lib/schema-fields'
 
 /**
- * Setlist Page singleton schema
+ * Setlist Page singleton — content for the /setlist route.
  */
-
 export const setlistPage = defineType({
   name: 'setlistPage',
   title: 'Setlist Page',
   type: 'document',
   icon: DocumentIcon,
+  groups: [
+    {name: 'hero', title: 'Hero', default: true},
+    {name: 'stats', title: 'Stats Banner'},
+    {name: 'imagery', title: 'Photos'},
+    {name: 'repertoire', title: 'Repertoire'},
+    {name: 'request', title: 'Special Request'},
+    {name: 'cta', title: 'Call to Action'},
+    {name: 'seo', title: 'SEO'},
+  ],
   fields: [
-    // Hero Section
+    // === HERO ===
     defineField({
       name: 'heroHeading',
       title: 'Hero Heading',
-      type: 'string',    }),
+      type: 'string',
+      description: 'Big headline at the top of the page.',
+      group: 'hero',
+    }),
+    defineField({
+      name: 'introText',
+      title: 'Introduction Text',
+      type: 'text',
+      rows: 3,
+      description: 'Short intro shown above the song list.',
+      group: 'hero',
+    }),
+    defineField({
+      name: 'subtitleSuffix',
+      title: 'Hero Subtitle Suffix',
+      type: 'string',
+      description: 'Text appended to the song count in the hero subtitle (e.g., the count plus this string forms "32 timeless classics from the great American songbook"). Note the leading space.',
+      initialValue: ' timeless classics from the great American songbook',
+      group: 'hero',
+    }),
     defineField({
       name: 'heroImage',
       title: 'Hero Background Image',
       type: 'image',
-      description: 'Background image for hero section',
-      options: {
-        hotspot: true,
-      },
+      description: 'Background image used behind the hero.',
+      group: 'hero',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
@@ -37,30 +63,57 @@ export const setlistPage = defineType({
       ],
     }),
 
-    // Content Section
+    // === STATS BANNER ===
+    // The setlist page shows three stats. Stat 1 has an auto-counted song
+    // total (just a label), stat 2 is icon + label only, stat 3 has both
+    // a value and a label.
     defineField({
-      name: 'introText',
-      title: 'Introduction Text',
-      type: 'text',
-      rows: 3,
-      description: 'Text displayed above the song list',
+      name: 'statsLabel1',
+      title: 'Songs Stat — Label',
+      type: 'string',
+      description: 'Caption under the auto-generated song count (the big number). Default: "Songs".',
+      initialValue: 'Songs',
+      group: 'stats',
+    }),
+    defineField({
+      name: 'statsLabel2',
+      title: 'Genre Stat — Label',
+      type: 'string',
+      description: 'Caption next to the spinning record icon. Default: "Classic Blues".',
+      initialValue: 'Classic Blues',
+      group: 'stats',
+    }),
+    defineField({
+      name: 'statsValue3',
+      title: 'Live Stat — Headline',
+      type: 'string',
+      description: 'Big text in the third stat. Default: "Live".',
+      initialValue: 'Live',
+      group: 'stats',
+    }),
+    defineField({
+      name: 'statsLabel3',
+      title: 'Live Stat — Caption',
+      type: 'string',
+      description: 'Caption under the third stat\'s big text. Default: "Performance Ready".',
+      initialValue: 'Performance Ready',
+      group: 'stats',
     }),
 
-    // Visual Interest Images
+    // === IMAGERY ===
     defineField({
       name: 'performanceImage',
       title: 'Performance Image',
       type: 'image',
-      description: 'Performance photo for visual interest',
-      options: {
-        hotspot: true,
-      },
+      description: 'A performance photo used for visual interest.',
+      group: 'imagery',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
           title: 'Alt Text',
           type: 'string',
-          initialValue: 'Kivett Bednar blues setlist',
+          initialValue: 'Kivett Bednar performing live',
         }),
         ...imagePositionFields,
       ],
@@ -69,137 +122,98 @@ export const setlistPage = defineType({
       name: 'guitarImage',
       title: 'Guitar Image',
       type: 'image',
-      description: 'Guitar close-up or detail shot',
-      options: {
-        hotspot: true,
-      },
+      description: 'A guitar close-up or detail shot.',
+      group: 'imagery',
+      options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
           title: 'Alt Text',
           type: 'string',
-          initialValue: 'Kivett Bednar blues setlist',
+          initialValue: 'Guitar detail',
         }),
         ...imagePositionFields,
       ],
     }),
 
-    // CTA Section
+    // === REPERTOIRE ===
+    defineField({
+      name: 'repertoireHeading',
+      title: 'Section Heading',
+      type: 'string',
+      description: 'Heading above the song grid.',
+      initialValue: 'The Repertoire',
+      group: 'repertoire',
+    }),
+    defineField({
+      name: 'songCountSummaryText',
+      title: 'Song Count Summary',
+      type: 'string',
+      description: 'Text after the song count (e.g., the count plus this forms "32 songs ready for your event"). Note the leading space.',
+      initialValue: ' songs ready for your event',
+      group: 'repertoire',
+    }),
+
+    // === REQUEST ===
+    defineField({
+      name: 'requestHeading',
+      title: 'Section Heading',
+      type: 'string',
+      description: 'Heading for the special-request section.',
+      initialValue: 'Have a Special Request?',
+      group: 'request',
+    }),
+    defineField({
+      name: 'requestText',
+      title: 'Section Text',
+      type: 'text',
+      rows: 3,
+      initialValue: "Looking for a specific blues classic not on the list? Get in touch and let's talk about adding it to the setlist for your event.",
+      group: 'request',
+    }),
+    defineField({
+      name: 'requestButtonText',
+      title: 'Request Button Text',
+      type: 'string',
+      initialValue: 'Make a Request',
+      group: 'request',
+    }),
+
+    // === CTA ===
     defineField({
       name: 'ctaHeading',
       title: 'CTA Heading',
       type: 'string',
-      description: 'Heading for call-to-action section at bottom',
+      description: 'Heading for the bottom call-to-action.',
+      group: 'cta',
     }),
     defineField({
       name: 'ctaText',
       title: 'CTA Text',
       type: 'text',
       rows: 2,
-      description: 'Text for call-to-action at bottom',
+      group: 'cta',
     }),
-
-    // Button Labels
     defineField({
       name: 'ctaBookLessonButtonText',
-      title: 'CTA: Book Lesson Button Text',
+      title: 'CTA — "Book a Lesson" Button',
       type: 'string',
-      description: 'Text for "Book a Lesson" button in CTA',
       initialValue: 'Book a Lesson',
+      group: 'cta',
     }),
     defineField({
       name: 'ctaContactButtonText',
-      title: 'CTA: Contact Button Text',
+      title: 'CTA — "Get in Touch" Button',
       type: 'string',
-      description: 'Text for "Get in Touch" button in CTA',
       initialValue: 'Get in Touch',
+      group: 'cta',
     }),
 
-    // Stats Section Labels
-    defineField({
-      name: 'statsLabel1',
-      title: 'Stats Label 1',
-      type: 'string',
-      description: 'Label for song count stat (e.g., "Songs")',
-      initialValue: 'Songs',
-    }),
-    defineField({
-      name: 'statsLabel2',
-      title: 'Stats Label 2',
-      type: 'string',
-      description: 'Label for genre stat (e.g., "Classic Blues")',
-      initialValue: 'Classic Blues',
-    }),
-    defineField({
-      name: 'statsValue3',
-      title: 'Stats Value 3',
-      type: 'string',
-      description: 'Value for third stat (e.g., "Live")',
-      initialValue: 'Live',
-    }),
-    defineField({
-      name: 'statsLabel3',
-      title: 'Stats Label 3',
-      type: 'string',
-      description: 'Label for third stat (e.g., "Performance Ready")',
-      initialValue: 'Performance Ready',
-    }),
-
-    // Repertoire Section
-    defineField({
-      name: 'repertoireHeading',
-      title: 'Repertoire Heading',
-      type: 'string',
-      description: 'Heading above the song grid',
-      initialValue: 'The Repertoire',
-    }),
-    defineField({
-      name: 'songCountSummaryText',
-      title: 'Song Count Summary Text',
-      type: 'string',
-      description: 'Text after song count (e.g., " songs ready for your event")',
-      initialValue: ' songs ready for your event',
-    }),
-
-    // Request Section
-    defineField({
-      name: 'requestHeading',
-      title: 'Request Section Heading',
-      type: 'string',
-      description: 'Heading for "Have a Special Request?" section',
-      initialValue: 'Have a Special Request?',
-    }),
-    defineField({
-      name: 'requestText',
-      title: 'Request Section Text',
-      type: 'text',
-      rows: 3,
-      description: 'Description text for request section',
-      initialValue: 'Looking for a specific blues classic not on the list? Get in touch and let\'s talk about adding it to the setlist for your event.',
-    }),
-    defineField({
-      name: 'requestButtonText',
-      title: 'Request Button Text',
-      type: 'string',
-      description: 'Button text for request section',
-      initialValue: 'Make a Request',
-    }),
-
-    // Dynamic Text
-    defineField({
-      name: 'subtitleSuffix',
-      title: 'Subtitle Suffix',
-      type: 'string',
-      description: 'Text appended to song count in hero subtitle (e.g., "32 [timeless classics...]")',
-      initialValue: ' timeless classics from the great American songbook',
-    }),
-    ...seoFields,
+    ...seoFieldsInGroup('seo'),
   ],
   preview: {
     prepare() {
-      return {
-        title: 'Setlist Page',
-      }
+      return {title: 'Setlist Page'}
     },
   },
 })

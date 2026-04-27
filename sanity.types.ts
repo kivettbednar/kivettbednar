@@ -691,18 +691,18 @@ export type CheckoutSettings = {
   }>;
   deliveryEstimateText?: string;
   secureCheckoutText?: string;
+  sslEncryptionText?: string;
   cartHeading?: string;
   cartEmptyHeading?: string;
   cartEmptyText?: string;
   cartEmptyButtonText?: string;
   secureCheckoutHeading?: string;
+  orderSummaryHeading?: string;
+  returnToCartText?: string;
+  checkoutUnavailableHeading?: string;
   redirectingHeading?: string;
   redirectingText?: string;
   redirectingSubtext?: string;
-  orderSummaryHeading?: string;
-  returnToCartText?: string;
-  sslEncryptionText?: string;
-  checkoutUnavailableHeading?: string;
 };
 
 export type MerchPage = {
@@ -754,6 +754,8 @@ export type SetlistPage = {
   _updatedAt: string;
   _rev: string;
   heroHeading?: string;
+  introText?: string;
+  subtitleSuffix?: string;
   heroImage?: {
     asset?: {
       _ref: string;
@@ -769,7 +771,10 @@ export type SetlistPage = {
     mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
-  introText?: string;
+  statsLabel1?: string;
+  statsLabel2?: string;
+  statsValue3?: string;
+  statsLabel3?: string;
   performanceImage?: {
     asset?: {
       _ref: string;
@@ -800,20 +805,15 @@ export type SetlistPage = {
     mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
-  ctaHeading?: string;
-  ctaText?: string;
-  ctaBookLessonButtonText?: string;
-  ctaContactButtonText?: string;
-  statsLabel1?: string;
-  statsLabel2?: string;
-  statsValue3?: string;
-  statsLabel3?: string;
   repertoireHeading?: string;
   songCountSummaryText?: string;
   requestHeading?: string;
   requestText?: string;
   requestButtonText?: string;
-  subtitleSuffix?: string;
+  ctaHeading?: string;
+  ctaText?: string;
+  ctaBookLessonButtonText?: string;
+  ctaContactButtonText?: string;
   seoTitle?: string;
   seoDescription?: string;
 };
@@ -951,6 +951,7 @@ export type LessonsPage = {
     mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
+  credentials?: string;
   learningItemsHeading?: string;
   learningItems?: Array<{
     title?: string;
@@ -960,7 +961,8 @@ export type LessonsPage = {
   }>;
   ctaBoxHeading?: string;
   ctaBoxText?: string;
-  credentials?: string;
+  emailButtonText?: string;
+  scheduleButtonText?: string;
   teachingImage?: {
     asset?: {
       _ref: string;
@@ -991,8 +993,6 @@ export type LessonsPage = {
     mobilePosition?: "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
     _type: "image";
   };
-  emailButtonText?: string;
-  scheduleButtonText?: string;
   testimonialQuote?: string;
   testimonialAttribution?: string;
   packagesHeading?: string;

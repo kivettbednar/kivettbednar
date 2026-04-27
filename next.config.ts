@@ -60,6 +60,9 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
     ],
     formats: ['image/avif', 'image/webp'],
+    // Next.js 16 will require any non-default `quality` prop value to be
+    // listed here. We use 95 across hero/gallery imagery.
+    qualities: [75, 85, 95],
   },
 }
 
