@@ -34,16 +34,23 @@ export function EventCard({event, index = 0, fallbackImage}: {event: Event; inde
   const hasCoverImage = !!event.coverImage?.asset
   const fallbackImageUrl = fallbackImage && !hasCoverImage ? fallbackImage : null
 
-  const eventDate = formatInTimeZone(
-    new Date(event.startDateTime),
-    event.timezone,
-    'MMM d, yyyy'
-  )
-  const eventTime = formatInTimeZone(
-    new Date(event.startDateTime),
-    event.timezone,
-    'h:mm a'
-  )
+  // Defensive: drafts (Studio Presentation preview) can render with missing/invalid
+  // startDateTime or timezone, which makes formatInTimeZone throw "Invalid time value".
+  const parsed = event.startDateTime ? new Date(event.startDateTime) : null
+  const isValidDate = parsed instanceof Date && !isNaN(parsed.getTime())
+  const tz = event.timezone || 'UTC'
+  let eventDate = 'Date TBD'
+  let eventTime = ''
+  if (isValidDate) {
+    try {
+      eventDate = formatInTimeZone(parsed!, tz, 'MMM d, yyyy')
+      eventTime = formatInTimeZone(parsed!, tz, 'h:mm a')
+    } catch {
+      // Invalid timezone string — fall back to UTC formatting.
+      eventDate = formatInTimeZone(parsed!, 'UTC', 'MMM d, yyyy')
+      eventTime = formatInTimeZone(parsed!, 'UTC', 'h:mm a')
+    }
+  }
 
   // Use slug if available, otherwise fallback to _id for events without slugs
   const eventLink = event.slug ? `/shows/${event.slug}` : event._id ? `/shows/${event._id}` : null
