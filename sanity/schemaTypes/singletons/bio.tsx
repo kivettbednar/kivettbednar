@@ -40,6 +40,23 @@ export const bio = defineType({
       description: 'Full long-form bio. Use H2 headings for sections (e.g., "Origins", "Influences", "Career").',
     }),
     defineField({
+      name: 'emptyStateText',
+      title: 'Empty State Text',
+      type: 'text',
+      rows: 2,
+      description:
+        'Fallback text shown if the bio Content above is empty. Useful when the page is freshly published but content is still being written.',
+      initialValue:
+        'Bio coming soon. Edit the Bio page in Sanity Studio to add your story, influences, and career highlights.',
+    }),
+    defineField({
+      name: 'lastUpdatedPrefix',
+      title: '"Last Updated" Prefix',
+      type: 'string',
+      description: 'Shown before the last-updated date (e.g., "Last updated: November 2024").',
+      initialValue: 'Last updated:',
+    }),
+    defineField({
       name: 'seoDescription',
       title: 'SEO Description',
       type: 'string',

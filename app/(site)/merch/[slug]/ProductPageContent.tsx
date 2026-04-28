@@ -1,7 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+import {clientBrowser} from '@/sanity/lib/client-browser'
+import {uiTextQuery} from '@/sanity/lib/queries'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
 import {PurchaseSection} from '@/components/merch/ProductPurchase'
 import {ImageLightbox} from '@/components/ui/ImageLightbox'
@@ -25,6 +27,16 @@ type ProductPageContentProps = {
 export function ProductPageContent({product, priceFormatted, productSlug, mainImageUrl, thumbnailImages, allImages, relatedProducts = [], trustBadges}: ProductPageContentProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [imageFallbackText, setImageFallbackText] = useState<string>('Image Coming Soon')
+
+  useEffect(() => {
+    clientBrowser
+      .fetch(uiTextQuery)
+      .then((res: any) => {
+        if (res?.productImageFallbackText) setImageFallbackText(res.productImageFallbackText)
+      })
+      .catch(() => {})
+  }, [])
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index)
@@ -124,7 +136,7 @@ export function ProductPageContent({product, priceFormatted, productSlug, mainIm
                             d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
                           />
                         </svg>
-                        <p className="text-text-muted/40 text-sm uppercase tracking-widest font-bold">Image Coming Soon</p>
+                        <p className="text-text-muted/40 text-sm uppercase tracking-widest font-bold">{imageFallbackText}</p>
                       </div>
                     </div>
                   )}

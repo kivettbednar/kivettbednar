@@ -308,13 +308,13 @@ function OrderConfirmationContent() {
                 <div className="space-y-4">
                   <div>
                     <div className="text-sm text-text-muted uppercase tracking-wide mb-1">
-                      Order Date
+                      {pageContent?.orderDateLabel || 'Order Date'}
                     </div>
                     <div className="text-text-primary">{orderDate}</div>
                   </div>
                   <div>
                     <div className="text-sm text-text-muted uppercase tracking-wide mb-1">
-                      Order Total
+                      {pageContent?.orderTotalLabel || 'Order Total'}
                     </div>
                     <div className="text-2xl font-bold text-accent-primary">
                       {formatCurrency(orderData.totalCents, currency)}
@@ -322,11 +322,11 @@ function OrderConfirmationContent() {
                   </div>
                   <div>
                     <div className="text-sm text-text-muted uppercase tracking-wide mb-1">
-                      Payment Status
+                      {pageContent?.paymentStatusLabel || 'Payment Status'}
                     </div>
                     <div className="inline-flex items-center gap-2 bg-green-600/20 text-green-500 px-3 py-1 text-sm font-bold uppercase tracking-wide">
                       <CheckCircle className="w-4 h-4" />
-                      Confirmed
+                      {pageContent?.paymentConfirmedText || 'Confirmed'}
                     </div>
                   </div>
                 </div>
@@ -419,7 +419,7 @@ function OrderConfirmationContent() {
                           </div>
                         )}
                         <div className="text-sm text-text-secondary mt-2">
-                          Quantity: {it.quantity}
+                          {pageContent?.orderItemQuantityPrefix || 'Quantity:'} {it.quantity}
                         </div>
                       </div>
                       <div className="text-right">

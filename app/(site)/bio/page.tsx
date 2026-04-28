@@ -13,6 +13,8 @@ type BioPageData = {
   pageTitle: string | null
   tagline: string | null
   lastUpdated: string | null
+  lastUpdatedPrefix: string | null
+  emptyStateText: string | null
   seoDescription: string | null
   heroImage: {
     asset?: {url?: string}
@@ -84,8 +86,8 @@ export default async function BioPage() {
             ) : (
               <div className="prose-custom space-y-6 text-text-secondary leading-relaxed text-lg">
                 <p>
-                  Bio coming soon. Edit the Bio page in Sanity Studio to add your story,
-                  influences, and career highlights.
+                  {data?.emptyStateText ||
+                    'Bio coming soon. Edit the Bio page in Sanity Studio to add your story, influences, and career highlights.'}
                 </p>
               </div>
             )}
@@ -94,7 +96,7 @@ export default async function BioPage() {
           {lastUpdated && (
             <AnimatedSection animation="fadeIn" delay={0.2}>
               <p className="text-text-muted text-sm mt-12 pt-8 border-t border-border">
-                Last updated: {lastUpdated}
+                {data?.lastUpdatedPrefix || 'Last updated:'} {lastUpdated}
               </p>
             </AnimatedSection>
           )}

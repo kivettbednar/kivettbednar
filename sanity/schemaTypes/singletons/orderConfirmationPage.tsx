@@ -70,6 +70,38 @@ export const orderConfirmationPage = defineType({
       initialValue: 'Order Items',
     }),
     defineField({
+      name: 'orderDateLabel',
+      title: '"Order Date" Label',
+      type: 'string',
+      initialValue: 'Order Date',
+    }),
+    defineField({
+      name: 'orderTotalLabel',
+      title: '"Order Total" Label',
+      type: 'string',
+      initialValue: 'Order Total',
+    }),
+    defineField({
+      name: 'paymentStatusLabel',
+      title: '"Payment Status" Label',
+      type: 'string',
+      initialValue: 'Payment Status',
+    }),
+    defineField({
+      name: 'paymentConfirmedText',
+      title: '"Confirmed" Status Text',
+      type: 'string',
+      description: 'Shown next to the green checkmark when payment succeeds.',
+      initialValue: 'Confirmed',
+    }),
+    defineField({
+      name: 'orderItemQuantityPrefix',
+      title: '"Quantity:" Prefix',
+      type: 'string',
+      description: 'Shown before each item\'s quantity (e.g. "Quantity: 2").',
+      initialValue: 'Quantity:',
+    }),
+    defineField({
       name: 'continueShoppingText',
       title: 'Continue Shopping Button Text',
       type: 'string',

@@ -10,17 +10,37 @@ import {ShoppingCart, Trash2, ChevronRight, Package, ShieldCheck} from 'lucide-r
 import {useState, useEffect} from 'react'
 import {formatCurrency} from '@/lib/format'
 import {clientBrowser} from '@/sanity/lib/client-browser'
-import {checkoutSettingsQuery} from '@/sanity/lib/queries'
+import {checkoutSettingsQuery, uiTextQuery} from '@/sanity/lib/queries'
 
-// Editable copy that lives in Sanity → Store → Checkout & Cart Copy.
-// Falls back to sensible defaults so the page works even without CMS data.
+// Editable copy that lives in Sanity. Cart-flow strings are split between
+// `checkoutSettings` (heading + button copy) and `uiText` (cart structural
+// labels — Subtotal, Total, Quantity, etc.). Falls back to sensible
+// defaults so the page works even without CMS data.
 type CartCopy = {
+  // checkoutSettings
   cartEmptyHeading?: string
   cartEmptyText?: string
   cartEmptyButtonText?: string
   orderSummaryHeading?: string
   secureCheckoutText?: string
   returnToCartText?: string
+  // uiText
+  quantityLabel?: string
+  removeLabel?: string
+  subtotalLabel?: string
+  discountLabel?: string
+  shippingLabel?: string
+  taxLabel?: string
+  totalLabel?: string
+  calculatedAtCheckoutText?: string
+  proceedButtonText?: string
+  processingText?: string
+  clearButtonText?: string
+  clearConfirmText?: string
+  itemEachText?: string
+  itemSingular?: string
+  itemPlural?: string
+  readyForCheckoutSuffix?: string
 }
 
 export default function CartPage() {
@@ -32,20 +52,35 @@ export default function CartPage() {
   const currency = items[0]?.currency || 'USD'
 
   useEffect(() => {
-    clientBrowser
-      .fetch(checkoutSettingsQuery)
-      .then((res: any) => {
-        if (!res) return
-        setCopy({
-          cartEmptyHeading: res.cartEmptyHeading || undefined,
-          cartEmptyText: res.cartEmptyText || undefined,
-          cartEmptyButtonText: res.cartEmptyButtonText || undefined,
-          orderSummaryHeading: res.orderSummaryHeading || undefined,
-          secureCheckoutText: res.secureCheckoutText || undefined,
-          returnToCartText: res.returnToCartText || undefined,
-        })
+    Promise.all([
+      clientBrowser.fetch(checkoutSettingsQuery).catch(() => null),
+      clientBrowser.fetch(uiTextQuery).catch(() => null),
+    ]).then(([cs, ui]: [any, any]) => {
+      setCopy({
+        cartEmptyHeading: cs?.cartEmptyHeading || undefined,
+        cartEmptyText: cs?.cartEmptyText || undefined,
+        cartEmptyButtonText: cs?.cartEmptyButtonText || undefined,
+        orderSummaryHeading: cs?.orderSummaryHeading || undefined,
+        secureCheckoutText: cs?.secureCheckoutText || undefined,
+        returnToCartText: cs?.returnToCartText || undefined,
+        quantityLabel: ui?.cartQuantityLabel || undefined,
+        removeLabel: ui?.cartRemoveLabel || undefined,
+        subtotalLabel: ui?.cartSubtotalLabel || undefined,
+        discountLabel: ui?.cartDiscountLabel || undefined,
+        shippingLabel: ui?.cartShippingLabel || undefined,
+        taxLabel: ui?.cartTaxLabel || undefined,
+        totalLabel: ui?.cartTotalLabel || undefined,
+        calculatedAtCheckoutText: ui?.cartCalculatedAtCheckoutText || undefined,
+        proceedButtonText: ui?.cartProceedButtonText || undefined,
+        processingText: ui?.cartProcessingText || undefined,
+        clearButtonText: ui?.cartClearButtonText || undefined,
+        clearConfirmText: ui?.cartClearConfirmText || undefined,
+        itemEachText: ui?.cartItemEachText || undefined,
+        itemSingular: ui?.cartItemSingular || undefined,
+        itemPlural: ui?.cartItemPlural || undefined,
+        readyForCheckoutSuffix: ui?.cartReadyForCheckoutSuffix || undefined,
       })
-      .catch(() => {})
+    })
   }, [])
 
   const handleApplyPromo = (discountCents: number, code: string, description?: string) => {
@@ -113,7 +148,11 @@ export default function CartPage() {
               </h1>
               {items.length > 0 && (
                 <p className="text-text-secondary mt-4 text-center">
-                  <span className="text-accent-primary font-bold">{items.length}</span> {items.length === 1 ? 'item' : 'items'} ready for checkout
+                  <span className="text-accent-primary font-bold">{items.length}</span>{' '}
+                  {items.length === 1
+                    ? copy.itemSingular || 'item'
+                    : copy.itemPlural || 'items'}{' '}
+                  {copy.readyForCheckoutSuffix || 'ready for checkout'}
                 </p>
               )}
             </motion.div>
@@ -222,7 +261,7 @@ export default function CartPage() {
                                 {formatCurrency(it.priceCents * it.quantity, it.currency)}
                               </div>
                               <div className="text-xs text-text-muted mt-0.5">
-                                {formatCurrency(it.priceCents, it.currency)} each
+                                {formatCurrency(it.priceCents, it.currency)} {copy.itemEachText || 'each'}
                               </div>
                             </div>
                           </div>
@@ -232,7 +271,7 @@ export default function CartPage() {
                         <div className="w-full sm:w-auto sm:flex-1 sm:min-w-0">
                           <div className="flex items-center gap-3 sm:gap-4 flex-wrap sm:mt-4">
                             <span className="text-xs sm:text-sm uppercase tracking-wide text-text-secondary whitespace-nowrap">
-                              Quantity
+                              {copy.quantityLabel || 'Quantity'}
                             </span>
                             <div className="flex items-center gap-2">
                               <button
@@ -258,7 +297,7 @@ export default function CartPage() {
                               className="ml-auto flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-red-400 uppercase tracking-wide font-bold transition-colors group/remove"
                             >
                               <Trash2 className="w-4 h-4 group-hover/remove:scale-110 transition-transform" />
-                              Remove
+                              {copy.removeLabel || 'Remove'}
                             </button>
                           </div>
                         </div>
@@ -269,7 +308,7 @@ export default function CartPage() {
                             {formatCurrency(it.priceCents * it.quantity, it.currency)}
                           </div>
                           <div className="text-xs md:text-sm text-text-muted mt-1">
-                            {formatCurrency(it.priceCents, it.currency)} each
+                            {formatCurrency(it.priceCents, it.currency)} {copy.itemEachText || 'each'}
                           </div>
                         </div>
                       </motion.div>
@@ -298,7 +337,7 @@ export default function CartPage() {
 
                     <div className="space-y-4 mb-6 pb-6 border-b border-border">
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">Subtotal</span>
+                        <span className="text-text-secondary">{copy.subtotalLabel || 'Subtotal'}</span>
                         <span className="font-bold text-text-primary">
                           {formatCurrency(totalCents, currency)}
                         </span>
@@ -306,7 +345,7 @@ export default function CartPage() {
                       {promoCode && promoCode.discountCents > 0 && (
                         <div className="flex justify-between text-accent-primary">
                           <span>
-                            Discount
+                            {copy.discountLabel || 'Discount'}
                             {promoCode.description && (
                               <span className="text-xs block text-text-muted mt-0.5">
                                 {promoCode.description}
@@ -319,12 +358,12 @@ export default function CartPage() {
                         </div>
                       )}
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">Shipping</span>
-                        <span className="text-text-muted text-sm">Calculated at checkout</span>
+                        <span className="text-text-secondary">{copy.shippingLabel || 'Shipping'}</span>
+                        <span className="text-text-muted text-sm">{copy.calculatedAtCheckoutText || 'Calculated at checkout'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">Tax</span>
-                        <span className="text-text-muted text-sm">Calculated at checkout</span>
+                        <span className="text-text-secondary">{copy.taxLabel || 'Tax'}</span>
+                        <span className="text-text-muted text-sm">{copy.calculatedAtCheckoutText || 'Calculated at checkout'}</span>
                       </div>
                     </div>
 
@@ -340,7 +379,7 @@ export default function CartPage() {
 
                     <div className="flex justify-between mb-6">
                       <span className="font-bebas text-xl uppercase tracking-wide text-text-primary">
-                        Total
+                        {copy.totalLabel || 'Total'}
                       </span>
                       <span className="text-3xl font-bold text-accent-primary">
                         {formatCurrency(finalTotalCents, currency)}
@@ -355,11 +394,11 @@ export default function CartPage() {
                       {checkoutLoading ? (
                         <>
                           <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                          Processing...
+                          {copy.processingText || 'Processing...'}
                         </>
                       ) : (
                         <>
-                          Proceed to Checkout
+                          {copy.proceedButtonText || 'Proceed to Checkout'}
                           <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </>
                       )}
@@ -373,12 +412,12 @@ export default function CartPage() {
 
                     <button
                       onClick={() => {
-                        if (window.confirm('Remove all items from your cart?')) clear()
+                        if (window.confirm(copy.clearConfirmText || 'Remove all items from your cart?')) clear()
                       }}
                       className="w-full border border-border hover:border-accent-red hover:text-accent-red text-text-secondary font-bold uppercase tracking-wide py-3 transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       <Trash2 className="w-4 h-4" />
-                      Clear Cart
+                      {copy.clearButtonText || 'Clear Cart'}
                     </button>
 
                     {/* Trust badge */}

@@ -1,7 +1,7 @@
 import {Metadata} from 'next'
 import {sanityFetch} from '@/sanity/lib/live'
 import Link from 'next/link'
-import {lessonsPageQuery, allLessonPackagesQuery} from '@/sanity/lib/queries'
+import {lessonsPageQuery, allLessonPackagesQuery, uiTextQuery} from '@/sanity/lib/queries'
 import {formatCurrency} from '@/lib/format'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {AnimatedSection} from '@/components/animations/AnimatedSection'
@@ -60,12 +60,14 @@ export default async function LessonsPage() {
   let lessonsPage = null
   let siteSettings = null
   let packages: any[] = []
+  let uiText: any = null
 
   try {
-    ;[lessonsPage, siteSettings, packages] = await Promise.all([
+    ;[lessonsPage, siteSettings, packages, uiText] = await Promise.all([
       sanityFetch({query: lessonsPageQuery}).then((r) => r.data),
       getSiteSettings(),
       sanityFetch({query: allLessonPackagesQuery}).then((r) => r.data || []),
+      sanityFetch({query: uiTextQuery}).then((r) => r.data),
     ])
   } catch (error) {
     console.warn('Failed to fetch lessons page data, using fallback content:', error)
@@ -75,13 +77,19 @@ export default async function LessonsPage() {
     return <PageUnavailable pageName="Lessons" />
   }
 
-  // Fallback if no content yet
+  // Fallback if no content yet — uses uiText.lessonsEmpty* (always
+  // available), since the lessonsPage doc itself doesn't exist here.
   if (!lessonsPage) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <div className="text-center max-w-md">
-          <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">Lessons Coming Soon</h1>
-          <p className="text-text-secondary">Guitar and blues lessons information will be available shortly. Check back soon.</p>
+          <h1 className="font-bebas text-4xl uppercase tracking-wide text-text-primary mb-4">
+            {uiText?.lessonsEmptyHeading || 'Lessons Coming Soon'}
+          </h1>
+          <p className="text-text-secondary">
+            {uiText?.lessonsEmptyText ||
+              'Guitar and blues lessons information will be available shortly. Check back soon.'}
+          </p>
         </div>
       </div>
     )

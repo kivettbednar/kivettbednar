@@ -2,7 +2,7 @@ import {Metadata} from 'next'
 import Image from 'next/image'
 import type {PortableTextBlock} from 'next-sanity'
 import {sanityFetch} from '@/sanity/lib/live'
-import {epkPageQuery} from '@/sanity/lib/queries'
+import {epkPageQuery, uiTextQuery} from '@/sanity/lib/queries'
 import {PageUnavailable} from '@/components/ui/PageUnavailable'
 import {LegalPortableText} from '@/components/ui/LegalPortableText'
 import {AnimatedHero} from '@/components/ui/AnimatedHero'
@@ -120,9 +120,10 @@ function downloadFilename(url: string, filename?: string): string {
 }
 
 export default async function EpkPage() {
-  const [rawData, siteSettings] = await Promise.all([
+  const [rawData, siteSettings, uiText] = await Promise.all([
     sanityFetch({query: epkPageQuery}).then((r) => r.data),
     getSiteSettings(),
+    sanityFetch({query: uiTextQuery}).then((r) => r.data).catch(() => null as any),
   ])
 
   if (!isPageEnabled(siteSettings, 'epk')) {
@@ -491,10 +492,11 @@ export default async function EpkPage() {
           {!data && (
             <div className="text-center py-24">
               <h2 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-4">
-                Press Kit Coming Soon
+                {(uiText as any)?.epkEmptyHeading || 'Press Kit Coming Soon'}
               </h2>
               <p className="text-text-secondary">
-                The press kit is being prepared. Please check back soon or contact directly for press inquiries.
+                {(uiText as any)?.epkEmptyText ||
+                  'The press kit is being prepared. Please check back soon or contact directly for press inquiries.'}
               </p>
             </div>
           )}
