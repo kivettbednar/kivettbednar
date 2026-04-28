@@ -490,6 +490,7 @@ export type AmpsPage = {
   shopSubheading?: string;
   emptyStateHeading?: string;
   emptyStateText?: string;
+  emptyStateButtonText?: string;
   seoTitle?: string;
   seoDescription?: string;
 };
@@ -2168,7 +2169,7 @@ export type MerchPageQueryResult = {
   seoDescription: string | null;
 } | null;
 // Variable: ampsPageQuery
-// Query: *[_type == "ampsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{    asset->,    alt  },  showcaseHeading,  showcaseText,  craftsmanshipHeading,  craftsmanshipText,  craftsmanshipImage{    asset->,    alt  },  shopHeading,  shopSubheading,  emptyStateHeading,  emptyStateText,  seoTitle,  seoDescription}
+// Query: *[_type == "ampsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{    asset->,    alt  },  showcaseHeading,  showcaseText,  craftsmanshipHeading,  craftsmanshipText,  craftsmanshipImage{    asset->,    alt  },  shopHeading,  shopSubheading,  emptyStateHeading,  emptyStateText,  emptyStateButtonText,  seoTitle,  seoDescription}
 export type AmpsPageQueryResult = {
   _id: string;
   heroHeading: string | null;
@@ -2231,6 +2232,7 @@ export type AmpsPageQueryResult = {
   shopSubheading: string | null;
   emptyStateHeading: string | null;
   emptyStateText: string | null;
+  emptyStateButtonText: string | null;
   seoTitle: string | null;
   seoDescription: string | null;
 } | null;
@@ -3317,7 +3319,7 @@ declare module "@sanity/client" {
     "*[_type == \"setlistPage\"][0]{\n  _id,\n  heroHeading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  introText,\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  ctaHeading,\n  ctaText,\n  ctaBookLessonButtonText,\n  ctaContactButtonText,\n  subtitleSuffix,\n  repertoireHeading,\n  songCountSummaryText,\n  requestHeading,\n  requestText,\n  requestButtonText,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  statsValue3,\n  seoTitle,\n  seoDescription\n}": SetlistPageQueryResult;
     "*[_type == \"showsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}": ShowsPageQueryResult;
     "*[_type == \"merchPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButton1Text,\n  emptyStateButton1Link,\n  emptyStateButton2Text,\n  emptyStateButton2Link,\n  contentHeading,\n  contentSubheading,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  seoTitle,\n  seoDescription\n}": MerchPageQueryResult;
-    "*[_type == \"ampsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  seoTitle,\n  seoDescription\n}": AmpsPageQueryResult;
+    "*[_type == \"ampsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButtonText,\n  seoTitle,\n  seoDescription\n}": AmpsPageQueryResult;
     "*[_type == \"product\" && category == \"amps\" && archived != true] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AmpsProductsQueryResult;
     "*[_type == \"lessonPackage\" && active == true && archived != true] | order(order asc, priceCents asc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active\n}": AllLessonPackagesQueryResult;
     "*[_type == \"lessonPackage\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  description,\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active,\n  seoTitle,\n  seoDescription\n}": LessonPackageBySlugQueryResult;

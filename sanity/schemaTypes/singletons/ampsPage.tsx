@@ -118,6 +118,14 @@ export const ampsPage = defineType({
         'All current builds are spoken for. New amps drop in small batches — reach out to get on the list or to commission a custom build tailored to your tone.',
       group: 'shop',
     }),
+    defineField({
+      name: 'emptyStateButtonText',
+      title: 'Empty State — Button Text',
+      type: 'string',
+      description: 'CTA button shown in the empty state (links to /contact).',
+      initialValue: 'Commission a Build',
+      group: 'shop',
+    }),
 
     // === SEO ===
     defineField({

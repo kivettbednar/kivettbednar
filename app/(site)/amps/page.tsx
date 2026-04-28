@@ -102,6 +102,7 @@ export default async function AmpsPage() {
   const emptyStateText =
     ampsPage?.emptyStateText ||
     'All current builds are spoken for. New amps drop in small batches — reach out to get on the list or to commission a custom build tailored to your tone.'
+  const emptyStateButtonText = (ampsPage as any)?.emptyStateButtonText || 'Commission a Build'
 
   return (
     <div className="min-h-screen">
@@ -192,7 +193,7 @@ export default async function AmpsPage() {
                     href="/contact"
                     className="inline-flex items-center justify-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-lg uppercase tracking-wider px-8 py-4 transition-all duration-300"
                   >
-                    Commission a Build
+                    {emptyStateButtonText}
                   </Link>
                 </div>
               </AnimatedSection>

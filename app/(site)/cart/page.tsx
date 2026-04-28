@@ -9,13 +9,44 @@ import {motion} from 'framer-motion'
 import {ShoppingCart, Trash2, ChevronRight, Package, ShieldCheck} from 'lucide-react'
 import {useState, useEffect} from 'react'
 import {formatCurrency} from '@/lib/format'
+import {clientBrowser} from '@/sanity/lib/client-browser'
+import {checkoutSettingsQuery} from '@/sanity/lib/queries'
+
+// Editable copy that lives in Sanity → Store → Checkout & Cart Copy.
+// Falls back to sensible defaults so the page works even without CMS data.
+type CartCopy = {
+  cartEmptyHeading?: string
+  cartEmptyText?: string
+  cartEmptyButtonText?: string
+  orderSummaryHeading?: string
+  secureCheckoutText?: string
+  returnToCartText?: string
+}
 
 export default function CartPage() {
   const {items, totalCents, updateQty, removeItem, clear, promoCode, applyPromoCode, removePromoCode, finalTotalCents} = useCart()
   const router = useRouter()
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [copy, setCopy] = useState<CartCopy>({})
   const currency = items[0]?.currency || 'USD'
+
+  useEffect(() => {
+    clientBrowser
+      .fetch(checkoutSettingsQuery)
+      .then((res: any) => {
+        if (!res) return
+        setCopy({
+          cartEmptyHeading: res.cartEmptyHeading || undefined,
+          cartEmptyText: res.cartEmptyText || undefined,
+          cartEmptyButtonText: res.cartEmptyButtonText || undefined,
+          orderSummaryHeading: res.orderSummaryHeading || undefined,
+          secureCheckoutText: res.secureCheckoutText || undefined,
+          returnToCartText: res.returnToCartText || undefined,
+        })
+      })
+      .catch(() => {})
+  }, [])
 
   const handleApplyPromo = (discountCents: number, code: string, description?: string) => {
     applyPromoCode(code, discountCents, description)
@@ -120,17 +151,18 @@ export default function CartPage() {
                   </div>
 
                   <h2 className="font-bebas text-3xl sm:text-4xl uppercase tracking-wide text-white mb-3 sm:mb-4">
-                    Your cart is empty
+                    {copy.cartEmptyHeading || 'Your cart is empty'}
                   </h2>
                   <p className="text-text-muted mb-8 sm:mb-10 text-sm sm:text-base max-w-sm mx-auto">
-                    Looks like you haven&apos;t added any items to your cart yet. Check out the latest merch!
+                    {copy.cartEmptyText ||
+                      "Looks like you haven't added any items to your cart yet. Check out the latest merch!"}
                   </p>
 
                   <Link
                     href="/merch"
                     className="inline-flex items-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold uppercase tracking-wider px-8 py-4 transition-all duration-300"
                   >
-                    <span>Browse Merch</span>
+                    <span>{copy.cartEmptyButtonText || 'Browse Merch'}</span>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -261,7 +293,7 @@ export default function CartPage() {
 
                     <h2 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-6 flex items-center gap-3">
                       <Package className="w-6 h-6 text-accent-primary" />
-                      Order Summary
+                      {copy.orderSummaryHeading || 'Order Summary'}
                     </h2>
 
                     <div className="space-y-4 mb-6 pb-6 border-b border-border">
@@ -352,14 +384,16 @@ export default function CartPage() {
                     {/* Trust badge */}
                     <div className="flex items-center justify-center gap-2 mt-6 pt-6 border-t border-border text-text-muted text-xs">
                       <ShieldCheck className="w-4 h-4 text-accent-primary" />
-                      <span>Secure checkout guaranteed</span>
+                      <span>{copy.secureCheckoutText || 'Secure checkout guaranteed'}</span>
                     </div>
 
                     <Link
                       href="/merch"
                       className="block text-center text-text-muted hover:text-accent-primary mt-4 text-sm uppercase tracking-wide transition-colors"
                     >
-                      ← Continue Shopping
+                      {copy.returnToCartText && copy.returnToCartText.includes('Cart')
+                        ? '← Continue Shopping'
+                        : copy.returnToCartText || '← Continue Shopping'}
                     </Link>
                   </motion.div>
                 </div>

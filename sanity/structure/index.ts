@@ -16,11 +16,9 @@ import {
   CreditCardIcon,
   CheckmarkCircleIcon,
   RocketIcon,
-  PlugIcon,
   ArchiveIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
-import {IntegrationsInfo} from '@/sanity/components/IntegrationsInfo'
 
 /**
  * Custom Studio structure. Designed for a non-technical site owner —
@@ -470,15 +468,6 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .id('uiText')
                 .child(S.document().schemaType('uiText').documentId('uiText'))
                 .icon(DocumentIcon),
-              S.divider(),
-              S.listItem()
-                .title('External Integrations')
-                .icon(PlugIcon)
-                .child(
-                  S.component(IntegrationsInfo)
-                    .title('External Integrations')
-                    .id('integrations-info')
-                ),
             ])
         ),
     ])

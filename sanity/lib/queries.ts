@@ -391,6 +391,7 @@ export const ampsPageQuery = defineQuery(`*[_type == "ampsPage"][0]{
   shopSubheading,
   emptyStateHeading,
   emptyStateText,
+  emptyStateButtonText,
   seoTitle,
   seoDescription
 }`)
