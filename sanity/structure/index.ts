@@ -17,6 +17,7 @@ import {
   CheckmarkCircleIcon,
   RocketIcon,
   PlugIcon,
+  ArchiveIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
 import {IntegrationsInfo} from '@/sanity/components/IntegrationsInfo'
@@ -120,12 +121,12 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
             .items([
               // --- PRODUCTS ---
               S.listItem()
-                .title('All Products')
+                .title('Active Products')
                 .icon(PackageIcon)
                 .child(
                   S.documentList()
-                    .title('All Products')
-                    .filter('_type == "product"')
+                    .title('Active Products')
+                    .filter('_type == "product" && !archived')
                     .defaultOrdering([{field: '_createdAt', direction: 'desc'}])
                 ),
               S.listItem()
@@ -141,7 +142,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Apparel Products')
-                            .filter('_type == "product" && category == "apparel"')
+                            .filter('_type == "product" && category == "apparel" && !archived')
                         ),
                       S.listItem()
                         .title('Music')
@@ -149,7 +150,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Music Products')
-                            .filter('_type == "product" && category == "music"')
+                            .filter('_type == "product" && category == "music" && !archived')
                         ),
                       S.listItem()
                         .title('Accessories')
@@ -157,7 +158,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Accessories Products')
-                            .filter('_type == "product" && category == "accessories"')
+                            .filter('_type == "product" && category == "accessories" && !archived')
                         ),
                       S.listItem()
                         .title('Posters & Prints')
@@ -165,7 +166,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Posters & Prints')
-                            .filter('_type == "product" && category == "prints"')
+                            .filter('_type == "product" && category == "prints" && !archived')
                         ),
                       S.listItem()
                         .title('Amps & Cases')
@@ -173,7 +174,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Amps & Cases')
-                            .filter('_type == "product" && category == "amps"')
+                            .filter('_type == "product" && category == "amps" && !archived')
                         ),
                     ])
                 ),
@@ -183,7 +184,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .child(
                   S.documentList()
                     .title('Featured Products')
-                    .filter('_type == "product" && featured == true')
+                    .filter('_type == "product" && featured == true && !archived')
                 ),
               S.listItem()
                 .title('Products on Sale')
@@ -191,7 +192,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .child(
                   S.documentList()
                     .title('Products on Sale')
-                    .filter('_type == "product" && onSale == true')
+                    .filter('_type == "product" && onSale == true && !archived')
                 ),
               S.listItem()
                 .title('Low Stock')
@@ -200,7 +201,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                   S.documentList()
                     .title('Low Stock Items')
                     .filter(
-                      '_type == "product" && trackInventory == true && inventoryQuantity <= lowStockThreshold && inventoryQuantity > 0'
+                      '_type == "product" && trackInventory == true && inventoryQuantity <= lowStockThreshold && inventoryQuantity > 0 && !archived'
                     )
                 ),
               S.listItem()
@@ -209,7 +210,16 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                 .child(
                   S.documentList()
                     .title('Out of Stock')
-                    .filter('_type == "product" && trackInventory == true && inventoryQuantity == 0')
+                    .filter('_type == "product" && trackInventory == true && inventoryQuantity == 0 && !archived')
+                ),
+              S.listItem()
+                .title('Archived Products')
+                .icon(ArchiveIcon)
+                .child(
+                  S.documentList()
+                    .title('Archived Products')
+                    .filter('_type == "product" && archived == true')
+                    .defaultOrdering([{field: '_updatedAt', direction: 'desc'}])
                 ),
               S.divider(),
 
@@ -349,7 +359,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Upcoming Events')
-                            .filter('_type == "event" && startDateTime >= now()')
+                            .filter('_type == "event" && startDateTime >= now() && !archived')
                             .defaultOrdering([{field: 'startDateTime', direction: 'asc'}])
                         ),
                       S.listItem()
@@ -358,16 +368,16 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Past Events')
-                            .filter('_type == "event" && startDateTime < now()')
+                            .filter('_type == "event" && startDateTime < now() && !archived')
                             .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
                         ),
                       S.listItem()
-                        .title('All Events')
+                        .title('All Active Events')
                         .icon(CalendarIcon)
                         .child(
                           S.documentList()
-                            .title('All Events')
-                            .filter('_type == "event"')
+                            .title('All Active Events')
+                            .filter('_type == "event" && !archived')
                             .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
                         ),
                       S.divider(),
@@ -377,7 +387,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Canceled Events')
-                            .filter('_type == "event" && isCanceled == true')
+                            .filter('_type == "event" && isCanceled == true && !archived')
                             .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
                         ),
                       S.listItem()
@@ -386,12 +396,48 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
                         .child(
                           S.documentList()
                             .title('Sold Out Events')
-                            .filter('_type == "event" && isSoldOut == true && isCanceled != true')
+                            .filter('_type == "event" && isSoldOut == true && isCanceled != true && !archived')
                             .defaultOrdering([{field: 'startDateTime', direction: 'asc'}])
+                        ),
+                      S.divider(),
+                      S.listItem()
+                        .title('Archived Events')
+                        .icon(ArchiveIcon)
+                        .child(
+                          S.documentList()
+                            .title('Archived Events')
+                            .filter('_type == "event" && archived == true')
+                            .defaultOrdering([{field: 'startDateTime', direction: 'desc'}])
                         ),
                     ])
                 ),
-              S.documentTypeListItem('lessonPackage').title('Lesson Packages').icon(BookIcon),
+              S.listItem()
+                .title('Lesson Packages')
+                .icon(BookIcon)
+                .child(
+                  S.list()
+                    .title('Lesson Packages')
+                    .items([
+                      S.listItem()
+                        .title('Active Packages')
+                        .icon(BookIcon)
+                        .child(
+                          S.documentList()
+                            .title('Active Lesson Packages')
+                            .filter('_type == "lessonPackage" && !archived')
+                            .defaultOrdering([{field: 'order', direction: 'asc'}])
+                        ),
+                      S.listItem()
+                        .title('Archived Packages')
+                        .icon(ArchiveIcon)
+                        .child(
+                          S.documentList()
+                            .title('Archived Lesson Packages')
+                            .filter('_type == "lessonPackage" && archived == true')
+                            .defaultOrdering([{field: '_updatedAt', direction: 'desc'}])
+                        ),
+                    ])
+                ),
               S.documentTypeListItem('song').title('Setlist Songs').icon(DocumentIcon),
             ])
         ),

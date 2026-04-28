@@ -18,6 +18,9 @@ import {
 import {assist} from '@sanity/assist'
 import {cancelGelatoOrderAction} from './sanity/actions/cancelGelatoOrder'
 import {retryGelatoOrderAction} from './sanity/actions/retryGelatoOrder'
+import {duplicateAction} from './sanity/actions/duplicateAction'
+import {archiveAction, unarchiveAction} from './sanity/actions/archiveActions'
+import {bulkOpsTool} from './sanity/tools/bulkOps/BulkOpsTool'
 import {adminGuideTool} from './sanity/tools/adminGuide'
 
 // Environment variables for project configuration
@@ -229,6 +232,7 @@ export default defineConfig({
     assist(),
     visionTool(),
     adminGuideTool(),
+    bulkOpsTool(),
   ],
 
   // Schema configuration, imported from ./src/schemaTypes/index.ts
@@ -238,8 +242,15 @@ export default defineConfig({
 
   document: {
     actions: (prev, context) => {
+      const archivable = ['product', 'event', 'lessonPackage']
       if (context.schemaType === 'order') {
         return [...prev, cancelGelatoOrderAction, retryGelatoOrderAction]
+      }
+      if (archivable.includes(context.schemaType)) {
+        // Append: Duplicate, Archive (when active), Unarchive (when archived).
+        // The archive/unarchive actions self-hide based on the doc's archived
+        // flag, so both can be safely registered.
+        return [...prev, duplicateAction, archiveAction, unarchiveAction]
       }
       return prev
     },

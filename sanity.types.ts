@@ -92,6 +92,7 @@ export type LessonPackage = {
   features?: Array<string>;
   includes?: Array<string>;
   featured?: boolean;
+  archived?: boolean;
   order?: number;
   badge?: string;
   active?: boolean;
@@ -293,6 +294,7 @@ export type Event = {
   specialNotes?: string;
   isCanceled?: boolean;
   isSoldOut?: boolean;
+  archived?: boolean;
   seoTitle?: string;
   seoDescription?: string;
 };
@@ -539,6 +541,7 @@ export type Product = {
   description?: BlockContent;
   category: "apparel" | "music" | "accessories" | "prints" | "amps";
   featured?: boolean;
+  archived?: boolean;
   images?: Array<{
     asset?: {
       _ref: string;
@@ -2232,7 +2235,7 @@ export type AmpsPageQueryResult = {
   seoDescription: string | null;
 } | null;
 // Variable: ampsProductsQuery
-// Query: *[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
+// Query: *[_type == "product" && category == "amps" && !archived] | order(featured desc, _createdAt desc) {  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type AmpsProductsQueryResult = Array<{
   _id: string;
   title: string;
@@ -2267,7 +2270,7 @@ export type AmpsProductsQueryResult = Array<{
   hasOptions: boolean | null;
 }>;
 // Variable: allLessonPackagesQuery
-// Query: *[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active}
+// Query: *[_type == "lessonPackage" && active == true && !archived] | order(order asc, priceCents asc) {  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active}
 export type AllLessonPackagesQueryResult = Array<{
   _id: string;
   title: string;
@@ -2313,7 +2316,7 @@ export type AllLessonPackagesQueryResult = Array<{
   active: boolean | null;
 }>;
 // Variable: lessonPackageBySlugQuery
-// Query: *[_type == "lessonPackage" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  description,  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active,  seoTitle,  seoDescription}
+// Query: *[_type == "lessonPackage" && slug.current == $slug && !archived][0]{  _id,  title,  "slug": slug.current,  tagline,  image{    asset->,    alt  },  description,  priceCents,  currency,  compareAtPriceCents,  duration,  sessionsCount,  sessionLength,  level,  format,  features,  includes,  featured,  badge,  active,  seoTitle,  seoDescription}
 export type LessonPackageBySlugQueryResult = {
   _id: string;
   title: string;
@@ -2616,7 +2619,7 @@ export type AllSongsQueryResult = Array<{
   order: number;
 }>;
 // Variable: upcomingEventsQuery
-// Query: *[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  isCanceled,  isSoldOut}
+// Query: *[_type == "event" && startDateTime >= $now && !isCanceled && !archived] | order(startDateTime asc)[0...$limit]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  isCanceled,  isSoldOut}
 export type UpcomingEventsQueryResult = Array<{
   _id: string;
   title: string;
@@ -2665,7 +2668,7 @@ export type UpcomingEventsQueryResult = Array<{
   isSoldOut: boolean | null;
 }>;
 // Variable: pastEventsQuery
-// Query: *[_type == "event" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{  _id,  title,  startDateTime,  timezone,  venue,  city,  state,  country,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}}
+// Query: *[_type == "event" && startDateTime < $now && !archived] | order(startDateTime desc)[$offset...$limit]{  _id,  title,  startDateTime,  timezone,  venue,  city,  state,  country,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}}
 export type PastEventsQueryResult = Array<{
   _id: string;
   title: string;
@@ -2706,7 +2709,7 @@ export type PastEventsQueryResult = Array<{
   } | null;
 }>;
 // Variable: eventsByMonthQuery
-// Query: *[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){  _id,  title,  startDateTime,  timezone,  venue,  city,  ticketUrl,  isCanceled,  isSoldOut}
+// Query: *[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth) && !archived] | order(startDateTime asc){  _id,  title,  startDateTime,  timezone,  venue,  city,  ticketUrl,  isCanceled,  isSoldOut}
 export type EventsByMonthQueryResult = Array<{
   _id: string;
   title: string;
@@ -2719,7 +2722,7 @@ export type EventsByMonthQueryResult = Array<{
   isSoldOut: boolean | null;
 }>;
 // Variable: eventBySlugQuery
-// Query: *[_type == "event" && (slug.current == $slug || _id == $slug)][0]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  heroImage{asset->, hotspot, crop, desktopPosition, alt},  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},  lineup[]{name, role, bio},  specialNotes,  isCanceled,  isSoldOut}
+// Query: *[_type == "event" && (slug.current == $slug || _id == $slug) && !archived][0]{  _id,  title,  "slug": slug.current,  excerpt,  startDateTime,  endDateTime,  timezone,  venue,  address,  city,  state,  country,  ticketUrl,  description,  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  heroImage{asset->, hotspot, crop, desktopPosition, alt},  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},  lineup[]{name, role, bio},  specialNotes,  isCanceled,  isSoldOut}
 export type EventBySlugQueryResult = {
   _id: string;
   title: string;
@@ -2830,12 +2833,12 @@ export type EventBySlugQueryResult = {
   isSoldOut: boolean | null;
 } | null;
 // Variable: eventsSlugs
-// Query: *[_type == "event"]{  "slug": coalesce(slug.current, _id)}
+// Query: *[_type == "event" && !archived]{  "slug": coalesce(slug.current, _id)}
 export type EventsSlugsResult = Array<{
   slug: string;
 }>;
 // Variable: allProductsQuery
-// Query: *[_type == "product"] | order(featured desc, _createdAt desc){  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
+// Query: *[_type == "product" && !archived] | order(featured desc, _createdAt desc){  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{      _id,      url,      metadata {        lqip,        dimensions      }    },    hotspot,    crop,    desktopPosition,    mobilePosition,    alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type AllProductsQueryResult = Array<{
   _id: string;
   title: string;
@@ -2870,7 +2873,7 @@ export type AllProductsQueryResult = Array<{
   hasOptions: boolean | null;
 }>;
 // Variable: productBySlugQuery
-// Query: *[_type == "product" && slug.current == $slug][0]{  _id,  title,  "slug": slug.current,  description,  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  availableDate,  materials,  careInstructions,  dimensions,  options[]{name, values},  variants[]{optionValues, priceCents, sku},  gelatoProductUid,  printAreas[]{areaName, artwork{asset->}},  shippingNotes,  relatedProducts[]->{    _id,    title,    "slug": slug.current,    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    badges  },  seo{title, description, ogImage{asset->}}}
+// Query: *[_type == "product" && slug.current == $slug && !archived][0]{  _id,  title,  "slug": slug.current,  description,  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  availableDate,  materials,  careInstructions,  dimensions,  options[]{name, values},  variants[]{optionValues, priceCents, sku},  gelatoProductUid,  printAreas[]{areaName, artwork{asset->}},  shippingNotes,  relatedProducts[]->{    _id,    title,    "slug": slug.current,    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},    priceCents,    compareAtPriceCents,    onSale,    currency,    category,    badges  },  seo{title, description, ogImage{asset->}}}
 export type ProductBySlugQueryResult = {
   _id: string;
   title: string;
@@ -3038,12 +3041,12 @@ export type ProductBySlugQueryResult = {
   } | null;
 } | null;
 // Variable: productSlugsQuery
-// Query: *[_type == "product" && defined(slug.current)]{  "slug": slug.current}
+// Query: *[_type == "product" && defined(slug.current) && !archived]{  "slug": slug.current}
 export type ProductSlugsQueryResult = Array<{
   slug: string;
 }>;
 // Variable: relatedProductsByCategoryQuery
-// Query: *[_type == "product" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  stockStatus,  badges,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
+// Query: *[_type == "product" && category == $category && _id != $excludeId && !archived] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  stockStatus,  badges,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type RelatedProductsByCategoryQueryResult = Array<{
   _id: string;
   title: string;
@@ -3075,7 +3078,7 @@ export type RelatedProductsByCategoryQueryResult = Array<{
   hasOptions: boolean | null;
 }>;
 // Variable: featuredProductsQuery
-// Query: *[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
+// Query: *[_type == "product" && featured == true && !archived] | order(_createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  "image": images[0]{    "asset": asset->{_id, url, metadata{lqip, dimensions}},    hotspot, crop, desktopPosition, mobilePosition, alt  },  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  featured,  badges,  tags,  inventoryQuantity,  trackInventory,  lowStockThreshold,  "hasOptions": count(options) > 0}
 export type FeaturedProductsQueryResult = Array<{
   _id: string;
   title: string;
@@ -3110,7 +3113,7 @@ export type FeaturedProductsQueryResult = Array<{
   hasOptions: boolean | null;
 }>;
 // Variable: productSearchQuery
-// Query: *[_type == "product" && (  title match $searchTerm  || category match $searchTerm  || tags[] match $searchTerm)] | order(_score desc, _createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  badges,  tags}
+// Query: *[_type == "product" && !archived && (  title match $searchTerm  || category match $searchTerm  || tags[] match $searchTerm)] | order(_score desc, _createdAt desc)[0...$limit]{  _id,  title,  "slug": slug.current,  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},  priceCents,  compareAtPriceCents,  onSale,  currency,  category,  stockStatus,  badges,  tags}
 export type ProductSearchQueryResult = Array<{
   _id: string;
   title: string;
@@ -3288,7 +3291,7 @@ export type PromoCodeByCodeQueryResult = {
   applicableCategories: Array<string> | null;
 } | null;
 // Variable: sitemapQuery
-// Query: *[_type in ["product", "event"] && defined(slug.current)] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
+// Query: *[_type in ["product", "event"] && defined(slug.current) && !archived] | order(_type asc){  "slug": slug.current,  _type,  _updatedAt,  _type == "event" => {    startDateTime,    isCanceled  }}
 export type SitemapQueryResult = Array<{
   slug: string;
   _type: "event";
@@ -3315,9 +3318,9 @@ declare module "@sanity/client" {
     "*[_type == \"showsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}": ShowsPageQueryResult;
     "*[_type == \"merchPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButton1Text,\n  emptyStateButton1Link,\n  emptyStateButton2Text,\n  emptyStateButton2Link,\n  contentHeading,\n  contentSubheading,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  seoTitle,\n  seoDescription\n}": MerchPageQueryResult;
     "*[_type == \"ampsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  seoTitle,\n  seoDescription\n}": AmpsPageQueryResult;
-    "*[_type == \"product\" && category == \"amps\"] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AmpsProductsQueryResult;
-    "*[_type == \"lessonPackage\" && active == true] | order(order asc, priceCents asc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active\n}": AllLessonPackagesQueryResult;
-    "*[_type == \"lessonPackage\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  description,\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active,\n  seoTitle,\n  seoDescription\n}": LessonPackageBySlugQueryResult;
+    "*[_type == \"product\" && category == \"amps\" && !archived] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AmpsProductsQueryResult;
+    "*[_type == \"lessonPackage\" && active == true && !archived] | order(order asc, priceCents asc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active\n}": AllLessonPackagesQueryResult;
+    "*[_type == \"lessonPackage\" && slug.current == $slug && !archived][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  tagline,\n  image{\n    asset->,\n    alt\n  },\n  description,\n  priceCents,\n  currency,\n  compareAtPriceCents,\n  duration,\n  sessionsCount,\n  sessionLength,\n  level,\n  format,\n  features,\n  includes,\n  featured,\n  badge,\n  active,\n  seoTitle,\n  seoDescription\n}": LessonPackageBySlugQueryResult;
     "*[_type == \"privacyPolicy\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": PrivacyPolicyQueryResult;
     "*[_type == \"termsOfService\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": TermsOfServiceQueryResult;
     "*[_type == \"returnsPolicy\"][0]{\n  _id,\n  pageTitle,\n  lastUpdated,\n  seoDescription,\n  content\n}": ReturnsPolicyQueryResult;
@@ -3326,20 +3329,20 @@ declare module "@sanity/client" {
     "*[_type == \"checkoutSettings\"][0]{\n  _id,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  deliveryEstimateText,\n  secureCheckoutText,\n  cartHeading,\n  cartEmptyHeading,\n  cartEmptyText,\n  cartEmptyButtonText,\n  secureCheckoutHeading,\n  redirectingHeading,\n  redirectingText,\n  redirectingSubtext,\n  orderSummaryHeading,\n  returnToCartText,\n  sslEncryptionText,\n  checkoutUnavailableHeading\n}": CheckoutSettingsQueryResult;
     "*[_type == \"orderConfirmationPage\"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}": OrderConfirmationPageQueryResult;
     "*[_type == \"song\"] | order(order asc){\n  _id,\n  title,\n  key,\n  artist,\n  notes,\n  order\n}": AllSongsQueryResult;
-    "*[_type == \"event\" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}": UpcomingEventsQueryResult;
-    "*[_type == \"event\" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}": PastEventsQueryResult;
-    "*[_type == \"event\" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  ticketUrl,\n  isCanceled,\n  isSoldOut\n}": EventsByMonthQueryResult;
-    "*[_type == \"event\" && (slug.current == $slug || _id == $slug)][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroImage{asset->, hotspot, crop, desktopPosition, alt},\n  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},\n  lineup[]{name, role, bio},\n  specialNotes,\n  isCanceled,\n  isSoldOut\n}": EventBySlugQueryResult;
-    "*[_type == \"event\"]{\n  \"slug\": coalesce(slug.current, _id)\n}": EventsSlugsResult;
-    "*[_type == \"product\"] | order(featured desc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AllProductsQueryResult;
-    "*[_type == \"product\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  availableDate,\n  materials,\n  careInstructions,\n  dimensions,\n  options[]{name, values},\n  variants[]{optionValues, priceCents, sku},\n  gelatoProductUid,\n  printAreas[]{areaName, artwork{asset->}},\n  shippingNotes,\n  relatedProducts[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    badges\n  },\n  seo{title, description, ogImage{asset->}}\n}": ProductBySlugQueryResult;
-    "*[_type == \"product\" && defined(slug.current)]{\n  \"slug\": slug.current\n}": ProductSlugsQueryResult;
-    "*[_type == \"product\" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  stockStatus,\n  badges,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": RelatedProductsByCategoryQueryResult;
-    "*[_type == \"product\" && featured == true] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": FeaturedProductsQueryResult;
-    "*[_type == \"product\" && (\n  title match $searchTerm\n  || category match $searchTerm\n  || tags[] match $searchTerm\n)] | order(_score desc, _createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  badges,\n  tags\n}": ProductSearchQueryResult;
+    "*[_type == \"event\" && startDateTime >= $now && !isCanceled && !archived] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}": UpcomingEventsQueryResult;
+    "*[_type == \"event\" && startDateTime < $now && !archived] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}": PastEventsQueryResult;
+    "*[_type == \"event\" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth) && !archived] | order(startDateTime asc){\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  ticketUrl,\n  isCanceled,\n  isSoldOut\n}": EventsByMonthQueryResult;
+    "*[_type == \"event\" && (slug.current == $slug || _id == $slug) && !archived][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroImage{asset->, hotspot, crop, desktopPosition, alt},\n  heroImageMobile{asset->, hotspot, crop, mobilePosition, alt},\n  lineup[]{name, role, bio},\n  specialNotes,\n  isCanceled,\n  isSoldOut\n}": EventBySlugQueryResult;
+    "*[_type == \"event\" && !archived]{\n  \"slug\": coalesce(slug.current, _id)\n}": EventsSlugsResult;
+    "*[_type == \"product\" && !archived] | order(featured desc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AllProductsQueryResult;
+    "*[_type == \"product\" && slug.current == $slug && !archived][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  availableDate,\n  materials,\n  careInstructions,\n  dimensions,\n  options[]{name, values},\n  variants[]{optionValues, priceCents, sku},\n  gelatoProductUid,\n  printAreas[]{areaName, artwork{asset->}},\n  shippingNotes,\n  relatedProducts[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    badges\n  },\n  seo{title, description, ogImage{asset->}}\n}": ProductBySlugQueryResult;
+    "*[_type == \"product\" && defined(slug.current) && !archived]{\n  \"slug\": slug.current\n}": ProductSlugsQueryResult;
+    "*[_type == \"product\" && category == $category && _id != $excludeId && !archived] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  stockStatus,\n  badges,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": RelatedProductsByCategoryQueryResult;
+    "*[_type == \"product\" && featured == true && !archived] | order(_createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{_id, url, metadata{lqip, dimensions}},\n    hotspot, crop, desktopPosition, mobilePosition, alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": FeaturedProductsQueryResult;
+    "*[_type == \"product\" && !archived && (\n  title match $searchTerm\n  || category match $searchTerm\n  || tags[] match $searchTerm\n)] | order(_score desc, _createdAt desc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  images[0]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  badges,\n  tags\n}": ProductSearchQueryResult;
     "*[_type == \"productCollection\"] | order(displayOrder asc, _createdAt desc){\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  featured,\n  displayOrder,\n  \"productSlugs\": products[]->slug.current\n}": AllCollectionsQueryResult;
     "*[_type == \"productCollection\" && slug.current == $slug][0]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  description,\n  image{asset->, alt},\n  \"products\": products[]->{\n    _id,\n    title,\n    \"slug\": slug.current,\n    images[]{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n    priceCents,\n    compareAtPriceCents,\n    onSale,\n    currency,\n    category,\n    stockStatus,\n    featured,\n    badges,\n    tags,\n    inventoryQuantity,\n    trackInventory,\n    lowStockThreshold\n  }\n}": CollectionBySlugQueryResult;
     "*[_type == \"promoCode\" && code == $code && active == true][0]{\n  _id,\n  code,\n  description,\n  discountType,\n  discountValue,\n  minimumPurchaseCents,\n  maxUses,\n  currentUses,\n  validFrom,\n  validUntil,\n  applicableProducts[]->{_id, title},\n  applicableCategories\n}": PromoCodeByCodeQueryResult;
-    "*[_type in [\"product\", \"event\"] && defined(slug.current)] | order(_type asc){\n  \"slug\": slug.current,\n  _type,\n  _updatedAt,\n  _type == \"event\" => {\n    startDateTime,\n    isCanceled\n  }\n}": SitemapQueryResult;
+    "*[_type in [\"product\", \"event\"] && defined(slug.current) && !archived] | order(_type asc){\n  \"slug\": slug.current,\n  _type,\n  _updatedAt,\n  _type == \"event\" => {\n    startDateTime,\n    isCanceled\n  }\n}": SitemapQueryResult;
   }
 }

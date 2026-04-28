@@ -644,6 +644,13 @@
         },
         "optional": true
       },
+      "archived": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "order": {
         "type": "objectAttribute",
         "value": {
@@ -2213,6 +2220,13 @@
         },
         "optional": true
       },
+      "archived": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "seoTitle": {
         "type": "objectAttribute",
         "value": {
@@ -3686,6 +3700,13 @@
         "optional": false
       },
       "featured": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "archived": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"

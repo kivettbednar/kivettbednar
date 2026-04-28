@@ -268,6 +268,15 @@ export const event = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'archived',
+      title: 'Archived',
+      type: 'boolean',
+      group: 'status',
+      description:
+        'Archived events stay in your records but disappear from the public Shows page (and from the homepage). Toggle off to bring back.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'seoTitle',
       title: 'SEO Title',
       type: 'string',

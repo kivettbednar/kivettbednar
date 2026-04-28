@@ -80,6 +80,15 @@ export const product = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'archived',
+      title: 'Archived',
+      type: 'boolean',
+      group: 'basics',
+      description:
+        'Archived products stay in your records (so order history keeps working) but disappear from the public merch page. Toggle off to bring back.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'images',
       title: 'Product Images',
       type: 'array',

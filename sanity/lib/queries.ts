@@ -396,7 +396,7 @@ export const ampsPageQuery = defineQuery(`*[_type == "ampsPage"][0]{
 }`)
 
 // Amps products (category filter) — same slim shape as allProductsQuery
-export const ampsProductsQuery = defineQuery(`*[_type == "product" && category == "amps"] | order(featured desc, _createdAt desc) {
+export const ampsProductsQuery = defineQuery(`*[_type == "product" && category == "amps" && !archived] | order(featured desc, _createdAt desc) {
   _id,
   title,
   "slug": slug.current,
@@ -431,7 +431,7 @@ export const ampsProductsQuery = defineQuery(`*[_type == "product" && category =
 }`)
 
 // Lesson Packages
-export const allLessonPackagesQuery = defineQuery(`*[_type == "lessonPackage" && active == true] | order(order asc, priceCents asc) {
+export const allLessonPackagesQuery = defineQuery(`*[_type == "lessonPackage" && active == true && !archived] | order(order asc, priceCents asc) {
   _id,
   title,
   "slug": slug.current,
@@ -455,7 +455,7 @@ export const allLessonPackagesQuery = defineQuery(`*[_type == "lessonPackage" &&
   active
 }`)
 
-export const lessonPackageBySlugQuery = defineQuery(`*[_type == "lessonPackage" && slug.current == $slug][0]{
+export const lessonPackageBySlugQuery = defineQuery(`*[_type == "lessonPackage" && slug.current == $slug && !archived][0]{
   _id,
   title,
   "slug": slug.current,
@@ -619,7 +619,7 @@ export const allSongsQuery = defineQuery(`*[_type == "song"] | order(order asc){
 
 
 // Events
-export const upcomingEventsQuery = defineQuery(`*[_type == "event" && startDateTime >= $now && !isCanceled] | order(startDateTime asc)[0...$limit]{
+export const upcomingEventsQuery = defineQuery(`*[_type == "event" && startDateTime >= $now && !isCanceled && !archived] | order(startDateTime asc)[0...$limit]{
   _id,
   title,
   "slug": slug.current,
@@ -639,7 +639,7 @@ export const upcomingEventsQuery = defineQuery(`*[_type == "event" && startDateT
   isSoldOut
 }`)
 
-export const pastEventsQuery = defineQuery(`*[_type == "event" && startDateTime < $now] | order(startDateTime desc)[$offset...$limit]{
+export const pastEventsQuery = defineQuery(`*[_type == "event" && startDateTime < $now && !archived] | order(startDateTime desc)[$offset...$limit]{
   _id,
   title,
   startDateTime,
@@ -651,7 +651,7 @@ export const pastEventsQuery = defineQuery(`*[_type == "event" && startDateTime 
   coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}
 }`)
 
-export const eventsByMonthQuery = defineQuery(`*[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth)] | order(startDateTime asc){
+export const eventsByMonthQuery = defineQuery(`*[_type == "event" && dateTime(startDateTime) >= dateTime($startOfMonth) && dateTime(startDateTime) < dateTime($endOfMonth) && !archived] | order(startDateTime asc){
   _id,
   title,
   startDateTime,
@@ -665,7 +665,7 @@ export const eventsByMonthQuery = defineQuery(`*[_type == "event" && dateTime(st
 
 // Event detail pages
 // Note: This query handles both slugs and IDs as fallback for events without slugs
-export const eventBySlugQuery = defineQuery(`*[_type == "event" && (slug.current == $slug || _id == $slug)][0]{
+export const eventBySlugQuery = defineQuery(`*[_type == "event" && (slug.current == $slug || _id == $slug) && !archived][0]{
   _id,
   title,
   "slug": slug.current,
@@ -690,14 +690,14 @@ export const eventBySlugQuery = defineQuery(`*[_type == "event" && (slug.current
 }`)
 
 // Returns slugs for events that have them, and _id as fallback for events without slugs
-export const eventsSlugs = defineQuery(`*[_type == "event"]{
+export const eventsSlugs = defineQuery(`*[_type == "event" && !archived]{
   "slug": coalesce(slug.current, _id)
 }`)
 
 // Products
 // Slim query for product grid cards — only fetches the first image with LQIP blur data
 // and a precomputed hasOptions flag. Full images[] + variants fetched via productBySlugQuery on detail pages.
-export const allProductsQuery = defineQuery(`*[_type == "product"] | order(featured desc, _createdAt desc){
+export const allProductsQuery = defineQuery(`*[_type == "product" && !archived] | order(featured desc, _createdAt desc){
   _id,
   title,
   "slug": slug.current,
@@ -731,7 +731,7 @@ export const allProductsQuery = defineQuery(`*[_type == "product"] | order(featu
   "hasOptions": count(options) > 0
 }`)
 
-export const productBySlugQuery = defineQuery(`*[_type == "product" && slug.current == $slug][0]{
+export const productBySlugQuery = defineQuery(`*[_type == "product" && slug.current == $slug && !archived][0]{
   _id,
   title,
   "slug": slug.current,
@@ -773,11 +773,11 @@ export const productBySlugQuery = defineQuery(`*[_type == "product" && slug.curr
   seo{title, description, ogImage{asset->}}
 }`)
 
-export const productSlugsQuery = defineQuery(`*[_type == "product" && defined(slug.current)]{
+export const productSlugsQuery = defineQuery(`*[_type == "product" && defined(slug.current) && !archived]{
   "slug": slug.current
 }`)
 
-export const relatedProductsByCategoryQuery = defineQuery(`*[_type == "product" && category == $category && _id != $excludeId] | order(_createdAt desc)[0...$limit]{
+export const relatedProductsByCategoryQuery = defineQuery(`*[_type == "product" && category == $category && _id != $excludeId && !archived] | order(_createdAt desc)[0...$limit]{
   _id,
   title,
   "slug": slug.current,
@@ -797,7 +797,7 @@ export const relatedProductsByCategoryQuery = defineQuery(`*[_type == "product" 
   "hasOptions": count(options) > 0
 }`)
 
-export const featuredProductsQuery = defineQuery(`*[_type == "product" && featured == true] | order(_createdAt desc)[0...$limit]{
+export const featuredProductsQuery = defineQuery(`*[_type == "product" && featured == true && !archived] | order(_createdAt desc)[0...$limit]{
   _id,
   title,
   "slug": slug.current,
@@ -821,7 +821,7 @@ export const featuredProductsQuery = defineQuery(`*[_type == "product" && featur
 }`)
 
 // Product search
-export const productSearchQuery = defineQuery(`*[_type == "product" && (
+export const productSearchQuery = defineQuery(`*[_type == "product" && !archived && (
   title match $searchTerm
   || category match $searchTerm
   || tags[] match $searchTerm
@@ -895,7 +895,7 @@ export const promoCodeByCodeQuery = defineQuery(`*[_type == "promoCode" && code 
 }`)
 
 // Sitemap
-export const sitemapQuery = defineQuery(`*[_type in ["product", "event"] && defined(slug.current)] | order(_type asc){
+export const sitemapQuery = defineQuery(`*[_type in ["product", "event"] && defined(slug.current) && !archived] | order(_type asc){
   "slug": slug.current,
   _type,
   _updatedAt,

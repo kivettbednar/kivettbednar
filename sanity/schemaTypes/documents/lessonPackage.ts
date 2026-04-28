@@ -171,6 +171,14 @@ export const lessonPackage = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'archived',
+      title: 'Archived',
+      type: 'boolean',
+      description:
+        'Archived packages stay in your records but disappear from the public Lessons page. Toggle off to bring back.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
