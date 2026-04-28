@@ -202,7 +202,7 @@ export default async function ShowsPage() {
               <AnimatedSection animation="fadeUp" delay={0.2}>
                 <div className="mt-20 pt-16 border-t border-border">
                   <h2 className="text-4xl font-bold mb-8 text-text-primary">
-                    Past Shows
+                    {(showsPage as any)?.pastShowsHeading || 'Past Shows'}
                   </h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {pastEvents.map((event: {_id: string; title: string | null; startDateTime: string | null; venue: string | null; city: string | null; state: string | null}) => {

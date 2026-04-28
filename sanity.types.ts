@@ -650,6 +650,9 @@ export type OrderConfirmationPage = {
   nextStepEmail?: string;
   nextStepShipping?: string;
   nextStepTracking?: string;
+  orderDetailsHeading?: string;
+  shippingAddressHeading?: string;
+  orderItemsHeading?: string;
   continueShoppingText?: string;
   viewShowsText?: string;
   noOrderHeading?: string;
@@ -893,6 +896,7 @@ export type ContactPage = {
   locationCardLinkText?: string;
   locationMapQuery?: string;
   formHeading?: string;
+  formSubheading?: string;
   directContactHeading?: string;
   directContactDescription?: string;
   socialHeading?: string;
@@ -1068,6 +1072,7 @@ export type ShowsPage = {
     _key: string;
   }>;
   upcomingShowsHeading?: string;
+  pastShowsHeading?: string;
   emptyStateHeading?: string;
   emptyStateText?: string;
   showCountPrefix?: string;
@@ -1077,6 +1082,7 @@ export type ShowsPage = {
   statsLabel2?: string;
   statsLabel3?: string;
   eventDetailsLabel?: string;
+  lineupHeading?: string;
   dateTimeLabel?: string;
   venueLabel?: string;
   viewOnMapText?: string;
@@ -1930,7 +1936,7 @@ export type LessonsPageQueryResult = {
   seoDescription: string | null;
 } | null;
 // Variable: contactPageQuery
-// Query: *[_type == "contactPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitGallery[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}  },  formHeading,  directContactHeading,  directContactDescription,  socialHeading,  quickLinksHeading,  aboutHeading,  quickLinkShowsText,  quickLinkLessonsText,  quickLinkSetlistText,  ctaSectionHeading,  ctaSectionText,  ctaSectionButtonText,  locationMapQuery,  connectHeading,  bookingCardTitle,  bookingCardDescription,  bookingCardLinkText,  lessonsCardTitle,  lessonsCardDescription,  lessonsCardLinkText,  locationCardTitle,  locationCardRegion,  locationCardDescription,  locationCardLinkText,  socialSubheading,  seoTitle,  seoDescription}
+// Query: *[_type == "contactPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  portraitGallery[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}  },  formHeading,  formSubheading,  directContactHeading,  directContactDescription,  socialHeading,  quickLinksHeading,  aboutHeading,  quickLinkShowsText,  quickLinkLessonsText,  quickLinkSetlistText,  ctaSectionHeading,  ctaSectionText,  ctaSectionButtonText,  locationMapQuery,  connectHeading,  bookingCardTitle,  bookingCardDescription,  bookingCardLinkText,  lessonsCardTitle,  lessonsCardDescription,  lessonsCardLinkText,  locationCardTitle,  locationCardRegion,  locationCardDescription,  locationCardLinkText,  socialSubheading,  seoTitle,  seoDescription}
 export type ContactPageQueryResult = {
   _id: string;
   heroHeading: string | null;
@@ -1972,6 +1978,7 @@ export type ContactPageQueryResult = {
     } | null;
   }> | null;
   formHeading: string | null;
+  formSubheading: string | null;
   directContactHeading: string | null;
   directContactDescription: string | null;
   socialHeading: string | null;
@@ -2056,7 +2063,7 @@ export type SetlistPageQueryResult = {
   seoDescription: string | null;
 } | null;
 // Variable: showsPageQuery
-// Query: *[_type == "showsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceGalleryHeading,  performanceGallerySubheading,  performanceImages[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},    alt,    caption  },  upcomingShowsHeading,  emptyStateHeading,  emptyStateText,  showCountPrefix,  showSingular,  showPlural,  statsLabel1,  statsLabel2,  statsLabel3,  eventDetailsLabel,  dateTimeLabel,  venueLabel,  viewOnMapText,  getTicketsText,  soldOutText,  backToShowsText,  shareEventText,  importantInfoText,  canceledBadgeText,  soldOutBadgeText,  canceledMessageText,  seoTitle,  seoDescription,  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}}
+// Query: *[_type == "showsPage"][0]{  _id,  heroHeading,  heroSubheading,  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},  performanceGalleryHeading,  performanceGallerySubheading,  performanceImages[]{    _key,    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},    alt,    caption  },  upcomingShowsHeading,  pastShowsHeading,  emptyStateHeading,  emptyStateText,  showCountPrefix,  showSingular,  showPlural,  statsLabel1,  statsLabel2,  statsLabel3,  eventDetailsLabel,  lineupHeading,  dateTimeLabel,  venueLabel,  viewOnMapText,  getTicketsText,  soldOutText,  backToShowsText,  shareEventText,  importantInfoText,  canceledBadgeText,  soldOutBadgeText,  canceledMessageText,  seoTitle,  seoDescription,  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}}
 export type ShowsPageQueryResult = {
   _id: string;
   heroHeading: string | null;
@@ -2102,6 +2109,7 @@ export type ShowsPageQueryResult = {
     caption: string | null;
   }> | null;
   upcomingShowsHeading: string | null;
+  pastShowsHeading: string | null;
   emptyStateHeading: string | null;
   emptyStateText: string | null;
   showCountPrefix: string | null;
@@ -2111,6 +2119,7 @@ export type ShowsPageQueryResult = {
   statsLabel2: string | null;
   statsLabel3: string | null;
   eventDetailsLabel: string | null;
+  lineupHeading: string | null;
   dateTimeLabel: string | null;
   venueLabel: string | null;
   viewOnMapText: string | null;
@@ -2595,7 +2604,7 @@ export type CheckoutSettingsQueryResult = {
   checkoutUnavailableHeading: string | null;
 } | null;
 // Variable: orderConfirmationPageQuery
-// Query: *[_type == "orderConfirmationPage"][0]{  _id,  thankYouHeading,  orderConfirmedLabel,  orderReceivedText,  whatsNextHeading,  nextStepEmail,  nextStepShipping,  nextStepTracking,  continueShoppingText,  viewShowsText,  noOrderHeading,  noOrderText}
+// Query: *[_type == "orderConfirmationPage"][0]{  _id,  thankYouHeading,  orderConfirmedLabel,  orderReceivedText,  whatsNextHeading,  nextStepEmail,  nextStepShipping,  nextStepTracking,  orderDetailsHeading,  shippingAddressHeading,  orderItemsHeading,  continueShoppingText,  viewShowsText,  noOrderHeading,  noOrderText}
 export type OrderConfirmationPageQueryResult = {
   _id: string;
   thankYouHeading: string | null;
@@ -2605,6 +2614,9 @@ export type OrderConfirmationPageQueryResult = {
   nextStepEmail: string | null;
   nextStepShipping: string | null;
   nextStepTracking: string | null;
+  orderDetailsHeading: string | null;
+  shippingAddressHeading: string | null;
+  orderItemsHeading: string | null;
   continueShoppingText: string | null;
   viewShowsText: string | null;
   noOrderHeading: string | null;
@@ -3315,9 +3327,9 @@ declare module "@sanity/client" {
     "*[_type == \"uiText\"][0]{\n  _id,\n  siteName,\n  siteTagline,\n  navShows,\n  navLessons,\n  navSetlist,\n  navAmps,\n  navMerch,\n  navContact,\n  navBio,\n  navEpk,\n  footerBioLabel,\n  footerEpkLabel,\n  footerNavigationHeading,\n  footerConnectHeading,\n  footerCopyrightText,\n  formLabelName,\n  formLabelEmail,\n  formLabelSubject,\n  formLabelMessage,\n  formButtonSubmit,\n  formButtonSending,\n  formSuccessHeading,\n  formSuccessMessage,\n  formSendAnotherText,\n  formPlaceholderName,\n  formPlaceholderEmail,\n  formPlaceholderSubject,\n  formPlaceholderMessage,\n  newsletterButtonText,\n  newsletterSuccessText,\n  newsletterPlaceholder,\n  newsletterDisclaimer,\n  footerBookingText,\n  buttonViewSetlist,\n  buttonScheduleLesson,\n  buttonBookLesson,\n  buttonEmailMe,\n  buttonGetInTouch,\n  linkSeeAllShows,\n  linkUpcomingShows,\n  linkGuitarLessons,\n  linkBluesSetlist,\n  showsCountSingular,\n  showsCountPlural,\n  upcomingPrefix,\n  setlistSubtitleSuffix,\n  socialFacebook,\n  socialInstagram\n}": UiTextQueryResult;
     "*[_type == \"homePage\"][0]{\n  _id,\n  heroSlides[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    mobileImage{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      alt\n    },\n    alt,\n    desktopPosition,\n    mobilePosition\n  },\n  heroHeading,\n  heroHeadingDesktopSize,\n  heroHeadingMobileSize,\n  heroHeadingTracking,\n  heroHeadingLineHeight,\n  heroSubheadingTracking,\n  heroSubheadingLineHeight,\n  heroSubheading,\n  heroTagline,\n  heroButtonText,\n  marqueeTopItems[]{text, style},\n  marqueeBottomItems[]{text, style},\n  aboutHeading,\n  aboutText,\n  aboutVerticalLabel,\n  aboutImage{\n    asset->{_id, url},\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  aboutButtonText,\n  gallerySectionHeading,\n  gallerySectionSubheading,\n  galleryImages[]{\n    _key,\n    image{\n      asset->{_id, url},\n      hotspot,\n      crop,\n      desktopPosition,\n      mobilePosition,\n      alt\n    },\n    alt,\n    width,\n    height\n  },\n  upcomingShowsHeading,\n  seeAllShowsLinkText,\n  featuredVideoHeading,\n  featuredVideoSubheading,\n  liveVideos[]{url, title, subtitle},\n  \"legacyFeaturedVideoUrl\": featuredVideoUrl,\n  \"legacyFeaturedVideoTitle\": featuredVideoTitle,\n  \"legacyStudioVideo1Url\": studioVideo1Url,\n  \"legacyStudioVideo1Title\": studioVideo1Title,\n  \"legacyStudioVideo2Url\": studioVideo2Url,\n  \"legacyStudioVideo2Title\": studioVideo2Title,\n  bookingSectionHeading,\n  bookingSectionIntro,\n  bookingInquiriesHeading,\n  bookingInquiriesText,\n  bookingInquiryListHeading,\n  bookingInquiryItems,\n  bookingTestimonialQuote,\n  bookingTestimonialAttribution,\n  newsletterHeading,\n  newsletterText,\n  showAboutSection,\n  showUpcomingShows,\n  showBookingSection,\n  showGallerySection,\n  showNewsletterSection,\n  showMusicSection,\n  musicSectionHeading,\n  musicSectionSubheading,\n  spotifyArtistId,\n  spotifyPlaylistId,\n  spotifyEmbedType,\n  appleMusicUrl,\n  bandcampUrl,\n  seoTitle,\n  seoDescription\n}": HomePageQueryResult;
     "*[_type == \"lessonsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  stats[]{\n    _key,\n    label,\n    value,\n    suffix\n  },\n  philosophyHeading,\n  philosophyText,\n  philosophyImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  learningItemsHeading,\n  learningItems[]{\n    _key,\n    title,\n    description\n  },\n  ctaBoxHeading,\n  ctaBoxText,\n  credentials,\n  teachingImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emailButtonText,\n  scheduleButtonText,\n  testimonialQuote,\n  testimonialAttribution,\n  packagesHeading,\n  packagesSubheading,\n  packagesCtaText,\n  seoTitle,\n  seoDescription\n}": LessonsPageQueryResult;
-    "*[_type == \"contactPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitGallery[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}\n  },\n  formHeading,\n  directContactHeading,\n  directContactDescription,\n  socialHeading,\n  quickLinksHeading,\n  aboutHeading,\n  quickLinkShowsText,\n  quickLinkLessonsText,\n  quickLinkSetlistText,\n  ctaSectionHeading,\n  ctaSectionText,\n  ctaSectionButtonText,\n  locationMapQuery,\n  connectHeading,\n  bookingCardTitle,\n  bookingCardDescription,\n  bookingCardLinkText,\n  lessonsCardTitle,\n  lessonsCardDescription,\n  lessonsCardLinkText,\n  locationCardTitle,\n  locationCardRegion,\n  locationCardDescription,\n  locationCardLinkText,\n  socialSubheading,\n  seoTitle,\n  seoDescription\n}": ContactPageQueryResult;
+    "*[_type == \"contactPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  portraitGallery[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}\n  },\n  formHeading,\n  formSubheading,\n  directContactHeading,\n  directContactDescription,\n  socialHeading,\n  quickLinksHeading,\n  aboutHeading,\n  quickLinkShowsText,\n  quickLinkLessonsText,\n  quickLinkSetlistText,\n  ctaSectionHeading,\n  ctaSectionText,\n  ctaSectionButtonText,\n  locationMapQuery,\n  connectHeading,\n  bookingCardTitle,\n  bookingCardDescription,\n  bookingCardLinkText,\n  lessonsCardTitle,\n  lessonsCardDescription,\n  lessonsCardLinkText,\n  locationCardTitle,\n  locationCardRegion,\n  locationCardDescription,\n  locationCardLinkText,\n  socialSubheading,\n  seoTitle,\n  seoDescription\n}": ContactPageQueryResult;
     "*[_type == \"setlistPage\"][0]{\n  _id,\n  heroHeading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  introText,\n  performanceImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  guitarImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  ctaHeading,\n  ctaText,\n  ctaBookLessonButtonText,\n  ctaContactButtonText,\n  subtitleSuffix,\n  repertoireHeading,\n  songCountSummaryText,\n  requestHeading,\n  requestText,\n  requestButtonText,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  statsValue3,\n  seoTitle,\n  seoDescription\n}": SetlistPageQueryResult;
-    "*[_type == \"showsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}": ShowsPageQueryResult;
+    "*[_type == \"showsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  heroMobileImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  performanceGalleryHeading,\n  performanceGallerySubheading,\n  performanceImages[]{\n    _key,\n    image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n    alt,\n    caption\n  },\n  upcomingShowsHeading,\n  pastShowsHeading,\n  emptyStateHeading,\n  emptyStateText,\n  showCountPrefix,\n  showSingular,\n  showPlural,\n  statsLabel1,\n  statsLabel2,\n  statsLabel3,\n  eventDetailsLabel,\n  lineupHeading,\n  dateTimeLabel,\n  venueLabel,\n  viewOnMapText,\n  getTicketsText,\n  soldOutText,\n  backToShowsText,\n  shareEventText,\n  importantInfoText,\n  canceledBadgeText,\n  soldOutBadgeText,\n  canceledMessageText,\n  seoTitle,\n  seoDescription,\n  defaultEventImage{asset->{_id, url}, hotspot, crop, alt}\n}": ShowsPageQueryResult;
     "*[_type == \"merchPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt},\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButton1Text,\n  emptyStateButton1Link,\n  emptyStateButton2Text,\n  emptyStateButton2Link,\n  contentHeading,\n  contentSubheading,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  seoTitle,\n  seoDescription\n}": MerchPageQueryResult;
     "*[_type == \"ampsPage\"][0]{\n  _id,\n  heroHeading,\n  heroSubheading,\n  heroImage{\n    asset->,\n    alt\n  },\n  showcaseHeading,\n  showcaseText,\n  craftsmanshipHeading,\n  craftsmanshipText,\n  craftsmanshipImage{\n    asset->,\n    alt\n  },\n  shopHeading,\n  shopSubheading,\n  emptyStateHeading,\n  emptyStateText,\n  emptyStateButtonText,\n  seoTitle,\n  seoDescription\n}": AmpsPageQueryResult;
     "*[_type == \"product\" && category == \"amps\" && archived != true] | order(featured desc, _createdAt desc) {\n  _id,\n  title,\n  \"slug\": slug.current,\n  \"image\": images[0]{\n    \"asset\": asset->{\n      _id,\n      url,\n      metadata {\n        lqip,\n        dimensions\n      }\n    },\n    hotspot,\n    crop,\n    desktopPosition,\n    mobilePosition,\n    alt\n  },\n  priceCents,\n  compareAtPriceCents,\n  onSale,\n  currency,\n  category,\n  stockStatus,\n  featured,\n  badges,\n  tags,\n  inventoryQuantity,\n  trackInventory,\n  lowStockThreshold,\n  \"hasOptions\": count(options) > 0\n}": AmpsProductsQueryResult;
@@ -3329,7 +3341,7 @@ declare module "@sanity/client" {
     "*[_type == \"bio\"][0]{\n  _id,\n  pageTitle,\n  tagline,\n  lastUpdated,\n  seoDescription,\n  heroImage{asset->, hotspot, crop, alt},\n  content\n}": BioQueryResult;
     "*[_type == \"epkPage\"][0]{\n  _id,\n  heroImage{asset->, hotspot, crop, alt},\n  pageIntro,\n  genres,\n  influencedBy,\n  shortBio,\n  longBio,\n  bookingContactName,\n  bookingContactEmail,\n  bookingContactPhone,\n  bookingNotes,\n  pressPhotos[]{\n    _key,\n    asset->,\n    alt,\n    caption,\n    credit\n  },\n  videos[]{\n    _key,\n    title,\n    url,\n    description\n  },\n  pressQuotes[]{\n    _key,\n    quote,\n    source,\n    sourceUrl,\n    logo{asset->, alt}\n  },\n  notableShows[]{\n    _key,\n    venue,\n    city,\n    date,\n    event\n  },\n  stagePlotPdf{asset->{url, originalFilename}},\n  techRiderPdf{asset->{url, originalFilename}},\n  fullPressKitPdf{asset->{url, originalFilename}},\n  onesheet{asset->{url, originalFilename}},\n  seoTitle,\n  seoDescription\n}": EpkPageQueryResult;
     "*[_type == \"checkoutSettings\"][0]{\n  _id,\n  trustBadges[]{\n    _key,\n    title,\n    description,\n    icon\n  },\n  deliveryEstimateText,\n  secureCheckoutText,\n  cartHeading,\n  cartEmptyHeading,\n  cartEmptyText,\n  cartEmptyButtonText,\n  secureCheckoutHeading,\n  redirectingHeading,\n  redirectingText,\n  redirectingSubtext,\n  orderSummaryHeading,\n  returnToCartText,\n  sslEncryptionText,\n  checkoutUnavailableHeading\n}": CheckoutSettingsQueryResult;
-    "*[_type == \"orderConfirmationPage\"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}": OrderConfirmationPageQueryResult;
+    "*[_type == \"orderConfirmationPage\"][0]{\n  _id,\n  thankYouHeading,\n  orderConfirmedLabel,\n  orderReceivedText,\n  whatsNextHeading,\n  nextStepEmail,\n  nextStepShipping,\n  nextStepTracking,\n  orderDetailsHeading,\n  shippingAddressHeading,\n  orderItemsHeading,\n  continueShoppingText,\n  viewShowsText,\n  noOrderHeading,\n  noOrderText\n}": OrderConfirmationPageQueryResult;
     "*[_type == \"song\"] | order(order asc){\n  _id,\n  title,\n  key,\n  artist,\n  notes,\n  order\n}": AllSongsQueryResult;
     "*[_type == \"event\" && startDateTime >= $now && !isCanceled && archived != true] | order(startDateTime asc)[0...$limit]{\n  _id,\n  title,\n  \"slug\": slug.current,\n  excerpt,\n  startDateTime,\n  endDateTime,\n  timezone,\n  venue,\n  address,\n  city,\n  state,\n  country,\n  ticketUrl,\n  description,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt},\n  isCanceled,\n  isSoldOut\n}": UpcomingEventsQueryResult;
     "*[_type == \"event\" && startDateTime < $now && archived != true] | order(startDateTime desc)[$offset...$limit]{\n  _id,\n  title,\n  startDateTime,\n  timezone,\n  venue,\n  city,\n  state,\n  country,\n  coverImage{asset->, hotspot, crop, desktopPosition, mobilePosition, alt}\n}": PastEventsQueryResult;

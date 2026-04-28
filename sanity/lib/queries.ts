@@ -251,6 +251,7 @@ export const contactPageQuery = defineQuery(`*[_type == "contactPage"][0]{
     image{asset->{_id, url}, hotspot, crop, desktopPosition, mobilePosition, alt}
   },
   formHeading,
+  formSubheading,
   directContactHeading,
   directContactDescription,
   socialHeading,
@@ -321,6 +322,7 @@ export const showsPageQuery = defineQuery(`*[_type == "showsPage"][0]{
     caption
   },
   upcomingShowsHeading,
+  pastShowsHeading,
   emptyStateHeading,
   emptyStateText,
   showCountPrefix,
@@ -330,6 +332,7 @@ export const showsPageQuery = defineQuery(`*[_type == "showsPage"][0]{
   statsLabel2,
   statsLabel3,
   eventDetailsLabel,
+  lineupHeading,
   dateTimeLabel,
   venueLabel,
   viewOnMapText,
@@ -602,6 +605,9 @@ export const orderConfirmationPageQuery = defineQuery(`*[_type == "orderConfirma
   nextStepEmail,
   nextStepShipping,
   nextStepTracking,
+  orderDetailsHeading,
+  shippingAddressHeading,
+  orderItemsHeading,
   continueShoppingText,
   viewShowsText,
   noOrderHeading,

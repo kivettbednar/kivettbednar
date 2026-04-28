@@ -204,6 +204,16 @@ export const contactPage = defineType({
       name: 'formHeading',
       title: 'Contact Form Heading',
       type: 'string',
+      description: 'Big heading above the contact form (e.g., "Send a Message").',
+      initialValue: 'Send a Message',
+      group: 'sections',
+    }),
+    defineField({
+      name: 'formSubheading',
+      title: 'Contact Form Subheading',
+      type: 'string',
+      description: 'Short line below the form heading.',
+      initialValue: 'Have a question or want to get in touch? Fill out the form below.',
       group: 'sections',
     }),
     defineField({

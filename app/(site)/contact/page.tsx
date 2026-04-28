@@ -285,10 +285,11 @@ export default async function ContactPage() {
             <AnimatedSection animation="fadeIn">
               <div className="text-center mb-12">
                 <h2 className="font-bebas text-4xl md:text-5xl uppercase tracking-wide text-text-primary mb-3">
-                  Send a Message
+                  {contactPage?.formHeading || 'Send a Message'}
                 </h2>
                 <p className="text-text-secondary">
-                  Have a question or want to get in touch? Fill out the form below.
+                  {(contactPage as any)?.formSubheading ||
+                    'Have a question or want to get in touch? Fill out the form below.'}
                 </p>
               </div>
             </AnimatedSection>

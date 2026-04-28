@@ -315,7 +315,9 @@ export default async function EventPage({params}: Props) {
                   {ev.lineup && ev.lineup.length > 0 && (
                     <AnimatedSection animation="fadeUp" delay={0.2}>
                       <div className="bg-surface-elevated rounded-2xl p-8 border-2 border-accent-primary/20 shadow-lg">
-                        <h2 className="text-3xl font-bold text-text-primary mb-6">Lineup</h2>
+                        <h2 className="text-3xl font-bold text-text-primary mb-6">
+                          {(showsPage as any)?.lineupHeading || 'Lineup'}
+                        </h2>
                         <div className="space-y-6">
                           {ev.lineup.map((performer: Performer, index: number) => (
                             <div key={index} className="border-b border-border last:border-0 pb-4 last:pb-0">

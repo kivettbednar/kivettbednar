@@ -4522,6 +4522,27 @@
         },
         "optional": true
       },
+      "orderDetailsHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "shippingAddressHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "orderItemsHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "continueShoppingText": {
         "type": "objectAttribute",
         "value": {
@@ -6634,6 +6655,13 @@
         },
         "optional": true
       },
+      "formSubheading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "directContactHeading": {
         "type": "objectAttribute",
         "value": {
@@ -8254,6 +8282,13 @@
         },
         "optional": true
       },
+      "pastShowsHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "emptyStateHeading": {
         "type": "objectAttribute",
         "value": {
@@ -8311,6 +8346,13 @@
         "optional": true
       },
       "eventDetailsLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "lineupHeading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

@@ -52,6 +52,24 @@ export const orderConfirmationPage = defineType({
       initialValue: "You'll receive tracking information once your order ships",
     }),
     defineField({
+      name: 'orderDetailsHeading',
+      title: 'Order Details Heading',
+      type: 'string',
+      initialValue: 'Order Details',
+    }),
+    defineField({
+      name: 'shippingAddressHeading',
+      title: 'Shipping Address Heading',
+      type: 'string',
+      initialValue: 'Shipping Address',
+    }),
+    defineField({
+      name: 'orderItemsHeading',
+      title: 'Order Items Heading',
+      type: 'string',
+      initialValue: 'Order Items',
+    }),
+    defineField({
       name: 'continueShoppingText',
       title: 'Continue Shopping Button Text',
       type: 'string',

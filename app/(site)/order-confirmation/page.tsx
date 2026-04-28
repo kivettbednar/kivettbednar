@@ -303,7 +303,7 @@ function OrderConfirmationContent() {
               >
                 <h2 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-6 flex items-center gap-3">
                   <Package className="w-6 h-6 text-accent-primary icon-hover" />
-                  Order Details
+                  {pageContent?.orderDetailsHeading || 'Order Details'}
                 </h2>
                 <div className="space-y-4">
                   <div>
@@ -341,7 +341,7 @@ function OrderConfirmationContent() {
               >
                 <h2 className="font-bebas text-2xl uppercase tracking-wide text-text-primary mb-6 flex items-center gap-3">
                   <Truck className="w-6 h-6 text-accent-primary icon-hover" />
-                  Shipping Address
+                  {pageContent?.shippingAddressHeading || 'Shipping Address'}
                 </h2>
                 <div className="text-text-secondary">
                   {displayName && (
@@ -382,7 +382,7 @@ function OrderConfirmationContent() {
               className="bg-surface-elevated border border-border p-8 mb-8"
             >
               <h2 className="font-bebas text-3xl uppercase tracking-wide text-text-primary mb-6">
-                Order Items
+                {pageContent?.orderItemsHeading || 'Order Items'}
               </h2>
               <div className="space-y-4">
                 {orderData.items.map((it: {productTitle: string; quantity: number; priceCents: number; imageUrl?: string; productId?: string; slug?: string; title?: string; options?: Record<string, string>}, index: number) => {

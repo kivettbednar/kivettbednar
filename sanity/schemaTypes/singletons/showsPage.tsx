@@ -133,6 +133,14 @@ export const showsPage = defineType({
       group: 'upcoming',
     }),
     defineField({
+      name: 'pastShowsHeading',
+      title: 'Past Shows Heading',
+      type: 'string',
+      description: 'Heading above the list of past shows.',
+      initialValue: 'Past Shows',
+      group: 'upcoming',
+    }),
+    defineField({
       name: 'emptyStateHeading',
       title: 'Empty State — Heading',
       type: 'string',
@@ -198,6 +206,14 @@ export const showsPage = defineType({
       title: 'Event Details Label',
       type: 'string',
       initialValue: 'Event Details',
+      group: 'eventDetail',
+    }),
+    defineField({
+      name: 'lineupHeading',
+      title: 'Lineup Heading',
+      type: 'string',
+      description: 'Heading on the event detail page when an event has a lineup of performers.',
+      initialValue: 'Lineup',
       group: 'eventDetail',
     }),
     defineField({
