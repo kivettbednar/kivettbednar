@@ -93,7 +93,7 @@ function formatDate(iso: string | null | undefined): string {
 
 function buildQuery(type: DocType, filter: Filter, search: string): {query: string; params: Record<string, unknown>} {
   const archiveClause =
-    filter === 'active' ? '&& !archived' : filter === 'archived' ? '&& archived == true' : ''
+    filter === 'active' ? '&& archived != true' : filter === 'archived' ? '&& archived == true' : ''
   const searchClause = search.trim() ? '&& title match $search' : ''
 
   const projection = `

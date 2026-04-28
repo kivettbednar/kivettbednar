@@ -39,8 +39,8 @@ const catIdx = args.indexOf('--category')
 const category = catIdx !== -1 ? args[catIdx + 1] : null
 
 const filter = category
-  ? `_type == "product" && !archived && category == $category`
-  : `_type == "product" && !archived`
+  ? `_type == "product" && archived != true && category == $category`
+  : `_type == "product" && archived != true`
 
 const client = createClient({projectId, dataset, apiVersion, token, useCdn: false})
 

@@ -37,7 +37,7 @@ const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 const client = createClient({projectId, dataset, apiVersion, token, useCdn: false})
 
 const candidates = await client.fetch(
-  `*[_type == "event" && startDateTime < $cutoff && !archived]{_id, title, startDateTime}`,
+  `*[_type == "event" && startDateTime < $cutoff && archived != true]{_id, title, startDateTime}`,
   {cutoff},
 )
 
